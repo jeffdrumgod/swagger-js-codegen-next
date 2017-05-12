@@ -1,0 +1,163 @@
+{
+	"UDA": {
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "This attribute defines UDA unique identifier. This number has no decimal places."
+			},
+			"name": {
+				"type": "string",
+				"description": "This attribute defines the name of UDA.",
+				"maximum": 200
+			},
+			"description": {
+				"type": "string",
+				"description": "This attribute contains a text that describes the UDA.",
+				"maximum": 255
+			},
+			"type": {
+				"type": "string",
+				"description": "This attribute defines the type of a UDA, the type allowed are: </br><ul>  <li>TXN - Accepted as value a text, number, date and etc;</li>  <li>TXL - Accepted as value a long text;</li>  <li>MVU - Accepted as value a multivalued with only one selection;</li>  <li>MVM - Accepted as value a multivalued with one or more selections;</li>  <li>MAN - Accepted as value a boolean true - \"Yes\" -  or - false -\"No\", this type is used when the product/SKU has or not a manual;</li>  <li>E3D - Accepted as value an URL, this URL is for a 3D experience  of a product;</li>  <li>MVH - Accepted as value a multivalued with only one selection, this type allow to use a HTML to personalize the exibition of the UDA;</li>  <li>MHM - Accepted as value a multivalued with one or more selections,  this type allow to use a HTML to personalize the exibition of the UDA;</li>  <li>RMM - Accepted as value a multivalued and restrictive with one or more selections .</li></ul> ",
+				"enum" : [
+					"TXN",
+					"TXL",
+					"MVU", 
+					"MVM",
+					"MAN", 
+					"E3D",
+					"MVH",
+					"MHM",
+					"RMM"
+				]
+			},
+			"visible": {
+				"description": "This attribute defines if an UDA will be displayed in the website.",
+				"type": "boolean"
+			},
+			"required": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA must have a value in a product/SKU."
+			},
+			"filter": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA name will be used as filter."
+			},
+			"restricted": {
+				"type": "boolean",
+				"description": "This attribute defines if only administrators can put a UDA value in the product/SKU."
+			},
+			"variant": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA belongs to some SKU. e.g: If the UDA defines the size of a shirt, this means each SKU of the product contains a different size of the shirt - a variation of size."
+			},
+			"compare": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA will be used in a comparison of two or more products."
+			},
+			"search": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA can be used as a param of search."
+			},
+			"promotion": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA can be used to do promotions."
+			},
+			"productSheet": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA will be displayed in the product sheet in the website."
+			},
+			"active": {
+				"type": "boolean",
+				"description": "This attribute defines if an UDA active for use."
+
+			},
+			"values": {
+				"type": "array",
+				"description": "This array of values is used only for the types multivalued, such as <i>MVU</i>, <i>MVM</i>, <i>MVH</i>, <i>MHM</i> and <i>RMM</i>.",
+				"items": {
+					"$ref":"#/UDAValue"
+				}
+			}
+		},
+		"example": {
+			  "id": 1245,
+			  "name": "Color",
+			  "description": "Color for the tissue",
+			  "type": "MVH ",
+			  "visible": true,
+			  "required": true,
+			  "filter": true,
+			  "restricted": true,
+			  "variant": true,
+			  "compare": true,
+			  "search": true,
+			  "promotion": true,
+			  "productSheet": true,
+			  "active": true,
+			  "values": [
+			    {
+			      "id": 123,
+			      "value": "Blue",
+			      "position": 0,
+			      "html": "<h1>Blue<h1>"
+			    },
+			    {
+			      "id": 153,
+			      "value": "Yellow",
+			      "position": 1,
+			      "html": "<h1>Yellow<h1>"
+			    }
+			  ]
+		}
+		,
+		"required": [
+			"id",
+			"name",
+			"description",
+			"compare",
+			"filter",
+			"variant",
+			"required",
+			"visible",
+			"promotion",
+			"productSheet",
+			"search",
+			"restricted",
+			"active",
+			"type"
+
+		]
+	},
+	"UDAValue": {
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "This attribute defines UDA value unique identifier. This number has no decimal places."
+			},
+			"value": {
+				"type": "string",
+				"description": "This attribute defines the value.",
+				"maximum": 255
+			},
+			"position": {
+				"type": "number",
+				"description": "This attribute defines position of the value in the combobox. This number has no decimal places."
+			},
+			"html" : {
+				"type": "string",
+				"description": "This attribute defines a HTML code, this HTML is used to personalize the exibition of the UDA and is use only by the types UDA <i>MVH</i> and <i>MHM</i>."
+			}
+		},
+		"example" :{
+			"id": 123,
+			"value": "Blue",
+			"position": 0,
+			"html": "<h1>Blue<h1>"
+		},
+		"required" : [
+			"id",
+			"value",
+			"position"
+		]
+	}
+}

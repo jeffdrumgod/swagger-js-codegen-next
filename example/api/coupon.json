@@ -1,0 +1,98 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Coupon API",
+        "description": "This is Infrashop Coupon API documentation. Here you will find API operations to interact with infrashop CreditLimits and Voucher."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "CreditLimit API",
+            "description": "<br><font size=\"2\">This group contains a set of APIs to replace and get the customer's credit limit.</font>"
+        }
+    ],
+    "paths": {
+        "/v1/creditlimits/customer/document/{customerDocument}": {
+            "post": {
+                "tags": [
+                    "CreditLimit API"
+                ],
+                "summary": "Replace Credit Limit",
+                "description": "Replace a customer's credit limit for an issuer.",
+                "parameters": [
+                    {
+                    	"name": "customerDocument",
+                        "description": "This is the customer's document number.",
+                        "in": "request",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "body",
+                        "description": "The body is filled with issuer and the initialValue",
+                        "in": "body",
+                        "type": "string",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/coupon.json#Parameters"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+						"description": "The return is the created Coupon",
+						"schema": {
+							"$ref": "./api/def/coupon.json#Coupon"
+						}
+					}
+                }
+            }
+        },
+        "/v1/creditlimits/customer/document/{customerDocument}/issuer/{issuer}": {
+        	"get": {
+        		"tags": [
+                    "CreditLimit API"
+                ],
+                "summary": "Get Credit Limit",
+                "description": "Get the Customer's Credit Limit",
+        		"parameters": [
+        			{
+                        "name": "customerDocument",
+                        "description": "This is the customer's document number.",
+                        "type": "string",
+                        "required": true,
+                        "in": "request"
+                    },
+                    {
+                        "name": "issuer",
+                        "description": "This is the issuer identifier.",
+                        "type": "string",
+                        "required": true,
+                        "in": "request"
+                    }
+        		],
+        		 "responses": {
+                    "200": {
+						"description": "The return value is a Coupon.",
+						"schema": {
+							"$ref": "./api/def/coupon.json#Coupon"
+						}
+					}
+                }
+        	}
+       }
+    },
+    "definitions": {
+		
+    }
+}

@@ -1,0 +1,570 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API de integração direta entre plataforma Vtex e ERP Ábacos",
+        "description": "Esta documentação detalha APIs de uso interno para a integração entre uma plataforma de e-commerce Vtex e um ERP Ábacos. As APIs são divididas em 4 grupos:<br><ul><li><strong>Estoque</strong>: Atualizações de estoque geradas pelo Ábacos são enviadas a plataforma Vtex</li><li><strong>Preço</strong>: Atualizações de preço geradas pelo Ábacos são enviadas para a plataforma Vtex</li><li><strong>Pedido</strong>: Pedidos capturados pela plataforma Vtex são criados no Ábacos.</li><li><strong>Tracking e nota fiscal</strong>: Quando um pedido é despachado, os dados de nota fiscal e rastreio são enviados a plataforma Vtex</li></ul>"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ifc-vtex-abacos-api/v1",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Estoque",
+            "description": "<br><font size=\"2\">As APIs de estoque levam as atualizações de estoque dos SKUs do ERP Ábacos para a plataforma Vtex.</font>"
+        },
+        {
+            "name": "Preço",
+            "description": "<br><font size=\"2\">As APIs de preço levam as atualizações de preço dos SKUs do ERP Ábacos para a plataforma Vtex.</font>"
+        },
+        {
+            "name": "Pedido",
+            "description": "<br><font size=\"2\">As APIs de preço levam novos pedidos da plataforma Vtex para o ERP Ábacos.</font>"
+        },
+        {
+            "name": "Tracking e nota fiscal",
+            "description": "<br><font size=\"2\">As APIs de preço levam as atualizações de tracking de pedido e notas fiscais do ERP Ábacos para a plataforma Vtex.</font>"
+        }
+    ],
+    "paths": {
+        "/stocks": {
+            "post": {
+                "tags": [
+                     "Estoque"
+                ],
+                "summary": "Envia atualizações de estoque do Ábacos para a plataforma Vtex",
+                "description": "Essa operação puxa entradas de estoque pendentes de integração do Ábacos e envia para a plataforma Vtex. Caso o envio seja feito com sucesso, a entrada é removida da fila do Ábacos automaticamente. Caso o envio falhe, é gerada uma entrada no motor de staging para que possa ser processado posteriormente. O retorno indica se ainda existem estoques pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                     "Estoque"
+                ],
+				"consumes": [
+					"application/xml",
+					"application/json"
+				],
+                "summary": "Envia uma entrada específica de estoque para a plataforma Vtex",
+                "description": "Essa operação recebe como entrada um registro de estoque, tanto em formato <b>XML</b> quanto em formato <b>JSON</b>, específico da API SOAP do Ábacos, e envia diretamente à plataforma Vtex. Caso o envio falhe, o erro é retornado diretamente ao chamador da API - não é gerada entrada no motor de staging para processamento posterior.",
+                "parameters": [
+                    {
+                        "name": "DadosEstoque",
+                        "in": "body",
+						"description": "Informação de atualização de saldo de estoque proveniente do Ábacos. Essa é a entidade gerada pelo Ábacos em sua interface de integração.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/DadosEstoque"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Entrada enviada com sucesso à plataforma Vtex"
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocks/staging": {
+            "post": {
+                "tags": [
+                     "Estoque"
+                ],
+                "summary": "Envia entradas de estoque do motor de staging para a plataforma Vtex",
+                "description": "Essa operação puxa entradas que estão no motor de staging - ou seja, que falharam em uma integração anterior e foram armazenados para novas retentativas - e envia para a plataforma Vtex. Caso o envio seja feito com sucesso, a entrada é removida da fila do motor de staging automaticamente. Caso o envio falhe, o contador de tentativas no motor de staging é decrementado. O retorno indica se ainda existem estoques pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/prices": {
+            "post": {
+                "tags": [
+                     "Preço"
+                ],
+                "summary": "Envia atualizações de preço do Ábacos para a plataforma Vtex",
+                "description": "Essa operação puxa entradas de preço pendentes de integração do Ábacos e envia para a plataforma Vtex. Caso o envio seja feito com sucesso, a entrada é removida da fila do Ábacos automaticamente. Caso o envio falhe, é gerada uma entrada no motor de staging para que possa ser processado posteriormente. O retorno indica se ainda existem preços pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                     "Preço"
+                ],
+				"consumes": [
+					"application/xml",
+					"application/json"
+				],
+                "summary": "Envia uma entrada específica de preço para a plataforma Vtex",
+                "description": "Essa operação recebe como entrada um registro de preço, tanto em formato <b>XML</b> quanto em formato <b>JSON</b>, específico da API SOAP do Ábacos, e envia diretamente à plataforma Vtex. Caso o envio falhe, o erro é retornado diretamente ao chamador da API - não é gerada entrada no motor de staging para processamento posterior.",
+                "parameters": [
+                    {
+                        "name": "DadosPreco",
+                        "in": "body",
+						"description": "Informação de atualização de preço proveniente do Ábacos. Essa é a entidade gerada pelo Ábacos em sua interface de integração.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/DadosPreco"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Entrada enviada com sucesso à plataforma Vtex"
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/prices/staging": {
+            "post": {
+                "tags": [
+                     "Preço"
+                ],
+                "summary": "Envia entradas de preço do motor de staging para a plataforma Vtex",
+                "description": "Essa operação puxa entradas que estão no motor de staging - ou seja, que falharam em uma integração anterior e foram armazenados para novas retentativas - e envia para a plataforma Vtex. Caso o envio seja feito com sucesso, a entrada é removida da fila do motor de staging automaticamente. Caso o envio falhe, o contador de tentativas no motor de staging é decrementado. O retorno indica se ainda existem preços pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/trackings": {
+            "post": {
+                "tags": [
+                     "Tracking e nota fiscal"
+                ],
+                "summary": "Envia atualizações de Tracking e nota fiscal do Ábacos para a plataforma Vtex",
+                "description": "Essa operação puxa entradas de tracking pendentes de integração do Ábacos e envia para a plataforma Vtex. Essa integração envia apenas o tracking de \"pedido despachado\" (ETR), junto com as informações de nota fiscal que são recuperadas do motor de staging através do número do pedido. O envio das informações só é feita caso a nota fiscal já esteja disponível no motor de staging. Caso o envio seja feito com sucesso, a entrada é removida da fila do Ábacos automaticamente. Caso o envio falhe ou a nota fiscal não esteja disponível, é gerada uma entrada no motor de staging para que possa ser processado posteriormente. O retorno indica se ainda existem trackings pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                     "Tracking e nota fiscal"
+                ],
+				"consumes": [
+					"application/xml",
+					"application/json"
+				],
+                "summary": "Envia uma entrada específica de tracking para a plataforma Vtex",
+                "description": "Essa operação recebe como entrada um registro de tracking, tanto em formato <b>XML</b> quanto em formato <b>JSON</b>, específico da API SOAP do Ábacos, e envia diretamente à plataforma Vtex. É importante notar que apenas o tracking de \"pedido despachado\" (ETR) é suportado. Caso o envio falhe, o erro é retornado diretamente ao chamador da API - não é gerada entrada no motor de staging para processamento posterior.",
+                "parameters": [
+                    {
+                        "name": "DadosStatusPedido",
+                        "in": "body",
+						"description": "Informação de atualização de tracking proveniente do Ábacos. Essa é a entidade gerada pelo Ábacos em sua interface de integração.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/DadosStatusPedido"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Entrada enviada com sucesso à plataforma Vtex"
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/trackings/staging": {
+            "post": {
+                "tags": [
+                     "Tracking e nota fiscal"
+                ],
+                "summary": "Envia entradas de tracking do motor de staging para a plataforma Vtex",
+                "description": "Essa operação puxa entradas que estão no motor de staging - ou seja, que falharam em uma integração anterior e foram armazenados para novas retentativas - e envia para a plataforma Vtex. Caso o envio seja feito com sucesso, a entrada é removida da fila do motor de staging automaticamente. Caso o envio falhe, o contador de tentativas no motor de staging é decrementado. O retorno indica se ainda existem trackings pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "tags": [
+                     "Pedido"
+                ],
+                "summary": "Envia novos pedidos da plataforma Vtex para o Ábacos",
+                "description": "Essa operação puxa novos pedidos em status \"ready for handling\" da plataforma Vtex e envia ao Ábacos. Caso o envio seja feito com sucesso, a entrada é removida da fila da plataforma Vtex automaticamente. Caso o envio falhe é gerada uma entrada no motor de staging para que possa ser processado posteriormente e o pedido também é removido da fila da Vtex. O retorno indica se ainda existem pedidos pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                     "Pedido"
+                ],
+				"consumes": [
+					"application/json"
+				],
+                "summary": "Envia uma entrada específica de pedido para o ERP Ábacos",
+                "description": "Essa operação recebe como entrada um registro de pedido, no formato <b>JSON</b>, específico da API SOAP da Vtex, e envia diretamente ao Ábacos. Caso o envio falhe, o erro é retornado diretamente ao chamador da API - não é gerada entrada no motor de staging para processamento posterior.",
+                "parameters": [
+                    {
+                        "name": "Order",
+                        "in": "body",
+						"description": "Informação de pedido proveniente da plataforma Vtex. Essa é a entidade gerada pela API OMS da plataforma Vtex. Clique <a href=\"http://bridge.vtexlab.com.br/vtex.bridge.web_deploy/swagger/ui/index.html#!/OMS/OMS_Orders\" target=\"_blank\">aqui</a> para mais info.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Entrada enviada com sucesso ao Ábacos"
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/orders/staging": {
+            "post": {
+                "tags": [
+                     "Pedido"
+                ],
+                "summary": "Envia entradas de pedidos do motor de staging para o ERP Ábacos",
+                "description": "Essa operação puxa entradas que estão no motor de staging - ou seja, que falharam em uma integração anterior e foram armazenados para novas retentativas - e envia para o ERP Ábacos. Caso o envio seja feito com sucesso, a entrada é removida da fila do motor de staging automaticamente. Caso o envio falhe, o contador de tentativas no motor de staging é decrementado. O retorno indica se ainda existem pedidos pendentes para serem integrados.",
+                "parameters": [
+                    {
+                        "name": "IntegrationRequest",
+                        "in": "body",
+						"description": "Requisição de integração. Usada para indicar o número máximo de entradas pendentes que devem ser integradas.",
+                        "required": true,
+                        "type": "object",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Indica se ainda existem entradas pendentes de integração.",
+                        "schema": {
+                            "$ref": "#/definitions/IntegrationResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos. A mensagem de erro vai indicar quais dados inválidos foram encontrados.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor. A mensagem de erro vai informar detalhes do problema encontrado.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "IntegrationRequest": {
+            "type": "object",
+            "properties": {
+				"maximumQuantity": {
+					"type": "number",
+					"description": "Número máximo de entradas pendentes que devem ser integradas."
+				}
+            },
+            "required": [
+                "maximumQuantity"
+            ],
+			"example": {
+				"maximumQuantity": 10
+			}
+        },
+        "IntegrationResponse": {
+            "type": "object",
+            "description": "Resultado de integração. Usada para indicar se ainda existem registros pendentes de integraçao.",
+            "properties": {
+				"hasMoreData": {
+					"type": "boolean",
+					"description": "Indica se ainda existem registros pendentes de integraçao."
+				}
+            },
+            "required": [
+                "hasMoreData"
+            ],
+			"example": {
+				"hasMoreData": true
+			}
+        },
+		"DadosEstoque": {
+            "type": "object"
+		},
+		"DadosPreco": {
+            "type": "object"
+		},
+		"DadosStatusPedido": {
+            "type": "object"
+		},
+		"Order": {
+            "type": "object"
+		}
+	}	
+}

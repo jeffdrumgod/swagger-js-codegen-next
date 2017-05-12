@@ -1,0 +1,1203 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Order Management API",
+        "description": "In this API documentation, you will find operations that you will call in order to manage the orders. Operations here includes managing sales targets. Feel free to browse through all of them and to try it for yourself!"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce order API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Sales Target API",
+            "description": "<br><font size=\"2\">The operations of Sales Targets API allows the management of sales targets where actions as fetching, updating and inseting data are possible.</font>"
+        },
+        {
+            "name": "Sales Forecast API",
+            "description": "<br><font size=\"2\">This API contains operations that will help you get sale forecast information.</font>"
+        },
+        {
+            "name": "Order Feed API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with order feed engine. You will find operations to retrieve updated orders, payment and order tracking events. After retrieving and processing the information, just call DELETE operation providing processed UUIDs in order to acknowledge them.</font>"
+        },
+        {
+            "name": "Order & Payment Management API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to manage your orders. You will find operations to retrieve and create orders and their payments. In Order API, you will find two views of an order - a simple one, containing just a few information, and a complete one, that contains all data about the order.</font>"
+        },
+        {
+            "name": "Tracking API",
+            "description": "<br><font size=\"2\">This is Infrashop Trackings API documentation. Here you will find API operations to interact with infrashop tracking engine. You will be able to create tracking, query for tracking by several attributes (DeliveryId, ControlPointId, occurrenceDt, etc), update trackings and so on.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-order-api/oauth/token": {
+			"$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-feed-api/v1/feed/ord": {
+			"$ref":"./api/feed-ord.json#/paths/ORD"
+		},
+        "/ifc-feed-api/v1/feed/pay": {
+			"$ref":"./api/feed-ord.json#/paths/PAY"
+		},
+        "/ifc-feed-api/v1/feed/trk": {
+			"$ref":"./api/feed-ord.json#/paths/TRK"
+		},
+        "/ifc-order-api/v1/orders": {
+            "post": {
+                "tags": [
+                    "Order & Payment Management API"
+                ],
+                "summary": "Creates an order.",
+                "description": "Creates an order within Infrashop. You have to provide a complete order with the corresponding sale channel - each marketplace has its own sale channel and this attribute will define how this API behaves when validating and adding default data to the order. <h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Gravar",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Order accepted successfuly.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid information provided. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/orders/{orderId}/fullview": {
+            "get": {
+                "tags": [
+                    "Order & Payment Management API"
+                ],
+                "summary": "Retrieves an order",
+                "description": "Retrieve a complete view of the order. This will return you all available information about the order, including trackings for its deliveries. Credit card information is masket for security reasons. <h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+						"description": "Order unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid information provided. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-payment-api/v1/payments": {
+            "post": {
+                "tags": [
+                    "Order & Payment Management API"
+                ],
+                "summary": "Approve / reprove an order payment",
+                "description": "Use this API to approve or reprove an order payment. Every time an order is paid (or refused), you should call this API to inform that this order should proceed with the fulfillment or be canceled.<h4>Required Functionalities</h4> Vendas - Pedidos - API de Pagamentos - Gravar <br> Vendas - Pedidos - API de Pagamentos - Gravar - INT - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Payment"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment update information accepted successfuly."
+                    },
+                    "400": {
+                        "description": "Invalid information provided. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order or payment not found. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-payment-api/v1/orders/{orderId}/payments/{paymentId}": {
+            "get": {
+                "tags": [
+                    "Order & Payment Management API"
+                ],
+                "summary": "Retrieves payment details",
+                "description": "This API will retrieve the current payment status information.<h4>Required Functionalities</h4> Vendas - Pedidos - API de Pagamentos - Consultar <br> Vendas - Pedidos - API de Pagamentos - Consultar - INT - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+						"description": "Order unique identifier"
+                    },
+                    {
+                        "name": "paymentId",
+                        "in": "path",
+                        "required": true,
+                        "type": "number",
+						"description": "Payment unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Payment"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid information provided. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order or payment not found. Please check error message for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/salestargets": {
+            "get": {
+                "tags": [
+                    "Sales Target API"
+                ],
+                "summary": "Fetches all sales targets",
+                "description": "This API fetches all sales targets paginated.",
+                "parameters": [
+                    {
+                        "name": "saleChannelId",
+                        "required": false,
+                        "default": "INT",
+                        "description": "The SaleChannel's id. For example, if the sale channel is Internet, the id is <b>\"INT\"</b>; if is Teleshopping, the id is <b>\"TEL\"</b> etc.",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The sales target date (in jersey date format) only with YEAR and MONTH, like <b>\"2016-06\"</b> for instance."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated sales targets list",
+                        "schema": {
+                            "$ref": "#/definitions/SalesTargetListPagination"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Sales Target API"
+                ],
+                "summary": "Create a new sale target",
+                "description": "This API creates a new SaleTarget. This API will create a new SaleTarget using the posted data. All fields are required.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SaleTarget"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return the newly created SaleTarget.",
+                        "schema": {
+                            "$ref": "#/definitions/SaleTarget"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }			
+        },
+        "/ifc-order-api/v1/salestargets/{saleChannelId}/{date}": {
+            "get": {
+                "tags": [
+                    "Sales Target API"
+                ],
+                "summary": "Fetch the sale target by the composite id.",
+                "description": "This API fetches a SaleTarget by its composite id (<b>saleChannelId</b> and <b>date</b>).",
+                "parameters": [
+                    {
+                        "name": "saleChannelId",
+                        "required": true,
+                        "default": "INT",
+                        "description": "The SaleChannel's id. For example, if the sale channel is Internet, the id is <b>\"INT\"</b>; if is Teleshopping, the id is <b>\"TEL\"</b> etc.",
+                        "type": "string",
+                        "in": "path"
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The sales target date (in jersey date format) only with YEAR and MONTH, like <b>\"2016-06\"</b> for instance."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SaleTarget fetched.",
+                        "schema": {
+                            "$ref": "#/definitions/SaleTarget"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SaleTarget not found. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Sales Target API"
+                ],
+                "summary": "Update a specific sale target by the composite id.",
+                "description": "This API updates a specific SaleTarget by the composite id (<b>saleChannelId</b> and <b>date</b>). It is possible to update the \"targetValue\" and \"expectedApprovalRate\" of the SaleTarget.",
+                "parameters": [
+                     {
+                        "name": "saleChannelId",
+                        "required": true,
+                        "default": "INT",
+                        "description": "The SaleChannel's id. For example, if the sale channel is Internet, the id is <b>\"INT\"</b>; if is Teleshopping, the id is <b>\"TEL\"</b> etc.",
+                        "type": "string",
+                        "in": "path"
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The sales target date (in jersey date format) only with YEAR and MONTH, like <b>\"2016-06\"</b> for instance."
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type": "object",
+							"description": "This entity defines a SaleTarget entry",
+							"example": {
+								"targetValue": 1500,
+								"expectedApprovalRate": 85
+							},
+							"properties": {
+								"targetValue": {
+									"type": "number",
+									"description": "The SaleTarget's value (that's the currencty target). Example: 1500"
+								},
+								"expectedApprovalRate": {
+									"type": "number",
+									"description": "The expected approval rate of SaleTarget. Example: 65."
+								}
+							},
+							"required": [
+								"targetValue",
+								"expectedApprovalRate"
+							]
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SaleTarget updated.",
+                        "schema": {
+							"$ref": "#/definitions/SaleTarget"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SaleTarget not found. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/saleforecasts": {
+            "get": {
+                "tags": [
+                    "Sales Forecast API"
+                ],
+                "summary": "Retrieves sale forecast information",
+                "description": "This API will give you sale forecast information.<h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The Sale Forecast found.",
+                        "schema": {
+                            "$ref": "#/definitions/SaleForecasts"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Sale Forecast not found. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+		"/ifc-order-api/v1/trackings": {
+            "post": {
+                "tags": [
+                    "Tracking API"
+                ],
+                "summary": "Updates order tracking information.",
+                "description": "Receives a order tracking event. This API operation should be called to inform the marketplace that this order is ready to be dispatched, was dipatched,  etc.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type" : "array",
+							"items": {
+								"$ref": "./api/def/itg-order.json#/Tracking"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid tracking information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update tracking for these orders. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+		"/ifc-order-api/v1/trackings/{deliveryId}/{controlPointId}/{occurrenceDate}": {
+			"get":{
+				"tags": [
+                    "Tracking API"
+                ],
+                "summary": "Retrieve the tracking data.",
+                "description": "Retrieve tracking data. This API operation will retrieve tracking data by deliveryId, controlPoint and Occurence Date.",
+                "parameters": [
+                    {
+                        "name": "deliveryId",
+                        "in": "path",
+                        "required": true,
+						"type": "number",
+						"description": "The unique identifier for delivery"
+                       
+                    },
+					{
+                        "name": "controlPointId",
+                        "in": "path",
+                        "required": true,
+						"type": "string",
+						"description": "The unique identifier for controlPoint"
+                       
+                    },
+					{
+                        "name": "occurrenceDate",
+                        "in": "path",
+                        "required": true,
+						"type": "string",
+                        "format": "date-time",
+						"description": "The Occurrence Date of tracking"
+                    },
+                    {
+                        "name": "marketplaceId",
+                        "in": "query",
+                        "required": false,
+                        "default" : false,
+                        "type": "boolean",
+                        "description": "If this attribute is \"true\" the tracking will contain the \"orderId\" and \"deliveryId\" from the marketplace, but if there is no order in the marketplace the response will contain the \"normal\" data."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The retrieved Tracking data.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Tracking"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SaleTarget not found. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+			}
+		},
+        "/ifc-order-api/v1/trackings/{deliveryId}/{controlPointId}/{occurrenceDate}/fullview": {
+            "get":{
+                "tags": [
+                    "Tracking API"
+                ],
+                "summary": "Retrieve the tracking data in mode full view of tracking object.",
+                "description": "Retrieve the tracking data in mode full view of tracking object. This API operation will retrieve tracking data by deliveryId, controlPoint and Occurence Date.",
+                "parameters": [
+                    {
+                        "name": "deliveryId",
+                        "in": "path",
+                        "required": true,
+						"type": "number",
+						"description": "The unique identifier for delivery"
+                       
+                    },
+					{
+                        "name": "controlPointId",
+                        "in": "path",
+                        "required": true,
+						"type": "string",
+						"description": "The unique identifier for controlPoint"
+                       
+                    },
+					{
+                        "name": "occurrenceDate",
+                        "in": "path",
+                        "required": true,
+						"type": "string",
+                        "format": "date-time",
+						"description": "The Occurrence Date of tracking"
+                    },
+                    {
+                        "name": "marketplaceId",
+                        "in": "query",
+                        "required": false,
+                        "default" : false,
+                        "type": "boolean",
+                        "description": "If this attribute is \"true\" the tracking will contain the \"orderId\" and \"deliveryId\" from the marketplace, but if there is no order in the marketplace the response will contain the \"normal\" data."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The retrieved Tracking data.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/AcecTracking"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage rating informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SaleTarget not found. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },        
+		"/ifc-order-api/v1/orders/{orderId}/trackings": {
+			"get": {
+                "tags": [
+                    "Tracking API"
+                ],
+                "summary": "Retrieve the tracking data filtered by order id.",
+                "description": "Retrieve tracking data. This API operation will retrieve the order tracking data paginated.<h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar ",
+                "parameters": [
+					{
+                        "name": "orderId",
+                        "in": "path",
+						"required": true,
+                        "type": "integer",
+						"description":"The order unique identifier."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated list of trackings data.",
+                        "schema": {
+                            "$ref": "#/definitions/OrderTrackingListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve tracking data. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+		"/ifc-order-api/v1/deliveries/{deliveryId}/trackings": {
+			"get": {
+                "tags": [
+                    "Tracking API"
+                ],
+                "summary": "Retrieve the tracking data filtered by delivery id.",
+                "description": "Retrieve tracking data. This API operation will retrieve the delivery tracking data paginated.<h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar ",
+                "parameters": [
+                    {
+                        "name": "deliveryId",
+                        "in": "path",
+						"required": true,
+                        "type": "integer",
+						"description":"The delivery unique identifier."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated list of trackings data.",
+                        "schema": {
+                            "$ref": "#/definitions/DeliveryTrackingListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve tracking data. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Delivery not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        }
+	},
+    "definitions": {
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "SalesTargetListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. SaleTarget entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-apiifc-order-api/v1/salestargets?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-apiifc-order-api/v1/salestargets?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-apiifc-order-api/v1/salestargets?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-apiifc-order-api/v1/salestargets?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing SaleTarget entries.",
+                    "items": 
+                        {
+                            "$ref": "#/definitions/SaleTarget"
+                        }   
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "SaleForecasts": {
+            "type": "object",
+            "description": "This entity defines a SaleForecasts",
+            "properties": {
+                "totalForecastAmount": {
+                    "type": "number",
+                    "description": "This is the current aggregated sale forecast"
+                },
+                "saleChannelForecastMap": {
+                    "type": "list",
+                    "description": "This map contains the sale forecast for each sale channel."
+                }
+            },
+            "example": {
+                "totalForecastAmount": 0,
+                "saleChannelForecastMap": {
+                    "BJH": 0,
+                    "TRC": 0,
+                    "TOT": 0,
+                    "OCH": 0,
+                    "CNP": 0,
+                    "OPT": 0,
+                    "DFT": 0,
+                    "MKP": 0,
+                    "BBB": 0,
+                    "INT": 0,
+                    "CDM": 0,
+                    "tst": 0,
+                    "TEL": 0,
+                    "UNL": 0,
+                    "FFT": 0,
+                    "WLM": 0,
+                    "CNC": 0,
+                    "MVR": 0,
+                    "POL": 0
+                }
+            },
+            "required": [
+                "totalForecastAmount",
+                "saleChannelForecastMap"
+            ]
+        },
+        "SaleTarget": {
+            "type": "object",
+            "description": "This entity defines a SaleTarget entry",
+			"example": {
+				"saleChannelId": "INT",
+				"date": "2016-06",
+				"targetValue": 1500,
+				"expectedApprovalRate": 85
+			},
+            "properties": {
+                "saleChannelId": {
+                    "type": "string",
+                    "description": "The SaleChannel's id. For example, if the sale channel is Internet, the id is <b>\"INT\"</b>; if is Teleshopping, the id is <b>\"TEL\"</b> etc."
+                },
+				"date": {
+					"type": "string",
+					"format": "date-time",
+					"description": "The SaleTarget's date (in jersey date format) only with YEAR and MONTH, like <b>\"2016-06\"</b> for instance."
+				},
+                "targetValue": {
+                    "type": "number",
+                    "description": "The SaleTarget's value (that's the currencty target). Example: 1500."
+                },
+                "expectedApprovalRate": {
+                    "type": "number",
+                    "description": "The expected approval rate of SaleTarget. Example: 65."
+                }
+            },
+			"required": [
+				"saleChannelId",
+				"date",
+				"targetValue",
+				"expectedApprovalRate"
+			]
+        },
+		"OrderTrackingListPagination": {
+			"type": "object",
+			"description": "Standard pagination envelope response. TrackingList entries will be available in \"items\".",
+			"properties": {
+				"links": {
+					"type": "array",
+					"description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/orders/{orderId}/trackings?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/orders/{orderId}/trackings?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/orders/{orderId}/trackings?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/orders/{orderId}/trackings?page=1&size=20"
+						}
+					],
+					"items": [
+						{
+							"$ref": "#/definitions/Link"
+						}
+					]
+				},
+				"items": {
+					"type": "array",
+					"description": "Array containing TrackingList entries.",
+					"items": 
+						{
+							"$ref": "./api/def/itg-order.json#/Tracking"
+						}
+					
+				}
+			},
+			"required": [
+				"links",
+				"items"
+			]
+		},
+		"DeliveryTrackingListPagination": {
+			"type": "object",
+			"description": "Standard pagination envelope response. TrackingList entries will be available in \"items\".",
+			"properties": {
+				"links": {
+					"type": "array",
+					"description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/deliveries/{deliveryId}/trackings?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/deliveries/{deliveryId}/trackings?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/deliveries/{deliveryId}/trackings?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-order-api/v1/deliveries/{deliveryId}/trackings?page=1&size=20"
+						}
+					],
+					"items": [
+						{
+							"$ref": "#/definitions/Link"
+						}
+					]
+				},
+				"items": {
+					"type": "array",
+					"description": "Array containing TrackingList entries.",
+					"items": 
+						{
+							"$ref": "./api/def/itg-order.json#/Tracking"
+						}
+					
+				}
+			},
+			"required": [
+				"links",
+				"items"
+			]
+		}
+	}
+}

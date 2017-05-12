@@ -1,0 +1,30 @@
+{
+	"Error": {
+		"type": "object",
+		"description": "Error information",
+		"properties": {
+			"type": {
+				"type": "string",
+				"description": "Nature of the error. You will get \"Resource Conflict\", \"Invalid Data\" and similar messages. This is a simple message of technical nature. "
+			},
+			"description": {
+				"type": "string",
+				"description": "Error description. This field is localized and can be used to show the error to the final user."
+			},
+			"date": {
+				"type": "string",
+				"description": "Date and time when the error occured"
+			},
+			"key": {
+				"type": "string",
+				"description": "Error key. This is a key that you can use to check for the error and take actions in your application."
+			}
+		},
+		"required": [
+			"type",
+			"description",
+			"date",
+			"key"
+		]
+	}
+}

@@ -1,0 +1,97 @@
+{
+	"Authentication": {
+		"type": "object",
+		"description": "Oauth authentication standard envelope",
+		"properties": {
+			"access_token": {
+				"type": "string",
+				"description": "This is the access token that should be informed in Authorization header as a Bearer token"
+			},
+			"token_type": {
+				"type": "string",
+				"description": "Oauth2 token type. Always \"bearer\""
+			},
+			"refresh_token": {
+				"type": "string",
+				"description": "Use this token to refresh your access token"
+			},
+			"expires_in": {
+				"type": "number",
+				"description": "Access token validity in seconds"
+			},
+			"scope": {
+				"type": "string",
+				"description": "Your authorized oauth2 scopes. It will always be \"read write\"."
+			},
+			"authorities": {
+				"type": "array",
+				"description": "Your authorities in Infracommerce marketplace. This is just informative, as you do not have to do anything with this information in other requests.",
+				"items": {
+					"$ref": "#/Authority"
+				}
+			}
+		},
+		"required": [
+			"access_token",
+			"token_type",
+			"refresh_token",
+			"expires_in",
+			"scope",
+			"authorities"
+		]
+	},
+	"Authority": {
+		"type": "object",
+		"description": "Oauth2 authority",
+		"properties": {
+			"authority": {
+				"type": "string",
+				"description": "one single authority - it usually maps to a functionality within Infracommerce marketplace."
+			}
+		}
+	},
+	"AuthenticationError": {
+		"type": "object",
+		"description": "Authentication error standard envelope",
+		"example": {
+			"error": "invalid_grant",
+			"error_description": "Invalid Login"
+		},
+		"properties": {
+			"error": {
+				"type": "string",
+				"description": "Error code"
+			},
+			"error_description": {
+				"type": "string",
+				"description": "Human readable error description"
+			}
+		},
+		"required": [
+			"error",
+			"error_description"
+		]
+	},
+	"InvalidToken": {
+		"type": "object",
+		"description": "Authentication error standard envelope",
+		"example": {
+			"error": "invalid_token",
+			"error_description": "Invalid access token: 926c6e54-df23-4sda4-be38-b002f0454720"
+		},
+		"properties": {
+			"error": {
+				"type": "string",
+				"description": "Error code"
+			},
+			"error_description": {
+				"type": "string",
+				"description": "Human readable error description"
+			}
+		},
+		"required": [
+			"error",
+			"error_description"
+		]
+	}
+}

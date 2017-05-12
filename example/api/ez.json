@@ -1,0 +1,3613 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Easy Checkout API",
+		"description": "This is Infracommerce Easy Checkout API documentation. Here you will find all the information that you need in order to go through a purchase process using APIs. You will find documentation for operations that go from adding a product to the shopping cart until placing an order using several payment methods.<br><br> Infracommerce Easy Checkout API documentation is categorized in several APIs, as you can see below. Feel free to browse through all of them and to try it for yourself!"
+	},
+	"schemes": [
+		"https"
+	],
+	"basePath": "/ckout/api/v1",
+	"produces": [
+		"application/json"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"tags": [{
+		"name": "Shopping Cart API",
+		"description": "<br><font size=\"2\">Easy Checkout Shopping Cart API provides operations for you to manage your shopping cart. You will be able to add products, change quantities, remove products, request to gift wrap your product and so on.</font>"
+	}, {
+		"name": "Customer API",
+		"description": "<br><font size=\"2\">Easy Checkout Customer API provides operations for you to register and update a customer. This is also the API that you should use to authenticate a customer in order to proceed in the checkout process.</font>"
+	}, {
+		"name": "Promotion API",
+		"description": "<br><font size=\"2\">Easy Checkout Promotional API provides operations for you to interact with promotional coupons in the shopping cart. You will be able to list all private promotion coupons, apply, revoke and more.</font>"
+	}, {
+		"name": "Delivery API",
+		"description": "<br><font size=\"2\">Easy Checkout Delivery API provides operations for you to manage your delivery. You will be able to request shipping and handling fees, select a delivery type, select when the order is supposed to be delivered and other operations.</font>"
+	}, {
+		"name": "Payment & Order API",
+		"description": "<br><font size=\"2\">Easy Checkout Payment & Order API provides operations for you to select how you want to pay for your order, provide all payment information, like credit card data, and place your order.</font>"
+	}, {
+		"name": "Shop API",
+		"description": "<br><font size=\"2\">Easy Checkout Shop API provides operations for you to search (based on geolocalization) and select the shop you want to delivery the orders.</font>"
+	}],
+	"paths": {
+		"/cart": {
+			"get": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Retrieves shopping cart",
+				"description": "Gets current shopping cart. If this is the first request in this session, an empty shopping cart will be created.",
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/convert": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Turns products codes into sku combinations",
+				"description": "Turns the passed products codes in the best composition of skus that are supported by the infrashop platform",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"type": "object",
+						"example": {
+						    "skus": [
+							    {
+							      "id": "789123456789",
+							      "qt": 10,
+							      "conversionType": "EAN2BOX"
+							    },
+							    {
+							      "id": "789123459876",
+							      "qt": 20,
+							      "conversionType": "EAN2BOX"
+							    }
+							  ]
+						},
+						"properties": {
+							"skus": {
+								"description": "Represents products codes to be converted in sku types"
+							},
+							"id": {
+								"type": "string",
+								"description": "The product code(EAN)"
+							},
+							"qt": {
+								"type": "int",
+								"description": "Product quantity to be convert. This attribute is essential to get the right correspondent sku in the infrashop platform"
+							},
+							"conversionType": {
+								"type": "string",
+								"description": "Informs what's the conversion type needed. By default, the value \"EAN2BOX\" should be used"
+							}
+						},
+						"required": [
+							"skus",
+							"id",
+							"qt",
+							"conversionType"
+						]
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is a json containing the best combinations of the corresponding skus",
+						"schema": {
+							"type": "object",
+							"example": {
+							    "addToCartUrl": "",
+							    "conversions": [
+							        {
+							            "id": "",
+							            "qt": "",
+							            "conversionType": "",
+							            "conversion": [
+							                {
+							                	"sku": "",
+							                	"qt": "",
+							                	"price": "",
+							                	"totalPrice": "",
+							                  "addToCartUrl": ""  
+							                },
+							                {
+							                  "sku": "",
+							                	"qt": "",
+							                	"price": "",
+							                	"totalPrice": "",
+							                  "addToCartUrl": ""
+							                }
+							            ],
+							            "totalPrice": "",
+							            "addToCartUrl": ""
+							        }
+							    ]
+							},
+							"properties": {
+								"addToCartUrl": {
+									"description": "An URL that redirects to cart with all the above suggestions already set"
+								},
+								"conversion": {
+							    	"type": "string",
+							    	"description": "The correspondent sku list to match the requested EAN"
+							    },
+							    "conversion.id": {
+							    	"type": "string",
+							    	"description": "The passed product Code (EAN)"
+							    },
+							    "conversion.qt": {
+							    	"type": "string",
+							    	"description": "The passed product quantity"
+							    },
+							    "conversion.conversionType": {
+							    	"type": "string",
+							    	"description": "The passed conversion type"
+							    },
+							    "conversion.totalPrice": {
+							    	"type": "string",
+							    	"description": "Conversion total price"
+							    },
+							    "conversion.addToCartUrl": {
+							    	"type": "string",
+							    	"description": "Url to add the conversions to cart"
+							    },							    
+							    "conversion.convertion": {
+							    	"description": "The results of the converson of the EAN to sku"
+							    },
+							    "conversion.convertions.sku": {
+							    	"type": "string",
+							    	"description": "The correspondent sku according to the passed product code"
+							    },
+							    "conversion.convertions.qt": {
+							    	"type" : "string",
+							    	"description": "The needed sku quantity to match the passed quantity"
+							    },
+							    "conversion.convertions.price": {
+							    	"type" : "string",
+							    	"description": "The price of each sku in the platform"
+							    },
+							    "conversion.convertions.totalPrice": {
+							    	"type" : "string",
+							    	"description": "The total price of the composition"
+							    },
+							    "conversion.convertions.addToCartUrl": {
+									"description": "An URL that redirects to cart with all the above suggestions already set"
+								}   
+							},
+							"required": [
+								"addToCartUrl",
+								"conversion",
+							    "conversion.id",
+							    "conversion.qt",
+							    "conversion.conversionType",
+							    "conversion.totalPrice",
+							    "conversion.addToCartUrl",							    
+							    "conversion.convertion",
+							    "conversion.convertions.sku",
+							    "conversion.convertions.qt",
+							    "conversion.convertions.price",
+							    "conversion.convertions.totalPrice",
+							    "conversion.convertions.addToCartUrl"
+							]
+						}
+					}
+				}
+			}
+		},
+		"/cart/update": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Updates items in shopping cart",
+				"description": "Updates current shopping cart. This operation gets a list of SKU + quantity and try to add those to the shopping cart. If the SKU provided is already present in cart, the quantity provided to this service is added to the current quantity in the shopping cart.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"type": "object",
+						"example": {
+							"skus": "{1000010355700001084,1,}"
+						},
+						"properties": {
+							"skus": {
+								"type": "string",
+								"description": "Sku ID + quantity that should be added to the shopping cart. This is NOT a JSON value, but has a look-alike syntax \"{SKU,QT,}\", with no quotes. If the SKU ID is 1000010355700001084 and you want 2 pieces, the value would be \"{1000010355700001084,2,}\", with no quotes. If you want to add/update several SKU at the same time, just use the same pattern several times, like \"{123,1,}{456,1,}{678,1,}\", again with no quotes."
+							}
+						},
+						"required": [
+							"skus"
+						]
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/sku/add": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Add items in shopping cart",
+				"description": "This API adds a new sku in <b>shopping cart</b>. In short, the API will receive a  list of skus with their respective quantities to add in shopping cart.\n\nIn addition, a sku can have some customizations (that are skus too) related  with itself, for that they can be related in \"customizations\" list where \"skuId\"  and \"customProperties\" (the list or properties of customization) of each  customization must be provided. The customizations (i.e. the \"sku customization\")  require some configurations to be considered a customization. For example, the UDA  \"CUSTOM_PRODUCT\" is the one that indicates that the sku is a customization. These  configurations will be validated by the API before the addition in <b>shopping cart</b>.\n\nWhen a sku it's already in <b>shopping cart</b>, the API will sum up the quantity provided  to the current quantity in the respective <b>shopping cart line</b> for skus without  customizations. For skus with customizations, the API will always add a new shopping cart line for each sku with their customizations.\n\nThe JSON syntax of <b>cart/update</b> API is also supported by this API",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/AddCustomProductRequest"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/update/uuid": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Update items in shopping cart by UUID",
+				"description": "This API is responsible to updates the quantity of skus/products in <b> shopping cart</b> through the <b>shopping cart lines's</b> UUID.\n\nIt's possible to increase or decrease the quantity of a specific sku on  <b>shopping cart</b>. If the quantity informed is negative the quantity  will be decreased, otherwise if the quantity informed is positive the  quantity of skus/products into <b>shopping cart</b> will be increased",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/UpdateOrDefineSkuQuantityRequest"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/set": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Updates items in shopping cart",
+				"description": "Updates current shopping cart. This operation gets a list of SKU + quantity and try to add those to the shopping cart. If the SKU provided is already present in cart, the quantity in the shopping cart will be replaced by the quantity provided as an input parameter to this service.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"type": "object",
+						"example": {
+							"skus": "{1000010355700001084,1,}"
+						},
+						"properties": {
+							"skus": {
+								"type": "string",
+								"description": "Sku ID + quantity that should be added to the shopping cart. This is NOT a JSON value, but has a look-alike syntax \"{SKU,QT,}\", with no quotes. If the SKU ID is 1000010355700001084 and you want 2 pieces, the value would be \"{1000010355700001084,2,}\", with no quotes. If you want to add/update several SKU at the same time, just use the same pattern several times, like \"{123,1,}{456,1,}{678,1,}\", again with no quotes."
+							}
+						},
+						"required": [
+							"skus"
+						]
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/set/uuid": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Set or define the quantity of a specific item in shopping cart by UUID",
+				"description": "Set or define the quantity of a specific item in <b>shopping cart</b> by <b>shopping cart line's</b> UUID.\n\nThe exact quantity of the item identified by the <b>shopping cart line's</b> UUID will be set.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/UpdateOrDefineSkuQuantityRequest"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/remove": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Removes items from shopping cart",
+				"description": "Remove items from the shopping cart. This operation gets a list of SKU and removes all pieces of that SKU from the shopping cart.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"type": "object",
+						"example": {
+							"skus": "{1000010355700001084,,}"
+						},
+						"properties": {
+							"skus": {
+								"type": "string",
+								"description": "Sku ID + quantity that should be removed from the shopping cart. This is NOT a JSON value, but has a look-alike syntax \"{SKU,,}\", with no quotes. If the SKU ID is 1000010355700001084 and you want to remove it the value would be \"{1000010355700001084,,}\", with no quotes."
+							}
+						},
+						"required": [
+							"skus"
+						]
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/remove/uuid": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Remove items from shopping cart by UUID",
+				"description": "Remove all items from shopping cart of the related shopping cart line's UUID.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/RemoveSkuUuidRequest"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/removeall": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Removes all items from shopping cart",
+				"description": "Remove all items from the shopping cart. Even if the cart is emptied, the session is not destroyed.",
+                "parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": false,
+					"schema": {
+						"$ref": "#/definitions/RemoveAllRequest"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart, expected to be empty.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/validatestock": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Validates product availability",
+				"description": "Validates if all SKUs in the shopping cart have stock availability. This call is mandatory if the store has \"deferred stock reservation\" funcionality enabled. If not, this call is not relevant. Please refer to the documentation for more information.",
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. Please refer to status & messages to ensure that all products are validated and still available in shopping cart.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/cart/wrapitem": {
+			"post": {
+				"tags": [
+					"Shopping Cart API"
+				],
+				"summary": "Sets a SKU to be gift wrapped",
+				"description": "If gif wraps are available, this operation will set/unset a specific shopping cart line in the shopping cart to be gift wrapped. In order to know if a shopping cart line can be gift wrapped, check \"wrap\" attribute in productItem object inside corresponding shopping cart line.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"type": "object",
+						"example": {
+							"sclUUID": "a9f804a0-ead7-11e5-92a1-a14c114c0528-1000010355700001084",
+							"checked": true
+						},
+						"properties": {
+							"sclUUID": {
+								"type": "string",
+								"description": "This is the UUID attribute of the shopping cart line that you want to be gift wrapped"
+							},
+							"checked": {
+								"type": "boolean",
+								"description": "If you seasfdadssfdasfdnd true, this shopping cart line wil; be gift wrapped. If you send false, this shopping cart line won't be gift wrapped."
+							}
+						},
+						"required": [
+							"sclUUID",
+							"checked"
+						]
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. Shopping cart price will be updated with gift wrap fees.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/attribute": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Adds, Update or remove customer attributes",
+				"description": "This operation add/updates or remove the customer attributes. It receives a list of attributes to be changed, if receives an attribute with empty value, this attribute will be removed.The list of attributes that can be changed is configurable in the General Parameter 'CUSTOMER_ATTRIBUTE_CONFIG'.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/updateAttributes"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/register": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Register a customer",
+				"description": "This operation register a customer. If the store want register guest user, change the attribute 'guest' for true and delete attribute 'password', else change to false and include the attribute 'password'.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/RegisterUsers"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/request/external": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Requests an external customer",
+				"description": "This API is responsible to request an external customer from a partner. Through the \"login\", the \"password\" and the \"state\", the CKOUT will request, from a partner, an external customer (Infra like) putting it in session with a respective \"accessToken\". As response this API will provide the \"accessToken\" and the \"state\" of the related external customer.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/RequestExternal"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/RequestExternalResponse"
+						}
+					}
+				}
+			}
+		},
+		"/customer/login": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Logs in",
+				"description": "This operation will log in a customer.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/LoginAndPass"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the login is successful, this shopping cart will contain customer's informations like basic info, addresses and phone numbers.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/logout": {
+			"get": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Logs out",
+				"description": "This operation will log out a customer. The entire shopping cart will be cleaned up. Products will be removed, promotional coupons will be unnaplied, payment methods will be deselected. After logging out a fresh new session is created.",
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart, expected to be empty.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/sendpass": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Forgot my password API operation.",
+				"description": "This is the API operation to call when the customer forgets his/her password. Depending on the store configuration, this API will send the password to customer's email or send an email with a password change link.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CustomerLoginData"
+					}
+				}],
+				"responses": {
+					"200": {
+						"examples": {
+							"data": {
+								"emailOrDocumentNr": "infratech.teste@gmail.com"
+							},
+							"messages": [{
+								"detail": "login.password.sent",
+								"severity": {
+									"ordinal": 0
+								},
+								"summary": "Senha enviada para o email solicitado."
+							}],
+							"status": true
+						},
+						"description": "This return value is a map with a single attribute called \"emailOrDocumentNr\", plus the basic message+status envelope. If this attribute is the same email that you sent in the API call and status is true, that means that the request was sucessful.",
+						"schema": {
+							"$ref": "#/definitions/DataSendPass"
+						}
+					}
+				}
+			}
+		},
+		"/customer/checklogin": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Checks if this login is already taken",
+				"description": "This operation will check if this login is already taken. No validation will take place - i.e., it doesn't matter if the login is an email or document number. This operation will only check if this login is already in use by a valid custmer.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CustomerLoginData"
+					}
+				}],
+				"responses": {
+					"200": {
+						"examples": {
+							"data": {
+								"alreadyRegistered": false
+							},
+							"messages": [],
+							"status": true
+						},
+						"description": "This return value is a map with a single attribute called \"alreadyRegistered\", plus the basic message+status envelope. If this attribute is true, that means that this login is already taken.",
+						"schema": {
+							"$ref": "#/definitions/DataCheckLogin"
+						}
+					}
+				}
+			}
+		},
+		"/customer/termagreement": {
+			"post": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Agrees with terms & conditions",
+				"description": "This operation will store customer's acceptance of terms and conditions. Calling this API operation is a prerequisite to place orders.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/Term"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "An updated version of the Shopping Cart. Accepting terms and conditions won't trigger any change in the shopping cart other than terms and condition agreement flag.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/login/external/{externalPartner}/url": {
+			"get": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Logs in with an external partner",
+				"description": "This API logs an user in our plataform with an external partner, like Facebook, Twitter or Google. When you call this API, you provide the external partner name and this API returns the external partner authenticated URL.",
+				"parameters": [{
+					"description": "the external partner name which will provide an authenticated URL for our plataform. Right now, <b>only<b/> Facebook connection is available.",
+					"name": "externalPartner",
+					"in": "path",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/LoginExternalResponse"
+						}
+					}
+				}
+			}
+		},
+		"/customer/login/external/{externalPartner}": {
+			"post": {
+				"example": {
+					"accessToken": "AQB2D4nj-wULtiHBryjq0Jc0MpiU2opiGUxyRyDAKxZo3CHWJGJ7jgI8_kbAI3jaSmjlXqXZO3laxBWm_YJ0BcYCLkA_Y66ytiuRiBuTtk4Bh4-bfcj0QrbxzY-YCNQGeYjhEvHVRQJE1eXuf2lmAjBUMMkMEDMzoDpXUylZ-8aQ3Y1ZbXgUREvrO-3P9dsyJNv_A3yXf_u1XCl4EyNKrSmhigiw9mRM92ofM4MbrYJyVS7_392wJwD81NhdKAuygnPEHjFBbJ_XFBhrEmrbUmcbnXhHZHfIQcFGPkjosM9ZwMgLjk2N7YPd9NuIvu17b_073reUXmPvIRikrTQ73x9m",
+					"state": "CKOUT_654183431730611"
+				},
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Provides customer information by an external partner authenticated data",
+				"description": "If the customer were enabled to authenticate himself on the external partner, then you can call this API to post the authenticated token and state received from the partner to get the following customer information.",
+				"parameters": [{
+					"description": "the external partner name which will provide an authenticated URL for our plataform. Right now, only Facebook connection is available.",
+					"name": "externalPartner",
+					"in": "path",
+					"required": true,
+					"type": "string"
+				}, {
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"description": "external partner data provided after successful customer login",
+					"schema": {
+						"$ref": "#/definitions/ExternalPartnerLogin"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/customer/logout/external": {
+			"get": {
+				"tags": [
+					"Customer API"
+				],
+				"summary": "Logout any user logged by external partners",
+				"description": "Logout customer logged by external partners only. In summary this request removes the node \"extenalCustomer\" from the session.",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/coupondu": {
+			"get": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Retrieves private promotional coupons.",
+				"description": "Retrieve all private promotional coupons available. Customer has to be logged in order to retrieve his/her coupons. Public coupons are not returned in this operation.",
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart, containing all private promotional coupons in \"couponPromotionList\" attribute.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/coupondu/apply": {
+			"post": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Applies a promotional coupon.",
+				"description": "Apply a promotional coupon in the current shopping cart. It can be either a public or private promotional coupon, and you do not have to list all promotional coupons prior to applying it. Just call this API operation sending the promotional coupon code and check messages to ensure that it was applied correctly. If the promotional coupon is valid but there are no changes in the shopping cart (like no price reduction), a specific message is returned.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CouponCode"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the coupon is successfuly applied in the shopping cart, \"applied\" attribute will be \"true\" in the corresponding coupon in shopping cart. You will also see the promotion in applied promotions list.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/coupondu/revoke": {
+			"post": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Revokes a promotional coupon.",
+				"description": "Revoke a promotional coupon in the current shopping cart. This operation will keep the promotional coupon in shopping cart promotional coupon list, but all its promotional effects will be revoked. \"applied\" attribute in promotional coupon object will be set to false, and if the order is placed like this, the promotional coupon will not be part of the order.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CouponCode"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the coupon is successfuly revoked in the shopping cart, \"applied\" attribute will be \"false\" in the corresponding coupon in shopping cart. All promotions triggered by this coupon will be revoked as well.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/coupondu/remove": {
+			"post": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Removes a promotional coupon.",
+				"description": "Remove a promotional coupon in the current shopping cart. This operation will remove the promotional coupon from shopping cart promotional coupon list and will revoke all its promotional effects as well. This API operation does everything that \"/coupondu/revoke\" does, plus it removes the promotional coupon from promotional coupon list.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CouponCode"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the coupon is successfuly removed from the shopping cart, it won be part of shopping cart promotional coupon list anymore. All promotions triggered by this coupon will be revoked as well.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/gift/apply/{giftCode}": {
+			"post": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Select one of the gifts, of the giftOptions.",
+				"description": "Select a gift in the current shopping cart, using the code that can be find in the giftOptionList in shopping cart. Just call this API operation sending the gift code code and check messages to ensure that it was applied correctly.",
+				"parameters": [{
+					"description":"the gift code to add a gift",
+					"name": "giftCode",
+					"in": "path",
+					"required": true,
+					"type":"string"
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the gift is successfuly added in the shopping cart. The Gift will be in shoppingCart and the promotion in applied promotions list.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/gift/revoke/{giftCode}": {
+			"post": {
+				"tags": [
+					"Promotion API"
+				],
+				"summary": "Remove one of the gifts, of the giftOptions.",
+				"description": "Select a gift in the current shopping cart to be removed, this works only with gifts listed in giftOptionList of shopping cart.",
+				"parameters": [{
+					"description":"the gift code to removed a gift",
+					"name": "giftCode",
+					"in": "path",
+					"required": true,
+					"type":"string"
+				}],
+				"responses": {
+					"200": {
+						"description": "The return value is an updated shopping cart. If the gift is successfuly removed in the shopping cart. The Gift will be removed from shoppingCart and also the promotion.",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/slots": {
+			"get": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Gets all available scheduled delivery options",
+				"description": "Gets available scheduled delivery options. Each option is a delivery slot.",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/SlotResponse"
+						}
+					}
+				}
+			}
+		},
+		"/slots/first": {
+			"get": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Gets first available scheduled delivery option",
+				"description": "Gets first available delivery slot. The first available slot is the one closer to today.",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/SlotResponse"
+						}
+					}
+				}
+			}
+		},
+		"/address": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Search address",
+				"description": "Search for an address. This API operation gets a ZIP code as input and returns address information.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/PostalCode"
+					}
+				}],
+				"responses": {
+					"200": {
+						"examples": {
+							"searchedAddress": {
+								"address": "Avenida Shishima Hifumi",
+								"city": "São José dos Campos",
+								"quarter": "Urbanova",
+								"state": "SP"
+							},
+							"messages": [],
+							"status": true
+						},
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/SimpleAddress"
+						}
+					}
+				}
+			}
+		},
+		"/address/select": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Select delivery address",
+				"description": "Select the delivery address. This operation will set the address as the delivery address and update freight options and fees. The return value will also contain all delivery type options.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/AddressID"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/address/insert": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Insert a new delivery address",
+				"description": "Insert a new delivery address.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/AddressAdd"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/address/update": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Update delivery address",
+				"description": "Update the delivery address.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/AddressUpdate"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/address/remove": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Remove delivery address",
+				"description": "Remove the delivery address.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/AddressID"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/delivery/select": {
+			"post": {
+				"tags": [
+					"Delivery API"
+				],
+				"summary": "Select delivery type",
+				"description": "Select the delivery type. After selecting a delivery address it is mandatory to select a delivery type. If the delivery address is a atore's delivery address, this API get a boolean parameter so that the order is flagged as \"delivery in a store\". The return value will be an updated shopping cart.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/DeliveryTypeSelection"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment": {
+			"get": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Get payment options",
+				"description": "Retrieve all options that you have to pay for the order. This API will return an updated version of the shopping cart containing an \"paymentOptionGroupList\" attribute, with all payment options. This attribute contains a list of groups (paymentGroup) that represents the payment type (credit card, voucher, debit, etc). Each group contains a list of payment keys, that is the actual payment method (VISA, MASTER, DEBIT_ITAU, etc).",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment/selectcardbrand": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Select credit card brand",
+				"description": "This API operation will select credit card payment option and also set the creadit card brand. As a return value, you will get all installment options, if any, and also an updated version of the shopping cart, with any eventual credit card based promotion already applied.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/SelectCreditCard"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment/creditcard/addandplaceorder": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Enter credit card data and place the order",
+				"description": "This API operation will get credit card information and installment information and place the order. If there is an issue placing the order, the return value will be a Basket object; If everything is fine, the return value will have the order details. Please notice that this call will pre-auth the credit card if this feature is enabled.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/CreditCard"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Order"
+						}
+					}
+				}
+			}
+		},
+		"/payment/bankslip/select": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Select bankslip as payment method",
+				"description": "This API operation will select bankslip as the current payment method. Any eventual bansklip related promotions will be triggered and an updated version of the shopping cart will be returned.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/PaymentKeyAndType"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment/bankslip/geturl": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Get url of bill",
+				"description": "This API operation will return the url of bill.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/GetBillUrl"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/GetBillUrlStatus"
+						}
+					}
+				}
+			}
+		},
+		"/order/place/bankslip": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Place an order using bankslip as payment method",
+				"description": "This API operation will place an order using bankslip as payment method. This API operation will do everything that /payment/banckslip/select (i.e., apply promotions, update prices, etc) and then place the order.",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/PaymentKeyAndType"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Order"
+						}
+					}
+				}
+			}
+		},
+		"/payment/paypal/select": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Select paypal as payment method",
+				"description": "This API operation will select paypal as the current payment method.",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment/paypal/geturl": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Get url of paypal services",
+				"description": "This API operation will return the url of paypal.",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/payment/mercadopagopoint/select": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Select Mercado Pago Point as payment method",
+				"description": "This API operation will select Mercado Pago Point as the current payment method. The valid options for paymentKey is \"MERCADOPAGO_POINT_CREDIT\" and \"MERCADOPAGO_POINT_DEBIT\", the paymentType is ALWAYS \"CREDIT\". The installmentQuantity is used ONLY for the paymentKey \"MERCADOPAGO_POINT_CREDIT\".",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/PaymentKeyAndTypeAndInstallment"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Basket"
+						}
+					}
+				}
+			}
+		},
+		"/order/place/mercadopagopoint": {
+			"post": {
+				"tags": [
+					"Payment & Order API"
+				],
+				"summary": "Place an order using Mercado Pago Point as payment method",
+				"description": "This API operation will init transaction with Mercado Pago, check status and when the payment is validated, place the order using Mercado Pago Point as payment method. This API operation will do everything that /payment/mercadopagopoint/select (i.e., apply promotions, update prices, etc) and then place the order. The valid options for paymentKey is \"MERCADOPAGO_POINT_CREDIT\" and \"MERCADOPAGO_POINT_DEBIT\", the paymentType is ALWAYS \"CREDIT\". The installmentQuantity is used ONLY for the paymentKey \"MERCADOPAGO_POINT_CREDIT\".",
+				"parameters": [{
+					"name": "body",
+					"in": "body",
+					"required": true,
+					"schema": {
+						"$ref": "#/definitions/PaymentKeyAndTypeAndInstallment"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/Order"
+						}
+					}
+				}
+			}
+		},
+		"/shop/localize": {
+			"post": {
+				"tags": [
+					"Shop API"
+				],
+				"summary": "Retrieve shops based on geolocalization",
+				"description": "This API retrieves shops based on a provided geolocalization - i.e., <b>latitude</b> and <b>longitude</b>. When you call this API, you provide a geolocalization and this API returns the requested number of stores sorted by the distance from the provided geolocalization, from lower to higher.",
+				"parameters": [{
+					"name": "jsonData",
+					"in": "body",
+					"required": true,
+					"description": "The shop coordinates and filters to localize the list of shops",
+					"schema": {
+						"$ref": "#/definitions/ShopCoordinates"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"schema": {
+							"$ref": "#/definitions/ShopListResponse"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"RequestExternal": {
+			"type": "object",
+			"example": {
+				"login": "email.teste@infracommerce.com.br",
+				"password": "123456",
+				"state": "CKOUT_6985011552358418"
+			},
+			"properties": {
+				"login": {
+					"type": "string",
+					"description": "The customer login in an external partner."
+				},
+				"password": {
+					"type": "string",
+					"description": "The customer password in an external partner."
+				},
+				"state": {
+					"type": "string",
+					"description": "The state of an external customer (provided in a previous request)."
+				}
+			},
+			"required": [
+				"login",
+				"password",
+				"state"
+			]
+		},
+		"RequestExternalResponse": {
+			"type": "object",
+			"example": {
+				"data": {
+					"accessToken": "c6e8bdb3-b538-46c4-b72d-ad30e69cc1ec",
+					"state": "CKOUT_6985011552358418"
+				},
+				"messages": [],
+				"status": true
+			},
+			"properties": {
+				"data": {
+					"$ref": "#/definitions/RequestExternalResponseData"
+				},
+				"messages": {
+					"type": "array",
+					"description": "Base message entry.",
+					"items": {
+						"$ref": "#/definitions/Message"
+					}
+				},
+				"status": {
+					"type": "boolean",
+					"description": "The response status. \"true\" if OK; \"false\" if some error has occurred."
+				}
+			}
+		},
+		"RequestExternalResponseData": {
+			"type": "object",
+			"description": "The data response.",
+			"properties": {
+				"accessToken": {
+					"type": "string",
+					"description": "The access token to identify the external custome in CKOUT."
+				},
+				"state": {
+					"type": "string",
+					"description": "The state of the request in CKOUT."
+				}
+			}
+		},
+		"AddCustomProductRequest": {
+			"type": "object",
+			"example": {
+				"skus": [{
+					"skuId": "106392",
+					"quantity": 3,
+					"customizations": [{
+						"skuId": "106412",
+						"customProperties": {
+							"value": "texto 01|texto 02|texto 03"
+						},
+						"type":"frete"
+					}]
+				}]
+			},
+			"properties": {
+				"skus": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Sku"
+					},
+					"description": "The list of custom sku/products json to be added in shopping cart."
+				}
+			},
+			"required": [
+				"skus"
+			]
+		},
+		"updateAttributes": {
+			"description": "Customer information to be registered.",
+			"example": {
+				"properties": {
+					"attribute1": "value1",
+					"attribute2": "value2"
+				}
+			},
+			"type": "object",
+			"allOf": [{
+				"type": "object",
+				"properties": {
+					"key": {
+						"type": "String",
+						"description": "Customer Attributes name."
+					},
+					"value": {
+						"type": "String",
+						"description": "Customer Attributes value."
+					}
+				}
+			}],
+			"required": [
+				"properties"
+			]
+		},
+		"RegisterUsers": {
+			"description": "Customer information to be registered.",
+			"example": {
+				"customer": {
+					"guest": false,
+					"name": "Teste teste",
+					"email": "teste_cad_manual4@teste.com",
+					"documentNrString": "14346858880",
+					"birthDateString": "10/10/1990",
+					"optInString": "false",
+					"customerTpString": "PERSON"
+				},
+				"customerLogin": {
+					"login": "teste_cad_manual4@teste.com",
+					"nickname": "Teste teste",
+					"password": "123456"
+				},
+				"externalLoginJSON": {
+					"accessToken": "AQB2D4nj-wULtiHBryjq0Jc0MpiU2opiGUxyRyDAKxZo3CHWJGJ7jgI8_kbAI3jaSmjlXqXZO3laxBWm_YJ0BcYCLkA_Y66ytiuRiBuTtk4Bh4-bfcj0QrbxzY-YCNQGeYjhEvHVRQJE1eXuf2lmAjBUMMkMEDMzoDpXUylZ-8aQ3Y1ZbXgUREvrO-3P9dsyJNv_A3yXf_u1XCl4EyNKrSmhigiw9mRM92ofM4MbrYJyVS7_392wJwD81NhdKAuygnPEHjFBbJ_XFBhrEmrbUmcbnXhHZHfIQcFGPkjosM9ZwMgLjk2N7YPd9NuIvu17b_073reUXmPvIRikrTQ73x9m",
+					"partner": "facebook",
+					"state": "CKOUT_654183431730611"
+				},
+				"homePhone": {
+					"areaCd": "11",
+					"phoneNr": "111111111"
+				},
+				"address": {
+					"recipientNm": "Teste teste",
+					"postalCd": "01311300",
+					"address": "Avenida Paulista",
+					"addressNr": "234",
+					"quarter": "Bela Vista",
+					"city": "São Paulo",
+					"state": "SP",
+					"countryId": "BR",
+					"additionalInfo": "Complexo Comercial MoneyCity"
+				},
+				"postalCodePrefix": "01311",
+				"postalCodeSufix": "300"
+			},
+			"type": "object",
+			"allOf": [{
+				"type": "object",
+				"properties": {
+					"address": {
+						"type": "object",
+						"description": "Customer complet address information.",
+						"allOf": [{
+							"$ref": "#/definitions/Address"
+						}]
+					},
+					"customer": {
+						"type": "object",
+						"description": "Customer information",
+						"allOf": [{
+							"$ref": "#/definitions/Customer"
+						}]
+					},
+					"customerLogin": {
+						"type": "object",
+						"description": "Customer authentication information",
+						"allOf": [{
+							"$ref": "#/definitions/CustomerLogin"
+						}]
+					},
+					"externalLoginJSON": {
+						"type": "object",
+						"description": "External partner login information to authenticate a customer",
+						"allOf": [{
+							"$ref": "#/definitions/ExternalPartnerLogin"
+						}]
+					},
+					"homePhone": {
+						"type": "object",
+						"description": "Customer home phone.",
+						"allOf": [{
+							"$ref": "#/definitions/Phone"
+						}]
+					},
+					"postalCodePrefix": {
+						"type": "string",
+						"description": "Customer postal code preffix from postalCd."
+					},
+					"postalCodeSufix": {
+						"type": "string",
+						"description": "Customer postal code suffix from postalCd."
+					}
+				}
+			}],
+			"required": [
+				"homePhone",
+				"address",
+				"postalCodePrefix",
+				"postalCodeSufix",
+				"customer",
+				"customerLogin"
+			]
+		},
+		"Sku": {
+			"type": "object",
+			"example": {
+				"skuId": "106392",
+				"quantity": 3,
+				"customizations": [{
+					"skuId": "106412",
+					"customProperties": {
+						"value": "texto 01|texto 02|texto 03"
+					}
+				}]
+			},
+			"properties": {
+				"skuId": {
+					"type": "string",
+					"description": "The sku to be added in shopping cart"
+				},
+				"quantity": {
+					"type": "number",
+					"description": "The quantity of sku to be added in shopping cart"
+				},
+				"customizations": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Customizations"
+					},
+					"description": "The customizations related to the sku to be added into shopping cart"
+				}
+			},
+			"required": [
+				"skuId",
+				"quantity"
+			]
+		},
+		"Customizations": {
+			"type": "object",
+			"example": {
+				"skuId": "106412",
+				"customProperties": {
+					"value": "texto 01|texto 02|texto 03"
+				}
+			},
+			"description": "This represents a customization of sku. all customizations needs to have CUSTOM_PRODUCT_TYPE attribute. This attribute represents a type of customization for example 'Text = engraving text'\n\nEach type of customizations can have your own CUSTOM_PRODUCT attribute for example ' the Text customization type needs to have CUSTOM_PRODUCT_TEXT_MAX_LINES and CUSTOM_PRODUCT_TEXT_MAX_LENGTH attributes.",
+			"properties": {
+				"skuId": {
+					"type": "string",
+					"description": "The sku id of customization"
+				},
+				"customProperties": {
+					"type": "object",
+					"description": "The properties that customization require. Each type of customization has its own attributes.\n\nCustomization of type text. This type of customization is related to the products can have an \"engraving text\" customization. In order to provide theses texts, the attribute \"value\" should be provided. \n\nIn addition, each customization can have its own rule about the properties values that can be set. Thus, for instance, for customization of type text the number of  lines (that are separated by pipe, \"|\") and the lenght of the text are validated."
+				},
+				"type": {
+					"type": "string",
+					"description": "The position to be customized. The group types of customizations, like texture, color, etc."
+				}
+			},
+			"required": [
+				"skuId",
+				"customProperties"
+			]
+		},
+		"UpdateOrDefineSkuQuantityRequest": {
+			"type": "object",
+			"example": {
+				"uuid": "2175eae0-3166-11e6-a6ca-8977590f30d6-7896113900268",
+				"quantity": 3
+			},
+			"properties": {
+				"uuid": {
+					"type": "string",
+					"description": "The uuid of Shopping Cart Line"
+				},
+				"quantity": {
+					"type": "number",
+					"description": "The quantity of to be set or decreased in shopping cart"
+				}
+			},
+			"required": [
+				"uuid",
+				"quantity"
+			]
+		},
+		"RemoveSkuUuidRequest": {
+			"type": "object",
+			"example": {
+				"uuid": "2175eae0-3166-11e6-a6ca-8977590f30d6-7896113900268",
+                "uuidList": ["2175eae0-3166-11e6-a6ca-8977590f30d6-7896113900268"]
+			},
+			"properties": {
+				"uuid": {
+					"type": "string",
+					"description": "The uuid of Shopping Cart Line to be removed. (Exclusionary with uuidList)"
+				},
+                "uuidList": {
+					"type": "array",
+                    "items": {
+							"type": "string"
+					},
+					"description": "The list of uuid of Shopping Cart Line to be removed. (Exclusionary with uuid)"
+				}
+			},
+			"required": [
+				"uuid",
+                "uuidList"
+			]
+		},
+        "RemoveAllRequest": {
+			"type": "object",
+			"example": {
+                "entitiesToKeep": ["COUPONDU"]
+			},
+			"properties": {
+                "entitiesToKeep": {
+					"type": "array",
+                    "items": {
+							"type": "string"
+					},
+					"description": "The list of entities of Shopping Cart that are not going to be removed. (All possible values: COUPONDU)"
+				}
+			},
+            "required": [
+                "entitiesToKeep"
+            ]
+        },
+		"Customer": {
+			"type": "object",
+			"description": "",
+			"properties": {
+				"guest": {
+					"type": "boolean",
+					"description": "Defines if a customer is wether a guest user or not. A guest user is a customer who has an account without password, which means he can't connect into plataform."
+				},
+				"name": {
+					"type": "string",
+					"description": "Customer complete name"
+				},
+				"email": {
+					"type": "string",
+					"description": "Customer email. Defines the email used to log in to plataform"
+				},
+				"documentNrString": {
+					"type": "string",
+					"description": "Customer document number (like CPF in Brazil)"
+				},
+				"birthDateString": {
+					"type": "string",
+					"description": "Customer birthdate"
+				},
+				"optInString": {
+					"type": "string",
+					"description": "Defines if the customer wants to receive newletter on his email"
+				},
+				"customerTpString": {
+					"type": "string",
+					"description": "Defines the customer type which can be either a PERSON (individual) or COMPANY (legal person)"
+				}
+			},
+			"required": [
+				"name",
+				"birthDateString",
+				"email",
+				"customerTpString"
+			]
+		},
+		"CustomerLogin": {
+			"type": "object",
+			"description": "Entity request for API operations that takes customer's authentication data to register him",
+			"properties": {
+				"login": {
+					"type": "string",
+					"description": "Customer login. Usually this is the customer email. In some cases, if the store is configured to do so, you can also login using a document number (like CPF in Brazil)"
+				},
+				"nickname": {
+					"type": "string",
+					"description": "Customer nickname. How the customer wants to be called on the plataform"
+				},
+				"password": {
+					"type": "string",
+					"description": "Customer password to access the plataform, which is encrypted on database in md5. If the customer isn't guest, then it's required"
+				}
+			},
+			"required": [
+				"login",
+				"nickname"
+			]
+		},
+		"CustomerLoginData": {
+			"type": "object",
+			"example": {
+				"emailOrDocumentNr": "infratech.teste@gmail.com"
+			},
+			"description": "Request entity for API operations that take customer's email or document number, like checklogin or recover password",
+			"properties": {
+				"emailOrDocumentNr": {
+					"type": "string",
+					"description": "Customer login. Usually this is the customer email. In some cases, if the store is configured to do so, you can also login using a document number (like CPF in Brazil)."
+				}
+			},
+			"required": [
+				"emailOrDocumentNr"
+			]
+		},
+		"Term": {
+			"type": "object",
+			"example": {
+				"agreeTerm": true
+			},
+			"description": "Just a simple flag to store customer's acceptance of terms and conditions.",
+			"properties": {
+				"agreeTerm": {
+					"type": "boolean",
+					"description": "true if the customer aggrees with terms & conditions, false if not. If the customer doesn't agree with terms and conditions, an order cannot be placed."
+				}
+			}
+		},
+		"ExternalPartnerLogin": {
+			"type": "object",
+			"description": "The authenticated data received from the external partner",
+			"properties": {
+				"accessToken": {
+					"type": "string",
+					"description": "The response data is included as an URL fragment and contains an access token and the code parameter"
+				},
+				"partner": {
+					"type": "string",
+					"description": "External partner name. Right now, only facebook is enabled"
+				},
+				"state": {
+					"type": "string",
+					"description": "An exclusive random string created by your app to protect itself against fake requests among sites"
+				},
+				"args": {
+					"type": "object",
+					"description": "When the partner has futher attributes than the three above they should be provided here",
+					"additionalProperties": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"example": {
+				"accessToken": "EC-53214676ED134722H",
+				"partner": "paypalexpress",
+				"state": "S23d!233",
+				"args": {
+					"PayerID": "GSQYMVATEGXPU"
+				}
+			},
+			"required": [
+				"accessToken",
+				"state"
+			]
+
+		},
+		"CouponCode": {
+			"type": "object",
+			"example": {
+				"couponCodeEntered": "TESTE-ZINCO"
+			},
+			"description": "Request entity for promotional coupon related API operations. It has a single attribute that is the promotional coupon code.",
+			"properties": {
+				"couponCodeEntered": {
+					"type": "string",
+					"description": "Promotional coupon code."
+				}
+			},
+			"required": [
+				"couponCodeEntered"
+			]
+		},
+		"LoginAndPass": {
+			"type": "object",
+			"example": {
+				"login": "infratech.teste@gmail.com",
+				"password": "123456"
+			},
+			"properties": {
+				"login": {
+					"type": "string",
+					"description": "Customer login. Usually this is the customer email. In some cases, it the store is configured to do so, you can also login using a document number (like CPF in Brazil)."
+				},
+				"password": {
+					"type": "string",
+					"description": "Customer password"
+				}
+			},
+			"required": [
+				"login",
+				"password"
+			]
+		},
+		"PostalCode": {
+			"type": "object",
+			"example": {
+				"postalCode": "12244000"
+			},
+			"properties": {
+				"postalCode": {
+					"type": "string",
+					"description": "Zip Code. It doesn't have to have trailing zeroes, but it is recommeded to send always all the digits. In Brazil, always 9 digits."
+				}
+			},
+			"required": [
+				"postalCode"
+			]
+		},
+		"AddressAdd": {
+			"type": "object",
+			"example": {
+				"address": {
+					"postalCd": "04548000",
+					"address": "Rua José Martins Borges",
+					"addressNr": "1",
+					"quarter": "Jardim Leonor Mendes de Barros",
+					"city": "São Paulo",
+					"state": "SP",
+					"countryId": "BR",
+					"recipientNm": "Sr. Teste da Silva",
+					"additionalInfo": "1"
+				}
+			},
+			"properties": {
+				"postalCd": {
+					"type": "string",
+					"description": "The postal code of the new address"
+				},
+				"address": {
+					"type": "string",
+					"description": "The address of customer."
+				},
+				"addressNr": {
+					"type": "string",
+					"description": "The number of address."
+				},
+				"quarter": {
+					"type": "string",
+					"description": "The quarter of address."
+				},
+				"city": {
+					"type": "string",
+					"description": "The city of address."
+				},
+				"countryId": {
+					"type": "string",
+					"description": "Id of country. Exemple: Brazil - BR"
+				},
+				"recipientNm": {
+					"type": "string",
+					"description": "The name that will received the delivery."
+				},
+				"additionalInfo": {
+					"type": "string",
+					"description": "Additional info to facilitate the delivery."
+				}
+			},
+			"required": [
+				"postalCd",
+				"address",
+				"addressNr",
+				"quarter",
+				"city",
+				"countryId",
+				"recipientNm"
+			]
+		},
+		"AddressUpdate": {
+			"type": "object",
+			"example": {
+				"address": {
+					"address": "Rua Tijuco Preto",
+					"addressId": 3330351,
+					"addressNr": "32101",
+					"city": "São Paulo",
+					"countryDescription": "Brasil",
+					"countryId": "BR",
+					"friendlyNm": "TESTE DEV1 - 1000",
+					"intercom": false,
+					"lift": false,
+					"postalCd": 3316000,
+					"postalCdFormatted": "03316-000",
+					"quarter": "Tatuapé",
+					"recipientNm": "TESTE DEV1 - 200000",
+					"state": "SP"
+				}
+			},
+			"properties": {
+				"postalCd": {
+					"type": "string",
+					"description": "The postal code of the new address"
+				},
+				"address": {
+					"type": "string",
+					"description": "The address of customer."
+				},
+				"addressNr": {
+					"type": "string",
+					"description": "The number of address."
+				},
+				"quarter": {
+					"type": "string",
+					"description": "The quarter of address."
+				},
+				"city": {
+					"type": "string",
+					"description": "The city of address."
+				},
+				"countryId": {
+					"type": "string",
+					"description": "Id of country. Exemple: Brazil - BR"
+				},
+				"recipientNm": {
+					"type": "string",
+					"description": "The name that will received the delivery."
+				},
+				"additionalInfo": {
+					"type": "string",
+					"description": "Additional info to facilitate the delivery."
+				}
+			},
+			"required": [
+				"address",
+				"addressId",
+				"addressNr",
+				"city",
+				"countryId",
+				"friendlyNm",
+				"postalCd",
+				"quarter",
+				"recipientNm",
+				"state"
+			]
+		},
+		"AddressID": {
+			"type": "object",
+			"example": {
+				"addressId": 367041055
+			},
+			"properties": {
+				"addressId": {
+					"type": "number",
+					"description": "Address ID. This ID is the address Id returned in the address array when the customer is logged in."
+				}
+			},
+			"required": [
+				"addressId"
+			]
+		},
+		"DeliveryTypeSelection": {
+			"type": "object",
+			"example": {
+				"serviceCode": "NOR",
+				"inShopDelivery": false
+			},
+			"properties": {
+				"serviceCode": {
+					"type": "string",
+					"enum": [
+						"NOR",
+						"ECO",
+						"EXP",
+						"SCH",
+						"GAR",
+						"SHP",
+						"INT"
+					],
+					"description": "Delivery Type. One of the values listed here that is also available in \"freightsOptions\" shopping cart attibute."
+				},
+				"inShopDelivery": {
+					"type": "boolean",
+					"description": "This will flag the order as a \"in store delivery\" order type."
+				}
+			},
+			"required": [
+				"serviceCode"
+			]
+		},
+		"SelectCreditCard": {
+			"type": "object",
+			"example": {
+				"paymentKey": "VISA"
+			},
+			"properties": {
+				"paymentKey": {
+					"type": "string",
+					"description": "This is the payment key provided in one of the payment options."
+				}
+			},
+			"required": [
+				"paymentKey"
+			]
+		},
+		"GetBillUrl": {
+			"type": "object",
+			"example": {
+				"encrypOrderId": "v5mH+Zau+LjuOorac7RLGw=="
+			},
+			"properties": {
+				"paymentKey": {
+					"encrypOrderId": "string",
+					"description": "EncrypOrderId is the orderId encrypted."
+				}
+			},
+			"required": [
+				"encrypOrderId"
+			]
+		},
+		"PaymentKeyAndType": {
+			"type": "object",
+			"example": {
+				"paymentKey": "BILL_ITAU",
+				"paymentType": "BILL"
+			},
+			"properties": {
+				"paymentKey": {
+					"type": "string",
+					"description": "Payment unique identifier. Use the same value as found in \"paymentKey\" attribute when calling payment API operation"
+				},
+				"paymentType": {
+					"type": "string",
+					"description": "Payment type group identifier. Use the same value as found in \"paymentType\" attribute when calling payment API operation"
+				}
+			},
+			"required": [
+				"paymentKey",
+				"paymentType"
+			]
+		},
+		"PaymentKeyAndTypeAndInstallment": {
+			"type": "object",
+			"example": {
+				"paymentKey": "MERCADOPAGO_POINT_CREDIT",
+				"paymentType": "DEBIT",
+				"installmentQuantity": 11
+			},
+			"properties": {
+				"paymentKey": {
+					"type": "string",
+					"description": "Payment unique identifier. Use the same value as found in \"paymentKey\" attribute when calling payment API operation"
+				},
+				"paymentType": {
+					"type": "string",
+					"description": "Payment type group identifier. Use the same value as found in \"paymentType\" attribute when calling payment API operation"
+				},
+				"installmentQuantity": {
+					"type": "number",
+					"description": "This is the actual number of installments. It must be one of the options provided before."
+				}
+			},
+			"required": [
+				"paymentKey",
+				"paymentType"
+			]
+		},
+		"CreditCard": {
+			"type": "object",
+			"example": {
+				"number": "4999999999999999",
+				"cardOwnersName": "TESTE TESTE",
+				"expirationMonthDate": "2",
+				"expirationYearDate": "2018",
+				"cardSecurityCode": "123",
+				"installmentQuantity": "3",
+				"agreeTerm": true
+			},
+			"properties": {
+				"number": {
+					"type": "string",
+					"description": "Credit card number."
+				},
+				"cardOwnersName": {
+					"type": "string",
+					"description": "Credit card owner name."
+				},
+				"expirationMonthDate": {
+					"type": "string",
+					"description": "Credit card expiration month. This must be a number from 1 to 12."
+				},
+				"expirationYearDate": {
+					"type": "string",
+					"description": "Credit card expiration year. This must be a 4 digit year number."
+				},
+				"cardSecurityCode": {
+					"type": "string",
+					"description": "Credit card security code."
+				},
+				"installmentQuantity": {
+					"type": "string",
+					"description": "This is the actual number of installments. It must be one of the options provided by /payment/selectcardbrand API operation."
+				},
+				"agreeTerm": {
+					"type": "boolean",
+					"description": "Purchase terms agreement. In order to place an order, the customer has to agree with the terms and conditions."
+				}
+			}
+		},
+		"SeverityOrdinal": {
+			"type": "object",
+			"description": "Message severity information. TODO ON DEFINITIONS MODEL- Detail all severities.",
+			"properties": {
+				"ordinal": {
+					"type": "number",
+					"description": "Message severity"
+				}
+			}
+		},
+		"MessageAndStatus": {
+			"description": "Base message and status entity. This is the basic field collection that is returned in every API operation. In here you will find error information, message description and keys.",
+			"type": "object",
+			"properties": {
+				"messages": {
+					"description": "TODO",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Message"
+					}
+				},
+				"status": {
+					"description": "true if the request is successful, false otherwise. Check message array for details",
+					"type": "boolean"
+				}
+			},
+			"required": [
+				"messages",
+				"status"
+			]
+		},
+		"Message": {
+			"description": "Base message entry.",
+			"type": "object",
+			"properties": {
+				"detail": {
+					"type": "string",
+					"description": "This is the message key. This value is a string, all lowercase, no spaces. You can use this text to map specific API responses to specific actions - usually error handling."
+				},
+				"severity": {
+					"$ref": "#/definitions/SeverityOrdinal"
+				},
+				"summary": {
+					"type": "string",
+					"description": "Human readable message translation. This will be translated to the language that is configured in store' s parameter, if supported by the platform."
+				}
+			}
+		},
+		"SlotResponse": {
+			"description": "This is the response from /slots and /slos/first API calls.",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"currentSlot": {
+						"description": "If this session has an already selected slot, this is the slot id (slotSaleId).",
+						"type": "string"
+					},
+					"days": {
+						"description": "The list of days that have scheduled delivery options. This is day-based summary of the slot list defined in \"slots\".",
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/SlotDay"
+						}
+					},
+					"slots": {
+						"description": "This is the actual delivery slot list. Each entry defines a scheduled delivery option.",
+						"type": "array",
+						"items": {
+							"$ref": "#/definitions/Slot"
+						}
+					},
+					"summary": {
+						"description": "TODO",
+						"type": "object"
+					}
+				}
+			}]
+		},
+		"DataCheckLogin": {
+			"type": "object",
+			"description": "Generic key value Json response.",
+			"required": [
+				"messages",
+				"status",
+				"data"
+			],
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"data": {
+						"type": "object",
+						"description": "Generic key value map. Check each API operation documentation to understand how this map is filled.",
+						"additionalProperties": {
+							"type": "string"
+						}
+					}
+				}
+			}]
+		},
+		"DataSendPass": {
+			"type": "object",
+			"description": "Generic key value Json response.",
+			"required": [
+				"messages",
+				"status",
+				"data"
+			],
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"data": {
+						"type": "object",
+						"description": "Generic key value map. Check each API operation documentation to understand how this map is filled.",
+						"additionalProperties": {
+							"type": "string"
+						}
+					}
+				}
+			}]
+		},
+		"GetBillUrlStatus": {
+			"type": "object",
+			"description": "Generic key value Json response.",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Url of bill."
+					}
+				}
+			}]
+		},
+		"GetPaypalUrlStatus": {
+			"type": "object",
+			"description": "Generic key value Json response.",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"url": {
+						"type": "string",
+						"description": "Url of bill."
+					}
+				}
+			}]
+		},
+		"GiftOption":{
+			"type":"object",
+			"description":"Gift Option for the customer",
+			"properties":{
+				"allowed":{
+					"type" : "boolean",
+					"description" : "Says if the customer are allowed to select this gift, if it's false, it's like a \"teaser\"."
+				},
+				"code":{
+					"type" : "string",
+					"description" : "The code of the gift, it's used in the API entry, it's necessary, if exists more than one rule, giving the same sku as gift."
+				},
+				"message":{
+					"type" : "string",
+					"description" : "Message to be shown, manly if it's a \"teaser\", but can be used for any purpose."
+				},
+				"sku":{
+					"type" : "string",
+					"description" : "Sku id of the gift."
+				}
+			},
+			"example" : {
+				"allowed": true,
+				"code": "18781_158491",
+				"message": "",
+				"sku": "158491"
+			}
+		},
+		"Basket": {
+			"type": "object",
+			"description": "Basket. This objects maps current user's basket, and it is a superset of a shopping cart's information.",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"returnType": {
+						"type": "string",
+						"description": "JSON return type. Always \"BASKET\"."
+					},
+					"apiVersion": {
+						"type": "string",
+						"description": "Current API version. Matches with the version you used in the request."
+					},
+					"domainImg": {
+						"type": "string",
+						"description": "Image domain. This must be used to build a complete image URL for products in the shopping cart."
+					},
+					"persistentShoppingCart": {
+						"type": "string",
+						"description": "TODO"
+					},
+					"restorePersistentCartMessages": {
+						"type": "string",
+						"description": "TODO"
+					},
+					"shoppingCart": {
+						"$ref": "#/definitions/ShoppingCart"
+					},
+					"selectedShop": {
+						"$ref": "#/definitions/Shop"
+					},
+					"externalCustomer": {
+						"$ref": "#/definitions/ExternalCustomer"
+					}
+				}
+			}]
+		},
+		"ShoppingCart": {
+			"type": "object",
+			"properties": {
+				"allAvailableVouchers": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Voucher"
+					}
+				},
+				"baseProductTotal": {
+					"type": "number",
+					"description": "Total product amount in the shopping cart. This includes product prices, without any discount. It does not include freight, slot. Gift products are included in this amount."
+				},
+				"baseProductTotalWithoutGift": {
+					"type": "number",
+					"description": "The same value as \"baseProductTotal\" but excluding gifts."
+				},
+				"baseSubtotal": {
+					"type": "number",
+					"description": "This is the value of \"baseProductTotal\" minus discounts. Please notice that this does not include freight values and discounts."
+				},
+				"couponPromotionList": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/PromotionalCoupon"
+					}
+				},
+				"deliveryShopAvailable": {
+					"type": "boolean",
+					"description": "Informs if the delivery in shop is available"
+				},
+				"deliveryShopAvailableList": {
+					"type": "object",
+					"$ref": "#/definitions/DeliveryShopAvailableList"
+				},
+				"discountSummary": {
+					"type": "string"
+				},
+				"freight": {
+					"type": "number"
+				},
+				"freightTime": {
+					"type": "number"
+				},
+				"giftOptionList":{
+					"type":"array",
+					"items":{
+						"$ref":"#/definitions/GiftOption"
+					}
+				},
+				"selectedGiftOptions":{
+					"type": "array",
+					"items":{
+						"$ref": "String"
+					}
+				},
+				"lastUpdateDate": {
+					"type": "number"
+				},
+				"persistentCartCreationDt": {
+					"type": "number"
+				},
+				"persistentCartUsed": {
+					"type": "number"
+				},
+				"postalCdFormatted": {
+					"type": "string"
+				},
+				"postalCode": {
+					"type": "number"
+				},
+				"productTotalWithoutCoupon": {
+					"type": "number"
+				},
+				"quantityItens": {
+					"type": "number"
+				},
+				"shoppingCartLines": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ShoppingCartLines"
+					}
+				},
+				"slotSale": {
+					"type": "string"
+				},
+				"stockReserved": {
+					"type": "string"
+				},
+				"subTotalDiscount": {
+					"type": "number"
+				},
+				"total": {
+					"type": "number"
+				},
+				"totalDiscount": {
+					"type": "number"
+				},
+				"totalDiscountWithCoupon": {
+					"type": "number"
+				},
+				"totalDiscountWithoutCoupon": {
+					"type": "number"
+				},
+				"totalGiftWrap": {
+					"type": "number"
+				},
+				"totalLoyaltyCreditEarning": {
+					"type": "number"
+				},
+				"totalWithoutCoupon": {
+					"type": "number"
+				},
+				"totalWithoutSlot": {
+					"type": "number"
+				},
+				"totalWithoutVoucher": {
+					"type": "number"
+				},
+				"voucherTotal": {
+					"type": "number"
+				},
+				"worseLeadTime": {
+					"type": "number"
+				}
+			}
+		},
+		"ShoppingCartV2Api-MoverParaUmNovoArquivoSwagger": {
+			"type": "object",
+			"properties": {
+				"allAvailableVouchers": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/Voucher"
+					}
+				},
+				"baseProductTotal": {
+					"type": "number",
+					"description": "Total product amount in the shopping cart. This includes product prices, without any discount. It does not include freight, slot. Gift products are included in this amount."
+				},
+				"baseProductTotalWithoutGift": {
+					"type": "number",
+					"description": "The same value as \"baseProductTotal\" but excluding gifts."
+				},
+				"baseSubtotal": {
+					"type": "number",
+					"description": "This is the value of \"baseProductTotal\" minus discounts. Please notice that this does not include freight values and discounts."
+				},
+				"couponPromotionList": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/PromotionalCoupon"
+					}
+				},
+				"deliveries": {
+					"type": "array",
+					"description": "Delivery array.",
+					"items": {
+						"$ref": "#/definitions/Delivery"
+					}
+				},
+				"deliveriesMap": {
+					"type": "array",
+					"description": "Delivery Map. The key of this map is the delivery ID and the value is the index in delivery array defined in \"deliveries\"",
+					"items": {
+						"$ref": "#/definitions/Delivery"
+					}
+				}
+			}
+		},
+		"ShoppingCartLines": {
+			"type": "object",
+			"example": {
+				"uuid": "2175eae0-3166-11e6-a6ca-8977590f30d6-7896113900268",
+				"baseProductTotal": 0,
+				"customProductItem": [{
+					"customProperties": {
+						"value": "customizável 1|customizável 2|customizável 3",
+						"key": "frases"
+					}
+				}, {
+					"customProperties": {
+						"value": "amarelo",
+						"key": "cor"
+					}
+				}],
+				"featuredDiscount": 0,
+				"isCustomized": true,
+				"lineTotal": 0,
+				"lineTotalWithOnlyCoupon": 0,
+				"lineTotalWithoutCoupon": 0,
+				"loyaltyCreditEarningDiscountList": [],
+				"loyaltyFeaturedDiscount": [],
+				"productDiscount": 0,
+				"productDiscountList": [],
+				"productItem": [],
+				"productSubtotalDiscountTotal": 0,
+				"productTotal": 0,
+				"productTotalWithOnlyCoupon": 0,
+				"productTotalWithoutCoupon": 0,
+				"productUnitPrice": 0,
+				"productUnitPriceBase": 0,
+				"quantity": 1,
+				"quantityDesired": [],
+				"skuRelatedSbtWithStock": [],
+				"stockReserved": true,
+				"totalLineDiscount": 0,
+				"totalLineDiscountWithCoupon": 0,
+				"totalLineDiscountWithoutCoupon": 0,
+				"totalLoyaltyCreditEarning": 0,
+				"wrap": []
+			},
+			"properties": {
+				"uuid": {
+					"type": "string",
+					"description": "The UUID of Shopping Cart Line"
+				},
+				"baseProductTotal": {
+					"type": "number"
+				},
+				"customProductItem": {
+					"type": "array",
+					"description": "The custom Product information data, this field is releated to isCustomized",
+					"items": {
+						"$ref": "#/definitions/CustomProductItem"
+					}
+				},
+				"featuredDiscount": {
+					"type": "string"
+				},
+				"isCustomized": {
+					"type": "boolean",
+					"description": "The flag used to know if the sku added has customizations",
+					"format": "true"
+				},
+				"lineTotal": {
+					"type": "number"
+				},
+				"lineTotalWithOnlyCoupon": {
+					"type": "number"
+				},
+				"lineTotalWithoutCoupon": {
+					"type": "number"
+				},
+				"loyaltyCreditEarningDiscountList": {
+					"type": "object"
+				},
+				"loyaltyFeaturedDiscount": {
+					"type": "object"
+				},
+				"productDiscount": {
+					"type": "number"
+				},
+				"productDiscountList": {
+					"type": "object"
+				},
+				"productItem": {
+					"type": "object"
+				},
+				"productSubtotalDiscountTotal": {
+					"type": "number"
+				},
+				"productTotal": {
+					"type": "number"
+				},
+				"productTotalWithOnlyCoupon": {
+					"type": "number"
+				},
+				"productTotalWithoutCoupon": {
+					"type": "number"
+				},
+				"productUnitPrice": {
+					"type": "number"
+				},
+				"productUnitPriceBase": {
+					"type": "number"
+				},
+				"quantity": {
+					"type": "number"
+				},
+				"quantityDesired": {
+					"type": "object"
+				},
+				"skuRelatedSbtWithStock": {
+					"type": "object"
+				},
+				"stockReserved": {
+					"type": "boolean"
+				},
+				"totalLineDiscount": {
+					"type": "number"
+				},
+				"totalLineDiscountWithCoupon": {
+					"type": "number"
+				},
+				"totalLineDiscountWithoutCoupon": {
+					"type": "number"
+				},
+				"totalLoyaltyCreditEarning": {
+					"type": "number"
+				},
+				"wrap": {
+					"type": "object"
+				}
+			},
+			"required": [
+				"uuid"
+			]
+		},
+		"CustomProductItem": {
+			"description": "The custom product information data added on cart",
+			"type": "object",
+			"properties": {
+				"key": {
+					"description": "The name of related customization",
+					"type": "string"
+				},
+				"value": {
+					"description": "The value of related customization",
+					"type": "string"
+				}
+			}
+		},
+		"Delivery": {
+			"description": "TODO",
+			"type": "object",
+			"properties": {
+				"id": {
+					"description": "TODO",
+					"type": "string"
+				}
+			}
+		},
+		"PromotionalCoupon": {
+			"description": "TODO",
+			"type": "object",
+			"properties": {
+				"id": {
+					"description": "TODO",
+					"type": "string"
+				}
+			}
+		},
+		"Voucher": {
+			"description": "TODO",
+			"type": "object",
+			"properties": {
+				"id": {
+					"description": "TODO",
+					"type": "string"
+				}
+			}
+		},
+		"SlotDay": {
+			"description": "This is scheduled delivery date.",
+			"type": "object",
+			"properties": {
+				"day": {
+					"type": "string",
+					"description": "Delivery slot day, from 1 to 28, 29, 30 or 31."
+				},
+				"weekDay": {
+					"type": "string",
+					"description": "Human readable delivery slot day of the week."
+				},
+				"month": {
+					"type": "string",
+					"description": "Human readable delivery slot month name."
+				},
+				"monthNumber": {
+					"type": "string",
+					"description": "Delivery slot month number, from 1 to 12."
+				},
+				"year": {
+					"type": "string",
+					"description": "Delivery slot year."
+				},
+				"firstSlotAvailable": {
+					"type": "string",
+					"description": "This is the first delivery slot available in this date. This is the slot id (slotSaleId)."
+				},
+				"holiday": {
+					"type": "string",
+					"description": "This will tell if the system has this date being handled as a holiday."
+				},
+				"startTime": {
+					"type": "string",
+					"description": "First delivery slot start time."
+				},
+				"promotionalPrice": {
+					"type": "string",
+					"description": "DEPRECATED. Do not use, it is here for compatibility reasons."
+				},
+				"endTime": {
+					"type": "string",
+					"description": "Last delivery slot end time, if set. If not set, check slot list."
+				},
+				"slotsAvailable": {
+					"type": "string",
+					"description": "DEPRECATED. Do not use, it is here for compatibility reasons."
+				},
+				"slotsAvailableIds": {
+					"type": "string",
+					"description": "DEPRECATED. Do not use, it is here for compatibility reasons."
+				}
+			}
+		},
+		"Slot": {
+			"description": "This is a scheduled delivery slot. It defines a date and time when yourthe worder will be delivered.",
+			"type": "object",
+			"properties": {
+				"slotSalesId": {
+					"type": "string",
+					"description": "Delivery slot id."
+				},
+				"status": {
+					"type": "string",
+					"description": "Delivery slot availability. \"available\" if it is available, any other valus should be handled as not available."
+				},
+				"col": {
+					"type": "string",
+					"description": "DEPRECATED. Do not use, it is here for compatibility reasons."
+				},
+				"ts": {
+					"type": "string",
+					"description": "Delivery slot start date timestamp."
+				},
+				"year": {
+					"type": "string",
+					"description": "Delivery slot year."
+				},
+				"day": {
+					"type": "string",
+					"description": "Delivery slot day, from 1 to 28, 29, 30 or 31."
+				},
+				"month": {
+					"type": "string",
+					"description": "Human readable delivery slot month name."
+				},
+				"monthNumber": {
+					"type": "string",
+					"description": "Delivery slot month number, from 1 to 12."
+				},
+				"date": {
+					"type": "string",
+					"description": "Human readable delivery slot date, containing day of the month and month name."
+				},
+				"bonusType": {
+					"type": "string",
+					"description": "Tells if there are promotions or penalties attached to this delivery slot. \"BONUS\" if this slot has a special price or promotion. \"MALUS\" if there is a penalty in this slot (like busy hour of the day, so the price is increased). \"NONE\" if there is no special handling in this slot. Please notice that this is informative only - you will probably build a presentation rule based on this valus, like different colors or font sizes."
+				},
+				"smallDate": {
+					"type": "string",
+					"description": "Human readable delivery slot date, containing day of the month and short month name."
+				},
+				"price": {
+					"type": "number",
+					"description": "The price of this slot. This is the value that will be added to the shopping cart if this slot is selected."
+				},
+				"holiday": {
+					"type": "string",
+					"description": "This will tell if the system has this date being handled as a holiday."
+				},
+				"endTime": {
+					"type": "string",
+					"description": "Delivery slot end time."
+				},
+				"weekDay": {
+					"type": "string",
+					"description": "Human readable delivery slot day of the week."
+				},
+				"startTime": {
+					"type": "string",
+					"description": "Delivery slot start time."
+				}
+			}
+		},
+		"SimpleAddress": {
+			"description": "This is a small address object. It is used by API operations that search for addresses based on ZIP code or geolocalization.",
+			"type": "object",
+			"properties": {
+				"address": {
+					"type": "string",
+					"description": "Street name"
+				},
+				"quarter": {
+					"type": "string",
+					"description": "Quarter name"
+				},
+				"city": {
+					"type": "string",
+					"description": "City name"
+				},
+				"state": {
+					"type": "string",
+					"description": "State name"
+				}
+			},
+			"required": [
+				"address",
+				"state",
+				"quarter",
+				"city"
+			]
+		},
+		"Address": {
+			"description": "This is a complete address object.",
+			"type": "object",
+			"allOf": [{
+				"$ref": "#/definitions/SimpleAddress"
+			}, {
+				"type": "object",
+				"properties": {
+					"additionalInfo": {
+						"type": "string",
+						"description": "Additional informations regarding address"
+					},
+					"addressNr": {
+						"type": "string",
+						"description": "The address number"
+					},
+					"postalCdFormatted": {
+						"type": "string",
+						"description": "The postal code formatted, i.e., with the pattern \"00000-000\""
+					},
+					"reference": {
+						"type": "string",
+						"description": "The reference regarding address"
+					},
+					"countryId": {
+						"type": "string",
+						"description": "The country id in ISO 3166-1 alpha-2 format"
+					},
+					"postalCd": {
+						"type": "string",
+						"description": "The postal code without format"
+					},
+					"recipientNm": {
+						"type": "string",
+						"description": "Recipient name for this address"
+					}
+				}
+			}],
+			"required": [
+				"postalCd",
+				"postalCdFormatted",
+				"recipientNm",
+				"countryId",
+				"addressNr"
+			]
+		},
+		"Order": {
+			"type": "object",
+			"description": "TODO"
+		},
+		"Phone": {
+			"description": "Phone information",
+			"type": "object",
+			"properties": {
+				"areaCd": {
+					"type": "string",
+					"description": "Area code for the phone"
+				},
+				"phoneNr": {
+					"type": "string",
+					"description": "Phone number without area code"
+				}
+			},
+			"required": [
+				"areaCd",
+				"phoneNr"
+			]
+		},
+		"DeliveryShopAvailableList": {
+			"type": "object",
+			"description": "The list of available delivery shops, organized by \"withdrawal point\" and \"withdrawal store\" types",
+			"properties": {
+				"withdrawalPoint": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of available delivery shops of withdrawal point type"
+				},
+				"withdrawalStore": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of available delivery shops of withdrawal store type"
+				}
+			},
+			"example": {
+				"withdrawalPoint": [
+					"LOC", "IPI", "PRE"
+				],
+				"withdrawalStore": [
+					"INT"
+				]
+			}
+		},
+		"ExternalCustomer": {
+			"type": "object",
+			"description": "The customer data provided after his login by an external partner.",
+			"properties": {
+				"birthDate": {
+					"type": "datetime",
+					"description": "the customer birthday registered on external partner."
+				},
+				"email": {
+					"type": "string",
+					"description": "the customer email registered on external partner."
+				},
+				"gender": {
+					"type": "string",
+					"description": "the customer gender registered on external partner."
+				},
+				"lastName": {
+					"type": "string",
+					"description": "the customer last name registered on external partner."
+				},
+				"name": {
+					"type": "string",
+					"description": "the customer full name registered on external partner."
+				}
+			},
+			"example": {
+				"birthDate": 635223600000,
+				"email": "adriano_silva_moreira@gmail.com",
+				"gender": "M",
+				"lastName": "Silva Moreira",
+				"name": "Adriano Silva Moreira"
+			}
+		},
+		"Shop": {
+			"type": "object",
+			"description": "The information related to the selected shop",
+			"properties": {
+				"additionalInfo": {
+					"type": "string",
+					"description": "Additional informations, if any, regarding shop's address"
+				},
+				"address": {
+					"type": "string",
+					"description": "The shop address"
+				},
+				"addressNr": {
+					"type": "string",
+					"description": "The shop address number"
+				},
+				"city": {
+					"type": "string",
+					"description": "The city where the shop is localized"
+				},
+				"cityTxt": {
+					"type": "string",
+					"description": "The city where the shop is localized (same as city)"
+				},
+				"postalCdFormatted": {
+					"type": "string",
+					"description": "The shop's postal code/zip code formatted using the mask related to the current country. For instance, in Brazil the mask pattern for postal code is \"######-###\", thus if the postal code is \"12230000\" the return will be \"12230-000\""
+				},
+				"quarter": {
+					"type": "string",
+					"description": "The shop's quarter"
+				},
+				"reference": {
+					"type": "string",
+					"description": "The reference, if any, regarding shop's address"
+				},
+				"state": {
+					"type": "string",
+					"description": "The state where the shop is localized"
+				},
+				"closeHour": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "A list of hours (in \"HH:mm\" pattern) where shop closes. The attribute \"openHour\" is the equivalent for the opening hours. Obs.: It is recommended to use the \"closeHour\" attribute from \"operationDays\" than this one"
+				},
+				"classification": {
+					"type": "string",
+					"description": "The shop's classification. Examples: Warehouse, Proxy, Hypermarket etc."
+				},
+				"dayOfWeekClose": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "List of days (the name of the day) of week in which shop is closed."
+				},
+				"dayOfWeekOpen": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "List of days (the name of the day) of week in which shop is open."
+				},
+				"distanceInKm": {
+					"type": "number",
+					"description": "Distance of the shop, in Kilometes, from a provided address"
+				},
+				"firstAttributes": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of the shop attributes values in the order they are registered. This list can have attributes like: latitude, longitude. freight value, delivery time etc."
+				},
+				"freightCalculateTp": {
+					"type": "string",
+					"description": "The type of the calculated freight. 1 - For the default type of freight; 2 - For partner freight."
+				},
+				"groups": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of shop group identifiers in which the current shop belongs"
+				},
+				"id": {
+					"type": "string",
+					"description": "The shop identifier"
+				},
+				"imageName": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of names of shop's images"
+				},
+				"imageThumbnail": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of thumbnails's URLs of shop's images"
+				},
+				"imageUrl": {
+					"type": "",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of URLs of shop's images"
+				},
+				"openHour": {
+					"type": "string",
+					"items": {
+						"type": "string"
+					},
+					"description": "A list of hours (in \"HH:mm\" pattern) where shop opens. The attribute \"closeHour\" is the equivalent for closing hours. Obs.: It is recommended to use the \"closeHour\" attribute from \"operationDays\" than this one"
+				},
+				"openingDate": {
+					"type": "date",
+					"description": "The date which the shop was opened or will be opened. The value is the translated value of java.util.Date object's getTime() (i.e.: the number of milliseconds since January 1, 1970, 00:00:00 GMT)"
+				},
+				"operationDays": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/ShopHours"
+					},
+					"description": "The list of operation days data"
+				},
+				"phoneNr": {
+					"type": "string",
+					"description": "The shop's phone number"
+				},
+				"postalCd": {
+					"type": "string",
+					"description": "The shop's postal code (zip code)"
+				},
+				"postalCodeAndCity": {
+					"type": "string",
+					"description": "The shop's postal code (zip code) followed by city and separated by space"
+				},
+				"ratingAvg": {
+					"type": "number",
+					"description": "The shop's rating average number"
+				},
+				"ratingCommentaries": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of shop's rating comentaries (it's positions matches with the other rating lists like \"ratingInsertDates\", \"ratingMails\", \"ratingShowEmails\" etc. and should be used together)"
+				},
+				"ratingCount": {
+					"type": "number",
+					"description": "The total of ratings received by the shop"
+				},
+				"ratingInsertDates": {
+					"type": "array",
+					"items": {
+						"type": "date"
+					},
+					"description": "The list of shop's rating dates (it's positions matches with the others rating lists like \"ratingInsertDates\", \"ratingMails\", \"ratingShowEmails\" etc. and should be used together)"
+				},
+				"ratingMails": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of shop's rating e-mails (it's positions matches with the others rating lists like \"ratingInsertDates\", \"ratingCommentaries\", \"ratingShowEmails\" etc. and should be used together)"
+				},
+				"ratingNames": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of customer's names that rated the shop (it's positions matches with the others rating lists like \"ratingInsertDates\", \"ratingMails\", \"ratingShowEmails\" etc. and should be used together)"
+				},
+				"ratingPositive": {
+					"type": "number",
+					"description": "The number of positive ratings that shop has received (positive ratings are those between 3 and 5)"
+				},
+				"ratingPositivePercent": {
+					"type": "number",
+					"description": "The positive rating percent that shop has received (positive ratings are those between 3 and 5)"
+				},
+				"ratingShowEmails": {
+					"type": "array",
+					"items": {
+						"type": "boolean"
+					},
+					"description": "The list of flags of  the shop's ratings that indicates if the customer wants to show its e-mail in the website. It's positions matches with the others rating lists like \"ratingInsertDates\", \"ratingMails\", \"ratingNames\" etc. and should be used together"
+				},
+				"ratingSubjects": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of subjects of each shop's ratings. It's positions matches with the others rating lists like \"ratingInsertDates\", \"ratingMails\", \"ratingNames\" etc. and should be used together"
+				},
+				"service": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of service names related with the shop"
+				},
+				"serviceImage": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of image's name of the services related with the shop"
+				},
+				"serviceSourceName": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of source's names of the services related with the shop"
+				},
+				"shopCode": {
+					"type": "string",
+					"description": "The shop code (i.e. the shop qualifier)"
+				},
+				"shopName": {
+					"type": "string",
+					"description": "The shop name"
+				},
+				"shopStatus": {
+					"type": "string",
+					"description": "The identifier of current shop status: 1 = OPEN; 2 = CLOSED; 3 = OPENING SOON"
+				},
+				"shopTp": {
+					"type": "string",
+					"description": "The identifier of the shop type, examples: \"Default\", \"physical store\" etc. the identifiers can vary according with what is registered in the related table for the store"
+				},
+				"size": {
+					"type": "string",
+					"description": "The identifier of the shop size, examples: small, medium, large etc. the identifiers can vary according with what is registered in the related table for the store"
+				},
+				"storeAttributes": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"description": "The map of all registered shop attributes identified by the attribute identifier"
+				},
+				"urlMagazine": {
+					"type": "string",
+					"description": "The link of the shop website"
+				},
+				"urlMap": {
+					"type": "string",
+					"description": "The Google Maps HTML that will be embedded in website"
+				},
+				"urlOffer": {
+					"type": "string",
+					"description": "The link for a file (a PDF for example) with the shop offers"
+				},
+				"urlSheet": {
+					"type": "string",
+					"description": "The link of the shop sheet"
+				},
+				"warehouseList": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of warehouses related with the shop"
+				}
+			},
+			"example": {
+				"additionalInfo": "Segundo andar",
+				"address": "Rua Benedito Osvaldo Lecques",
+				"addressNr": "300",
+				"city": "São José Dos Campos",
+				"cityTxt": "São José Dos Campos",
+				"classification": "Hypermarket",
+				"closeHour": [
+					"20:00"
+				],
+				"dayOfWeekClose": [
+					"Segunda"
+				],
+				"dayOfWeekOpen": [
+					"Segunda"
+				],
+				"distanceInKm": 1.849,
+				"firstAttributes": [
+					"-23.218702",
+					"-45.896736",
+					"10",
+					"5"
+				],
+				"freightCalculateTp": "1",
+				"groups": ["1"],
+				"id": "5763",
+				"imageName": ["mainImage"],
+				"imageThumbnail": ["http://www..."],
+				"imageUrl": ["http://www..."],
+				"openHour": [
+					"09:00"
+				],
+				"openingDate": 1427252400000,
+				"operationDays": [{
+					"closeHour": "20:00",
+					"dayOfWeek": "Domingo",
+					"id": "1",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Segunda",
+					"id": "2",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Terça",
+					"id": "3",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Quarta",
+					"id": "4",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Quinta",
+					"id": "5",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Sexta",
+					"id": "6",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}, {
+					"closeHour": "20:00",
+					"dayOfWeek": "Sábado",
+					"id": "7",
+					"isBusinessDay": true,
+					"openHour": "09:00"
+				}],
+				"phoneNr": "+551122223333",
+				"postalCd": "12246021",
+				"postalCodeAndCity": "12246021 São José Dos Campos",
+				"quarter": "Bairro",
+				"quarterTxt": "Bairro",
+				"ratingAvg": 5,
+				"ratingCommentaries": ["Loja excelente"],
+				"ratingCount": 1,
+				"ratingInsertDates": [1427252400000],
+				"ratingMails": ["email@infracommerce.com.br"],
+				"ratingNames": ["Sr. Silva"],
+				"ratingPositive": 1,
+				"ratingPositivePercent": 100,
+				"ratingShowEmails": [true],
+				"ratingSubjects": ["Sobre a loja"],
+				"reference": "Ao lado da COOP",
+				"service": [
+					"Entrega na Loja"
+				],
+				"serviceImage": ["serviceImage"],
+				"serviceSourceName": [
+					"SDL"
+				],
+				"shopCode": "5763",
+				"shopName": "Produtos esportivos Casa do Esporte",
+				"shopStatus": "1",
+				"shopTp": "INT",
+				"size": "Medium",
+				"state": "SP",
+				"stateTxt": "SP",
+				"storeAttributes": {
+					"attribute_1_st": ["-23.218702"],
+					"attribute_2_st": ["-45.896736"],
+					"attribute_3_st": ["10"],
+					"attribute_4_st": ["5"]
+				},
+				"urlMagazine": "http://www...",
+				"urlMap": "<iframe width=\"425\" height=\"350\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?f=q;source=s_q;hl=en;geocode=;q=Rua+Major+Sert%C3%B3rio,+23,+Vila+Buarque+-+S%C3%A3o+Paulo,+01222000,+SP;aq=NULL;sll=-23.545065,-46.647906;sspn=0.010347,0.021136null;ie=UTF8null;hq=null;hnear=R.+Maj.+Sert%C3%B3rio+-+S%C3%A3o+Paulo,+Brazilnull;ll=-23.545065,-46.647906null;spn=0.010347,0.021136null;t=mnull;z=14null;output=embed\"></iframe><br /><small><a href=\"https://maps.google.com/maps?f=qnull;source=embednull;hl=ennull;geocode=null;q=Rua+Major+Sert%C3%B3rio,+23,+Vila+Buarque+-+S%C3%A3o+Paulo,+01222000,+SPnull;aq=null;sll=-23.545065,-46.647906null;sspn=0.010347,0.021136null;ie=UTF8null;hq=null;hnear=R.+Maj.+Sert%C3%B3rio+-+S%C3%A3o+Paulo,+Brazilnull;ll=-23.545065,-46.647906null;spn=0.010347,0.021136null;t=mnull;z=14\" style=\"color:#0000FF;text-align:left\">View Larger Map</a></small>",
+				"urlOffer": "http://www...",
+				"urlSheet": "http://www...",
+				"warehouseList": ["1", "2", "3"]
+			}
+		},
+		"ShopHours": {
+			"type": "object",
+			"description": "Data related with the shop opening/closing hours",
+			"properties": {
+				"closeHour": {
+					"type": "string",
+					"description": "The shop's closing hour (in \"HH:mm\" pattern)"
+				},
+				"dayOfWeek": {
+					"type": "string",
+					"description": "The related day of week (in day name)"
+				},
+				"id": {
+					"type": "string",
+					"description": "The identifier"
+				},
+				"isBusinessDay": {
+					"type": "boolean",
+					"description": "A boolean that indicates if the related day is considered a business day"
+				},
+				"openHour": {
+					"type": "string",
+					"description": "The shop's opening hour (in \"HH:mm\" pattern)"
+				}
+			}
+		},
+		"ShopCoordinates": {
+			"type": "object",
+			"description": "Data related with the shop coordinates and filters to be used in order to localize a list of shops",
+			"properties": {
+				"latitude": {
+					"type": "number",
+					"description": "The latitude value to be requested"
+				},
+				"longitude": {
+					"type": "number",
+					"description": "The longitude value to be requested"
+				},
+				"maxShops": {
+					"type": "number",
+					"description": "The max number of shops intended in the response to be requested (performance issues)"
+				},
+				"modeView": {
+					"type": "string",
+					"description": "Visualization mode"
+				},
+				"serviceSourceName": {
+					"type": "string",
+					"description": "The shop source name service intended to be requested"
+				},
+				"shopTypeList": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"description": "The list of delivery shop types intended to be requested"
+				}
+			},
+			"example": {
+				"latitude": -23.208398199999998,
+				"longitude": -45.95221730000001,
+				"maxShops": 25,
+				"modeView": "CAT",
+				"serviceSourceName": "SDL",
+				"shopTypeList": [
+					"LOC",
+					"IPI",
+					"PRE"
+				]
+			}
+		},
+		"ShopListResponse": {
+			"type": "object",
+			"description": "The list of shop",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"shopList": {
+						"type": "array",
+						"description": "List of shops",
+						"items": {
+							"$ref": "#/definitions/Shop"
+						}
+					}
+				}
+			}]
+		},
+		"LoginExternalResponseData": {
+			"type": "object",
+			"description": "The authenticated external partner URL",
+			"properties": {
+				"url": {
+					"type": "string",
+					"description": "authenticated external partner URL"
+				}
+			},
+			"example": {
+				"url": "https://www.facebook.com/dialog/oauth?client_id=168033536942610&redirect_uri=https://cart-{storeId}-dev.infracommerce.com.br/staticlight/dialog-login?name=facebook&st={STORE_ID}&state=CKOUT_03287739482795182&scope=email,user_birthday"
+			}
+		},
+		"LoginExternalResponse": {
+			"type": "object",
+			"description": "The external partner response",
+			"allOf": [{
+				"$ref": "#/definitions/MessageAndStatus"
+			}, {
+				"type": "object",
+				"properties": {
+					"data": {
+						"$ref": "#/definitions/LoginExternalResponseData"
+					}
+				}
+			}]
+		},
+		"paymentOptions": {
+			"description": "Payment Options",
+			"type": "object",
+			"properties": {
+				"dueDateWorkDays": {
+					"type": "boolean"
+				},
+				"hash": {
+					"type": "string"
+				},
+				"imageUrl": {
+					"type": "string"
+				},
+				"minInstallmentValue": {
+					"type": "number"
+				},
+				"paymentBrand": {
+					"type": "string"
+				},
+				"paymentKey": {
+					"type": "string"
+				},
+				"paymentName": {
+					"type": "string"
+				},
+				"paymentType": {
+					"type": "string"
+				},
+				"properties": {
+					"type": "object"
+				},
+				"qttDueDate": {
+					"type": "number"
+				},
+				"securityCodeLength": {
+					"type": "number"
+				},
+				"totalAmount": {
+					"type": "number"
+				}
+			}
+		}
+	}
+}

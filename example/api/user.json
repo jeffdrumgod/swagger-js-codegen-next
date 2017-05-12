@@ -1,0 +1,1611 @@
+{
+   "swagger":"2.0",
+   "info":{
+      "version":"1.0.0",
+      "title":"Infrashop User Management API",
+          "description":"In this API documentation, you will find operations that you will call in order to manage users data. Operations here includes managing profiles, users and functionalities. Feel free to browse through all of them and to try it for yourself!"
+   },
+   "schemes":[
+      "https"
+   ],
+   "basePath":"/",
+   "produces":[
+      "application/json"
+   ],
+   "consumes":[
+      "application/json"
+   ],
+   "tags":[
+	  {
+		 "name": "Authentication API",
+		 "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce user API. Use this token in all other API calls in Authorization header.</font>"
+	  },
+      {
+         "name":"User API",
+         "description":"<br><font size=\"2\">This group contains a set of APIs to manage the user. Operations here includes: retrieve, create and update data of an user.</font>"
+      },
+      {
+         "name":"Profile API",
+         "description":"<br><font size=\"2\">This group contains a set of APIs to manage the profiles. Operations here includes: retrieve, create, exclude and update profile's data.</font>"
+      },
+      {
+         "name":"Functionality API",
+         "description":"<br><font size=\"2\">This group contains a set of APIs to manage the functionalities. Operations here includes: retrieve, create, exclude and update functionalities data.</font>"
+      }
+   ],
+   "paths":{
+      "/ifc-security-api/oauth/token": {
+                 "$ref": "./api/auth.json#/paths/AUTH"
+      },
+      "/ifc-security-api/v1/users":{
+        "post":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Create user",
+            "description":"This API allow to create users based with one profile of management. The users created has permissons to manage your store and this permissons are based on the profile. <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Gravar ",
+            "parameters":[
+               {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/UserCreate"
+                    }
+                }
+            ],
+            "responses":{
+               "201":{
+                  "description":"User created.",
+                  "examples":{
+                     "userId":1234,
+                     "name":"JBL\\Jose",
+                     "fullName":"Jose Maria",
+                     "email":"mail@mail.com",
+                     "active":true,
+                     "editable":true,
+                     "firstAccess":true,
+                     "profile":{
+                        "profileId":1234,
+                        "name":"Administrador"
+                     }
+                  },
+                  "schema":{
+                     "$ref":"./api/def/user.json#/User"
+                  }
+               },
+				"400": {
+					"description": "Invalid information provided. Please check error message for more details.",
+					"schema": {
+						"$ref": "./api/def/mercury-base.json#/Error"
+					}
+				},
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         },
+         "get":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Retrieve a list of users",
+            "description":"This API returns a list of the users paged and has the parameters \"name\", \"email\" and \"active\" to use as filters (it's allowed to combine the filters). If no filter was provided, the return will contain all users. <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Consultar",
+            "parameters":[
+               {
+                  "name":"active",
+                  "required":false,
+                  "description":"This filter indicates if the list of users needs to be active - \"true\"- or disabled -\"false\".",
+                  "type":"boolean",
+                  "in":"query"
+               },
+               {
+                  "name":"name",
+                  "required":false,
+                  "description":"When a name is used as filter the operation will return only one user based on the name, if the name do not exists the list will be empty.",
+                  "type":"string",
+                  "in":"query"
+               },
+               {
+                  "name":"email",
+                  "required":false,
+                  "description":"When an email is used as filter the operation can return a list of users, if the email do not exists the list will be empty.",
+                  "type":"string",
+                  "in":"query"
+               },
+                {
+                  "name": "page",
+                  "required": false,
+                  "default": 0,
+                  "description": "Page number. Starts with 0.",
+                  "type": "integer",
+                  "in": "query"
+              },
+              {
+                  "name": "size",
+                  "required": false,
+                  "default": 20,
+                  "description": "Page size. Cannot be higher than 20.",
+                  "type": "integer",
+                  "in": "query"
+              }
+            ],
+            "responses":{
+               "200":{
+                  "description":"List of users paged.",
+                  "schema":{
+                     "$ref":"#/definitions/UserPagination"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         }
+      },
+      "/ifc-security-api/v1/users/{userId}":{
+         "get":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Retrieve an user",
+            "description":"This API allow to retrieve a user information based on the user identified. <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Consultar",
+            "parameters":[
+               {
+                  "name":"userId",
+                  "required":true,
+                  "description":"The user identifier",
+                  "type":"number",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"User found.",
+                  "examples":{
+                     "userId":1234,
+                     "name":"JBL\\Jose",
+                     "fullName":"Jose Maria",
+                     "email":"mail@mail.com",
+                     "active":true,
+                     "editable":true,
+                     "firstAccess":true,
+                     "profile":{
+                        "profileId":1234,
+                        "name":"Administrador"
+                     }
+                  },
+                  "schema":{
+                     "$ref":"./api/def/user.json#/User"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"User not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "put":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Update an user",
+            "description":"This API allow to update the informations about an user, if the user's attribute \"editable\" is \"true\". <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Gravar",
+            "parameters":[
+               {
+                  "name":"userId",
+                  "required":true,
+                  "description":"The user identifier to update",
+                  "type":"number",
+                  "in":"path"
+               },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/UserCreateUpdate"
+                    }
+                }
+            ],
+            "responses":{
+               "200":{
+                  "description":"User updated.",
+                  "examples":{
+                     "userId":1234,
+                     "name":"JBL\\Jose",
+                     "fullName":"Jose Maria",
+                     "email":"mail@mail.com",
+                     "active":true,
+                     "editable":true,
+                     "profile":{
+                        "profileId":1234
+                     }
+                  },
+                  "schema":{
+                     "$ref":"./api/def/user.json#/User"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"User not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "delete":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Delete an user",
+            "description":"This API allows to delete an user, if the user's attribute \"editable\" is \"true\". <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Gravar",
+            "parameters":[
+               {
+                  "name":"userId",
+                  "required":true,
+                  "description":"The user identifier to delete.",
+                  "type":"number",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"User deleted."
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"User not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/ifc-security-api/v1/users/{userId}/password":{
+         "put":{
+            "tags":[
+               "User API"
+            ],
+            "summary":"Update a password of the user",
+            "description":"This API allows to update the password of the user if user's attribute \"editable\" is \"true\". <h4>Required Functionalities</h4>Gestão de Acesso - Gestão de Usuarios - Gravar",
+            "parameters":[
+                {
+                  "name":"userId",
+                  "required":true,
+                  "description":"The user identifier to update the password.",
+                  "type":"number",
+                  "in":"path"
+               },
+                {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "./api/def/user.json#/UserPassword"
+                    }
+                }
+            ],
+            "responses":{
+               "200":{
+                  "description":"User password updated.",
+                  "examples":{
+                     "userId":1234,
+                     "name":"JBL\\Jose",
+                     "fullName":"Jose Maria",
+                     "email":"mail@mail.com",
+                     "active":true,
+                     "editable":true,
+                     "firstAccess":true,
+                     "profile":{
+                        "profileId":1234,
+                        "name":"Administrador"
+                     }
+                  },
+                  "schema":{
+                     "$ref":"./api/def/user.json#/User"
+                  }
+               },
+				"400": {
+					"description": "Invalid password. Please check error messages for more info.",
+					"schema": {
+						"$ref": "./api/def/mercury-base.json#/Error"
+					}
+				},
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"User not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/ifc-security-api/v1/profiles": {
+         "get":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary": "Retrieve a list of profiles",
+            "description": "This API returns a list of profiles paginated. It is possible to filter the results by \"name\" and \"editable\" entries. If no filter were provided the return will contain all profiles. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Consultar",
+            "parameters":[
+               {
+                  "name":"editable",
+                  "required":false,
+                  "description":"This filter indicates if the list of profiles needs to be editable (i.e, \"true\") or not editable (i.e, \"false\")",
+                  "type":"boolean",
+                  "in":"query"
+               },
+               {
+                  "name":"name",
+                  "required":false,
+                  "description":"When a name is used as filter the API will return only the profiles based on the name. If the profile with the name provided do not exists the list will be empty.",
+                  "type":"string",
+                  "in":"query"
+               },
+               {
+                  "name": "page",
+                  "required": false,
+                  "default": 0,
+                  "description": "Page number. Starts with 0.",
+                  "type": "integer",
+                  "in": "query"
+               },
+               {
+                  "name": "size",
+                  "required": false,
+                  "default": 20,
+                  "description": "The maximum number of records to retrieve. If not provided, a default value is used.",
+                  "type": "integer",
+                  "in": "query"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"List of profiles paged.",
+                  "schema":{
+                     "$ref":"#/definitions/ProfilePagination"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         },
+         "post":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary": "Create a new profile",
+            "description": "This API allows the creation of a new profile. The profile created should have a set of functionalities associted with it. These functionalities are the roles (or the permissions) that the users, associted with the profile, have in the Infracommerce plataform. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/ProfileCreate"
+                    }
+                }
+            ],
+            "responses":{
+               "201":{
+                  "description":"The profile created.",
+                  "schema":{
+                     "$ref":"#/definitions/Profile"
+                  }
+               },
+				"400": {
+					"description": "Invalid information provided. Please check error message for more details.",
+					"schema": {
+						"$ref": "./api/def/mercury-base.json#/Error"
+					}
+				},
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         }
+      },
+      "/ifc-security-api/v1/profiles/{profileId}": {
+         "delete":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Delete a profile by its id",
+            "description":"This API allows to delete an profile if the profiles's attribute \"editable\" is \"true\". <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+                  "name":"profileId",
+                  "required":true,
+                  "description":"The profiler identifier to be deleted.",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"Profile deleted."
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "get":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Retrieve a profile by its id",
+            "description":"This API allow to retrieve a profile information based on the profile identifier.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Consultar",
+            "parameters":[
+               {
+                  "name":"profileId",
+                  "required":true,
+                  "description":"The profile identifier",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"The profile found.",
+                  "schema":{
+                     "$ref":"#/definitions/Profile"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "put":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Update a profile",
+            "description":"This API allow to update the informations about a profile if the profile's attribute \"editable\" is \"true\". This API only updates the data related to profile, the data related to the profile's functionalities is done in the API \"/ifc-security-api/v1/profiles/{profileId}/functionality\". The functionality data will be ignorated.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+					"name":"profileId",
+					"required":true,
+					"description":"The profile identifier to update",
+					"type":"number",
+					"in":"path"
+               },
+               {
+					"name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/ProfileCreateUpdate"
+                    }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"The profile updated.",
+                  "schema":{
+                     "$ref":"#/definitions/Profile"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }
+	  },
+      "/ifc-security-api/v1/profiles/{profileId}/functionalities": {
+         "put":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Update a profile's functionalities data",
+            "description":"This API allow to update the informations about a profile's functionality if the profile's attribute \"editable\" is \"true\". This API only updates the data related to profile's functionality (i.e., only the attribute \"functionality\"). The profile's data, if provided, will be ignored.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+					"name":"profileId",
+					"required":true,
+					"description":"The profile identifier to update",
+					"type":"integer",
+					"in":"path"
+               },
+               {
+					"name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/ProfileCreate"
+                    }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"The profile updated.",
+                  "schema":{
+                     "$ref":"#/definitions/Profile"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "get":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary": "Fetch all functionalities related (or don't) with the profile",
+            "description": "This API returns a list of all functionalities, paginated, related or not with the profile. If query parameter \"related\" is not provided or is provided as \"true\", it means that only functionalities related with the profile will be returned; otherwise, if the value is \"false\" only functionalities that are note related with the profile will be returned.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Consultar",
+            "parameters":[
+               {
+					"name":"profileId",
+					"required":true,
+					"description":"The profile identifier to fetch the functionalities",
+					"type":"integer",
+					"in":"path"
+               },
+               {
+                  "name":"related",
+                  "required":false,
+                  "description":"This filter indicates to fetch all functionalities that are related with the profile (value equals \"true\") or to fetch all functionalities that are not related with the profile (value equals \"false\").",
+                  "type":"boolean",
+                  "in":"path"
+               },
+               {
+                  "name": "page",
+                  "required": false,
+                  "default": 0,
+                  "description": "Page number. Starts with 0.",
+                  "type": "integer",
+                  "in": "query"
+               },
+               {
+                  "name": "size",
+                  "required": false,
+                  "default": 20,
+                  "description": "The maximum number of records to retrieve. If not provided, a default value is used.",
+                  "type": "integer",
+                  "in": "query"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"List of functionalities paginated.",
+                  "schema":{
+                     "$ref":"#/definitions/ProfileFunctionalityPagination"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         },
+         "delete":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Delete all functionalities of a profile",
+            "description":"This API deletes all functionalities related to a profile. The profile is identified by its ID. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+                  "name":"profileId",
+                  "required":true,
+                  "description":"The profile identifier in which functionalities will be removed.",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"Functionalities deleted."
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }		 
+	  },
+      "/ifc-security-api/v1/profiles/{profileId}/functionalities/{functionalityId}": {
+         "delete":{
+            "tags":[
+               "Profile API"
+            ],
+            "summary":"Delete a functionality from a profile",
+            "description":"This API deletes a functionality related to a profile. The profile and the functionality to be deleted are identified by theirs IDs. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Perfis - Gravar",
+            "parameters":[
+               {
+                  "name":"profileId",
+                  "required":true,
+                  "description":"The profile identifier in which functionality will be removed.",
+                  "type":"integer",
+                  "in":"path"
+               },
+               {
+                  "name":"functionalityId",
+                  "required":true,
+                  "description":"The functionality identifier that will be removed.",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"Functionality deleted."
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Profile or functionality not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }		 
+	  },
+      "/ifc-security-api/v1/functionalities":{
+         "get":{
+            "tags":[
+               "Functionality API"
+            ],
+            "summary":"Retrieve a list of functionalities",
+            "description":"This API returns a list of functionalities paginated and has the parameters \"name\" and \"roleName\" to use as filters (it's allowed to combine the filters). If no filter was provided, the return will contain all functionalities. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Funcionalidade - Consulta",
+            "parameters":[
+               {
+                  "name":"name",
+                  "required":false,
+                  "description":"When a name is used as filter the API will return only functionalities based on the name. If the functionality with the name provided do not exists the list will be empty.",
+                  "type":"string",
+                  "in":"query"
+               },
+               {
+                  "name":"roleName",
+                  "required":false,
+                  "description":"When a source name is used as filter the API will return only functionalities based on the source name. If the functionality with the source name provided do not exists the list will be empty.",
+                  "type":"string",
+                  "in":"query"
+               },
+               {
+                  "name": "page",
+                  "required": false,
+                  "default": 0,
+                  "description": "Page number. Starts with 0.",
+                  "type": "integer",
+                  "in": "query"
+               },
+               {
+                  "name": "size",
+                  "required": false,
+                  "default": 20,
+                  "description": "The maximum number of records to retrieve. If not provided, a default value is used.",
+                  "type": "integer",
+                  "in": "query"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"List of functionalities paged.",
+                  "schema":{
+                     "$ref":"#/definitions/FunctionalityPagination"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               }
+            }
+         },
+         "post":{
+            "tags":[
+               "Functionality API"
+            ],
+            "summary": "Create a new functionality",
+            "description": "This API allows the creation of a new functionality. The functionalities are the roles (or the permissions) that the users, associted with the profile, have in the Infracommerce plataform. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Funcionalidade - Gravar",
+            "parameters":[
+               {
+                    "name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/FunctionalityCreate"
+                    }
+                }
+            ],
+            "responses":{
+               "201":{
+                  "description":"The functionality created.",
+                  "schema":{
+                     "$ref":"#/definitions/Functionality"
+                  }
+               },
+				"400": {
+					"description": "Invalid information provided. Please check error message for more details.",
+					"schema": {
+						"$ref": "./api/def/mercury-base.json#/Error"
+					}
+				},
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "409":{
+                  "description":"There is already a functionality that uses this roleName. You cannot create a functionality with the same ruleName that an already existing functionality.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/ifc-security-api/v1/functionalities/{functionalityId}":{
+         "delete":{
+            "tags":[
+               "Functionality API"
+            ],
+            "summary":"Delete a functionality by its id",
+            "description":"This API allows to delete a functionality. <h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Funcionalidade - Gravar",
+            "parameters":[
+               {
+                  "name":"functionalityId",
+                  "required":true,
+                  "description":"The functionality identifier to be deleted.",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "204":{
+                  "description":"Functionality deleted."
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Functionality not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "get":{
+            "tags":[
+               "Functionality API"
+            ],
+            "summary":"Retrieve a functionality by its id",
+            "description":"This API allows to retrieve a functionality information based on the functionality identifier.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Funcionalidade - Consulta",
+            "parameters":[
+               {
+                  "name":"functionalityId",
+                  "required":true,
+                  "description":"The functionality identifier",
+                  "type":"integer",
+                  "in":"path"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"The functionality found.",
+                  "schema":{
+                     "$ref":"#/definitions/Functionality"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Functionality not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         },
+         "put":{
+            "tags":[
+               "Functionality API"
+            ],
+            "summary":"Update a functionality",
+            "description":"This API allows to update the informations about a functionality.<h4>Required Functionalities</h4> Gestão de Acesso - Gestão de Funcionalidade - Gravar",
+            "parameters":[
+               {
+					"name":"functionalityId",
+					"required":true,
+					"description":"The functionality identifier to update",
+					"type":"number",
+					"in":"path"
+               },
+               {
+					"name": "body",
+                    "in": "body",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/definitions/Functionality"
+                    }
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"The functionality updated.",
+                  "schema":{
+                     "$ref":"#/definitions/Functionality"
+                  }
+               },
+               "401":{
+                  "description":"User not authenticated.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "403":{
+                  "description":"User is not authorized. Please ensure that you have access to manage customer informations.",
+                  "schema":{
+                     "$ref":"./api/def/oauth.json#/InvalidToken"
+                  }
+               },
+               "404":{
+                  "description":"Functionality not found.",
+                  "schema":{
+                     "$ref":"./api/def/mercury-base.json#/Error"
+                  }
+               }
+            }
+         }
+	  }
+   },
+   "definitions":{
+      "UserPagination":{
+         "type":"object",
+         "description":"Standard pagination envelope response. Users entries will be available in \"items\".",
+         "properties":{
+            "links":{
+               "type":"array",
+               "description":"Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+               "example":[
+                  {
+                     "rel":"self",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/users?page=0&size=20"
+                  },
+                  {
+                     "rel":"first",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/users?page=0&size=20"
+                  },
+                  {
+                     "rel":"last",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/users?page=1&size=20"
+                  },
+                  {
+                     "rel":"next",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/users?page=1&size=20"
+                  }
+               ],
+               "items":[
+                  {
+                     "$ref":"#/definitions/Link"
+                  }
+               ]
+            },
+            "items":{
+               "type":"array",
+               "description":"Array containing user entries.",
+               "items":[
+                  {
+                     "$ref":"#/definitions/Users"
+                  }
+               ]
+            }
+         },
+         "required":[
+            "links",
+            "items"
+         ]
+      },
+      "ProfilePagination":{
+         "type":"object",
+         "description":"Standard pagination envelope response. Profiles entries will be available in \"items\".",
+         "properties":{
+            "links":{
+               "type":"array",
+               "description":"Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+               "example":[
+                  {
+                     "rel":"self",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles?page=0&size=20"
+                  },
+                  {
+                     "rel":"first",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles?page=0&size=20"
+                  },
+                  {
+                     "rel":"last",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles?page=1&size=20"
+                  },
+                  {
+                     "rel":"next",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles?page=1&size=20"
+                  }
+               ],
+               "items":[
+                  {
+                     "$ref":"#/definitions/Link"
+                  }
+               ]
+            },
+            "items":{
+               "type":"array",
+               "description":"Array containing profile entries.",
+               "items":[
+                  {
+                     "$ref":"#/definitions/Profile"
+                  }
+               ]
+            }
+         },
+         "required":[
+            "links",
+            "items"
+         ]
+      },
+      "FunctionalityPagination":{
+         "type":"object",
+         "description":"Standard pagination envelope response. Functionality entries will be available in \"items\".",
+         "properties":{
+            "links":{
+               "type":"array",
+               "description":"Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+               "example":[
+                  {
+                     "rel":"self",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/functionalities?page=0&size=20"
+                  },
+                  {
+                     "rel":"first",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/functionalities?page=0&size=20"
+                  },
+                  {
+                     "rel":"last",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/functionalities?page=1&size=20"
+                  },
+                  {
+                     "rel":"next",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/functionalities?page=1&size=20"
+                  }
+               ],
+               "items":[
+                  {
+                     "$ref":"#/definitions/Link"
+                  }
+               ]
+            },
+            "items":{
+               "type":"array",
+               "description":"Array containing functionality entries.",
+               "items":[
+                  {
+                     "$ref":"#/definitions/Functionality"
+                  }
+               ]
+            }
+         },
+         "required":[
+            "links",
+            "items"
+         ]
+      },
+      "ProfileFunctionalityPagination":{
+         "type":"object",
+         "description":"Standard pagination envelope response. Functionality entries will be available in \"items\".",
+         "properties":{
+            "links":{
+               "type":"array",
+               "description":"Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+               "example":[
+                  {
+                     "rel":"self",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles/123/functionalities?page=0&size=20"
+                  },
+                  {
+                     "rel":"first",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles/123/functionalities?page=0&size=20"
+                  },
+                  {
+                     "rel":"last",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles/123/functionalities?page=1&size=20"
+                  },
+                  {
+                     "rel":"next",
+                     "href":"http://ws-mystore.a8e.net.br/ifc-security-api/v1/profiles/123/functionalities?page=1&size=20"
+                  }
+               ],
+               "items":[
+                  {
+                     "$ref":"#/definitions/Link"
+                  }
+               ]
+            },
+            "items":{
+               "type":"array",
+               "description":"Array containing functionality entries.",
+               "items":[
+                  {
+                     "$ref":"#/definitions/Functionality"
+                  }
+               ]
+            }
+         },
+         "required":[
+            "links",
+            "items"
+         ]
+      },
+      "Link":{
+         "type":"object",
+         "description":"Page link.",
+         "properties":{
+            "rel":{
+               "type":"string",
+               "description":"Link type"
+            },
+            "href":{
+               "type":"string",
+               "description":"Complete link"
+            }
+         },
+         "required":[
+            "rel",
+            "href"
+         ]
+      },
+      "Users": {
+         "type":"object",
+         "description":"The entity user, this user is used to authentication (login) to retrieve a token and do request for the Infracommerce APIs.",
+         "example":{
+            "userId":1234,
+            "name":"JBL\\Jose",
+            "fullName":"Jose Maria",
+            "email":"mail@mail.com",
+            "active":true,
+            "editable":true,
+            "firstAccess":true,
+            "profile":{
+               "profileId":1234,
+               "name":"Administrador"
+            }
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the user, this attribute is used to retrieve a token Oauth2 and is unique in the Infracommerce APIs."
+            },
+            "password":{
+               "type":"string",
+               "description":"The password of the user, this attribute is used with the name to retrieve a token Oauth2."
+            },
+            "email":{
+               "type":"string",
+               "description":"The email of the user. This attribute needs to be a valid email."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user can be editable and so if is \"true\" the operations DELETE and PUT will not work for this user. In the operation POST this attribute will by \"true\" as default value."
+            },
+            "active":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user will be able to get the token Oauth2. In the operation POST if this attribute is null, the default value is \"false\"."
+            },
+            "firstAccess":{
+               "type":"string",
+               "description":"This attribute indicates if the user has do an accesss in the Infracommerce APIs. This attribute is readonly"
+            },
+            "userId":{
+               "type":"number",
+               "description":"The user identified, this attribute is required to do the operations DELETE and PUT."
+            },
+            "fullName":{
+               "type":"string",
+               "description":"The full name of the user."
+            },
+            "profile":{
+               "type":"object",
+               "description":"The profile of access that belongs to this user. The profile defines wich operations the user is allowed to call.",
+               "$ref":"./api/def/user.json#/UserProfile"
+            }
+         },
+         "required":[
+            "name",
+            "profile",
+            "fullName",
+            "userId",
+            "firstAccess",
+            "active",
+            "editable",
+            "email",
+            "password"
+         ]
+      },
+      "UserCreate": {
+         "type":"object",
+         "description":"The entity user, this user is used to authentication (login) to retrieve a token and do request for the Infracommerce APIs.",
+         "example":{
+            "name":"Jose",
+			"password":"123456",
+            "fullName":"Jose Maria",
+            "email":"mail@mail.com",
+            "active":true,
+            "editable":true,
+            "profile":{
+               "profileId":1234
+            }
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the user, this attribute is used to retrieve a token Oauth2 and is unique in the Infracommerce APIs."
+            },
+            "password":{
+               "type":"string",
+               "description":"The password of the user, this attribute is used with the name to retrieve a token Oauth2."
+            },
+            "email":{
+               "type":"string",
+               "description":"The email of the user. This attribute needs to be a valid email."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user can be editable and so if is \"true\" the operations DELETE and PUT will not work for this user. In the operation POST this attribute will by \"true\" as default value."
+            },
+            "active":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user will be able to get the token Oauth2. In the operation POST if this attribute is null, the default value is \"false\"."
+            },
+            "fullName":{
+               "type":"string",
+               "description":"The full name of the user."
+            },
+            "profile":{
+               "type":"object",
+               "description":"The profile of access that belongs to this user. The profile defines wich operations the user is allowed to call.",
+               "$ref":"./api/def/user.json#/UserProfile"
+            }
+         },
+         "required":[
+            "name",
+            "profile",
+            "fullName",
+            "active",
+            "editable",
+            "email",
+            "password"
+         ]
+      },
+      "UserCreateUpdate": {
+         "type":"object",
+         "description":"The entity user, this user is used to authentication (login) to retrieve a token and do request for the Infracommerce APIs.",
+         "example":{
+            "name":"Jose",
+            "fullName":"Jose Maria",
+            "email":"mail@mail.com",
+            "active":true,
+            "editable":true,
+            "profile":{
+               "profileId":1234
+            }
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the user, this attribute is used to retrieve a token Oauth2 and is unique in the Infracommerce APIs."
+            },
+            "email":{
+               "type":"string",
+               "description":"The email of the user. This attribute needs to be a valid email."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user can be editable and so if is \"true\" the operations DELETE and PUT will not work for this user. In the operation POST this attribute will by \"true\" as default value."
+            },
+            "active":{
+               "type":"boolean",
+               "description":"This attribute indicates if the user will be able to get the token Oauth2. In the operation POST if this attribute is null, the default value is \"false\"."
+            },
+            "fullName":{
+               "type":"string",
+               "description":"The full name of the user."
+            },
+            "profile":{
+               "type":"object",
+               "description":"The profile of access that belongs to this user. The profile defines wich operations the user is allowed to call.",
+               "$ref":"./api/def/user.json#/UserProfile"
+            }
+         },
+         "required":[
+            "name",
+            "profile",
+            "fullName",
+            "active",
+            "editable",
+            "email"
+         ]
+      },
+      "Profile": {
+         "type":"object",
+         "description":"The profile's entity. The profile contains the set of roles (permissions on Infracommerce plataform) allowed for the users that have it defined. The profiles are used to control and delegate more ou less permissions for users on Infracommerce plataform",
+         "example":{
+            "profileId":703,
+            "name":"Administrador",
+            "description":"Administrador do sistema",
+            "editable":true,
+			"functionalities":[701,702,890,1232]
+         },
+         "properties":{
+            "profileId":{
+               "type":"integer",
+               "description":"The unique identifier of the profile in database. For POST operation, this attribute is not required once it will be generated by the back-end."
+            },
+            "name":{
+               "type":"string",
+               "description":"The name of the profile used to identify it among others."
+            },
+            "description":{
+               "type":"string",
+               "description":"The profile description. A text to explain, in more details, the profile."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"Indicates if the profile can be editable (\"true\") of don't (\"false\") after its creation. If the profile can't be editable, operations like DELETE or PUT must not work. In POST, this attribute, if not provided, must be \"true\" as default."
+            },
+			"functionalities": {
+				"type":"array",
+				"description":"The list of functionality identifiers (i.e, \"functionalityId\") related to the profile.",
+				"items":{
+					"type":"integer"
+				}
+			}
+         },
+         "required":[
+            "profileId",
+            "name",
+            "description"
+         ]
+      },
+      "ProfileCreate": {
+         "type":"object",
+         "description":"The profile's entity. The profile contains the set of roles (permissions on Infracommerce plataform) allowed for the users that have it defined. The profiles are used to control and delegate more ou less permissions for users on Infracommerce plataform",
+         "example":{
+            "name":"Administrador",
+            "description":"Administrador do sistema",
+            "editable":true,
+			"functionalities":[701,702,890,1232]
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the profile used to identify it among others."
+            },
+            "description":{
+               "type":"string",
+               "description":"The profile description. A text to explain, in more details, the profile."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"Indicates if the profile can be editable (\"true\") of don't (\"false\") after its creation. If the profile can't be editable, operations like DELETE or PUT must not work. In POST, this attribute, if not provided, must be \"true\" as default."
+            },
+			"functionalities": {
+				"type":"array",
+				"description":"The list of functionality identifiers (i.e, \"functionalityId\") related to the profile.",
+				"items":{
+					"type":"integer"
+				}
+			}			
+         },
+         "required":[
+            "name",
+            "description"
+         ]
+      },
+      "ProfileCreateUpdate": {
+         "type":"object",
+         "description":"The profile's entity. The profile contains the set of roles (permissions on Infracommerce plataform) allowed for the users that have it defined. The profiles are used to control and delegate more ou less permissions for users on Infracommerce plataform",
+         "example":{
+            "name":"Administrador",
+            "description":"Administrador do sistema",
+            "editable":true
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the profile used to identify it among others."
+            },
+            "description":{
+               "type":"string",
+               "description":"The profile description. A text to explain, in more details, the profile."
+            },
+            "editable":{
+               "type":"boolean",
+               "description":"Indicates if the profile can be editable (\"true\") of don't (\"false\") after its creation. If the profile can't be editable, operations like DELETE or PUT must not work. In POST, this attribute, if not provided, must be \"true\" as default."
+            }		
+         },
+         "required":[
+            "name",
+            "description"
+         ]
+      },
+      "Functionality": {
+         "type":"object",
+         "description":"The functionality's entity. A functionality is a role, or a permission identifier, responsible to allow an operation inside Infracommerce plataform. The functionalities are associated with the profiles that, in turn, is associated with users in order to control which kind of permissions they have. For instance, users that have a profile that have associated with it the source name \"HotsiteManagementRead\" have acess to read Hotsite data.",
+         "example":{
+            "functionalityId":292,
+            "name":"Gestão de Conteúdo - Gestão de RSS/Twitter - Gestão de Conteúdo RSS/Twitter - Consultar",
+            "description":"Gestão de Conteúdo - Gestão de RSS/Twitter - Gestão de Conteúdo RSS/Twitter - Consultar",
+            "roleName":"ContentManagementRssTwitterReadRole"
+         },
+         "properties":{
+            "functionalityId":{
+               "type":"integer",
+               "description":"The unique identifier of the functionality in database. For POST operation, this attribute is not required once it will be generated by the back-end."
+            },
+            "name":{
+               "type":"string",
+               "description":"The name of the functionality. Is used to identify it among others."
+            },
+            "description":{
+               "type":"string",
+               "description":"The functionality description. A text to explain, in more details, the functionality."
+            },
+            "roleName":{
+               "type":"string",
+               "description":"A \"CamelCase\" name that identifies the functionality, and their function, to the back-end. For example: \"HotsiteManagementRead\" (for Hotsite read permission), \"HotsiteManagementWrite\" (for Hotsite write permssion)."
+            }
+         },
+         "required":[
+            "functionalityId",
+            "name",
+            "description",
+			"roleName"
+         ]
+      },
+      "FunctionalityCreate": {
+         "type":"object",
+         "description":"The functionality's entity. A functionality is a role, or a permission identifier, responsible to allow an operation inside Infracommerce plataform. The functionalities are associated with the profiles that, in turn, is associated with users in order to control which kind of permissions they have. For instance, users that have a profile that have associated with it the source name \"HotsiteManagementRead\" have acess to read Hotsite data.",
+         "example":{
+            "name":"Gestão de Conteúdo - Gestão de RSS/Twitter - Gestão de Conteúdo RSS/Twitter - Consultar",
+            "description":"Gestão de Conteúdo - Gestão de RSS/Twitter - Gestão de Conteúdo RSS/Twitter - Consultar",
+            "roleName":"ContentManagementRssTwitterReadRole"
+         },
+         "properties":{
+            "name":{
+               "type":"string",
+               "description":"The name of the functionality. Is used to identify it among others."
+            },
+            "description":{
+               "type":"string",
+               "description":"The functionality description. A text to explain, in more details, the functionality."
+            },
+            "roleName":{
+               "type":"string",
+               "description":"A \"CamelCase\" name that identifies the functionality, and their function, to the back-end. For example: \"HotsiteManagementRead\" (for Hotsite read permission), \"HotsiteManagementWrite\" (for Hotsite write permssion)."
+            }
+         },
+         "required":[
+            "name",
+            "description",
+			"roleName"
+         ]
+      }
+   }
+}

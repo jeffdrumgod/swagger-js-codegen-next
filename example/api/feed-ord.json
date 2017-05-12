@@ -1,0 +1,740 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Feed engine API",
+        "description": "In this API documentation, you will get to know infrashop feed engine. Using API operations defined here you will be able to retrieve up to date informations about key data like product, order, price, stock, payment and order status."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "paths": {
+        "ORD": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve all pending orders",
+                "description": "Retrieve all pending orders. This API operation will return all orders that were created and not acknowledged yet. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "feedtp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": ""
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OrderFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve order feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "ACK a list of order feed entries.",
+                "description": "This API operation allows you to acknowledge a list of order feed entries. After acknowledging a order feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of order feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this order feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "PAY": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve all pending payment updates",
+                "description": "Retrieve all pending payment updates. This API operation will return all payments that were updated and not acknowledged yet. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PaymentFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve payment feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "ACK a list of payment feed entries.",
+                "description": "This API operation allows you to acknowledge a list of payment feed entries. After acknowledging a payment feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of payment feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this payment feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Payment feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "TRK": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve all pending order trackings",
+                "description": "Retrieve all pending order trackings. This API operation will return all order trackings that were created and not acknowledged yet. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order tracking feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OrderTrackingFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve order tracking feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "ACK a list of order tracking feed entries.",
+                "description": "This API operation allows you to acknowledge a list of order tracking feed entries. After acknowledging a order tracking feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of order tracking feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this order tracking feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Order tracking feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "ORD_LIST": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve orders from feed engine by last update date.",
+                "description": "Retrieve all orders in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for orders. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OrderFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve order feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		},
+        "PAY_LIST": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve payments from feed engine by last update date.",
+                "description": "Retrieve all payments in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for payments. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PaymentFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve payment feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		},
+        "TRK_LIST": {
+            "get": {
+                "tags": [
+                    "Order Feed API"
+                ],
+                "summary": "Retrieve order trackings from feed engine by last update date.",
+                "description": "Retrieve all order trackings in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						            "format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for order trackings. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order tracking feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OrderTrackingFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve order tracking feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		}
+    },
+	"definitions": {
+        "OrderFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "data": {
+                    "$ref": "./def/itg-order.json#/Order"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "PaymentFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "data": {
+                    "$ref": "./def/itg-order.json#/Payment"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "OrderTrackingFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "data": {
+                    "$ref": "./def/itg-order.json#/Tracking"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },		
+        "OrderFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Order entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/ord/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/ord/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/ord/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/ord/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing Order entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },		
+        "PaymentFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Payment entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pay/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pay/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pay/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pay/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing Payment entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-order.json#/Payment"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },		
+        "OrderTrackingFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Order tracking entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/trk/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/trk/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/trk/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/trk/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing Order tracking entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-order.json#/Tracking"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        }
+	}
+}

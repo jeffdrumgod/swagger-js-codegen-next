@@ -1,0 +1,931 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "My Account API",
+        "description": "This is Infracommerce My Account API documentation. Here you will find simple and straightforward API operations to identify a customer and to retrieve customer's placed orders."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/m",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Customer API",
+            "description": "<br><font size=\"2\">My Account Customer API provides a single operation for you to login as a customer in order to be able to retrieve order information.</font>"
+        },
+        {
+            "name": "Order API",
+            "description": "<br><font size=\"2\">My Account Order API provides operations for you to retrieve customer's orders information. You wil be able to get an order by its ID and to list all orders from a customer.</font>"
+        }
+    ],
+    "paths": {
+        "/customer": {
+            "post": {
+                "tags": [
+                    "Customer API"
+                ],
+                "summary": "Login a customer",
+                "description": "Login a customer. You will have to provide the customer login and password and will get a Token that must be used in other My Account API operations to retrieve information.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "example": {
+                                "customerLogin": {
+                                    "login": "infratech.teste@gmail.com",
+                                    "password": "123456"
+                                }
+                            },
+                            "properties": {
+                                "login": {
+                                    "type": "string",
+                                    "description": "Customer login name. It can be either the customer email or document number - this configuration is done when setting up your shop. Default setting is e-email."
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "Customer password."
+                                }
+                            },
+                            "required": [
+                                "login",
+                                "password"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful customer login.",
+                        "schema": {
+                            "$ref": "#/definitions/Customer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request. Please check error messages for mor info",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorList"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username/password",
+                        "schema": {
+                            "$ref": "#/definitions/AuthError"
+                        }
+                    },
+                    "412": {
+                        "description": "Invalid values for customer login (not a valid email or document number) or customer password (less than 3 letters)",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorList"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/list": {
+            "get": {
+                "tags": [
+                    "Order API"
+                ],
+                "summary": "Retrieve all customer's orders",
+                "description": "This API will return all customer's orders, sorted by purchase date (newer to older).",
+                "parameters": [
+                    {
+                        "name": "ACEC-AuthToken",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "description": "Authentication token. This is the \"tokenString\" value retirnet by Customer API operation."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer order list.",
+                        "schema": {
+                            "$ref": "#/definitions/OrderList"
+                        }
+                    },
+                    "400": {
+                        "description": "No token provided",
+                        "schema": {
+                            "$ref": "#/definitions/AuthError"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/AuthError"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/{orderId}": {
+            "get": {
+                "tags": [
+                    "Order API"
+                ],
+                "summary": "Retrieve a specific order.",
+                "description": "This API will return a detailed version of the order. The order must be an order placed by the customer that is authenticated (token).",
+                "parameters": [
+                    {
+                        "name": "ACEC-AuthToken",
+                        "in": "header",
+                        "required": true,
+                        "type": "string",
+                        "description": "Authentication token. This is the \"tokenString\" value retirnet by Customer API operation."
+                    },
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Order unique identifier."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed information for this order.",
+                        "schema": {
+                            "$ref": "#/definitions/Order"
+                        }
+                    },
+                    "400": {
+                        "description": "No token provided",
+                        "schema": {
+                            "$ref": "#/definitions/AuthError"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/AuthError"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "AuthError": {
+            "type": "object",
+            "description": "Authentication error",
+            "example": {
+                "errors": [
+                    {
+                        "parameter": "AuthToken",
+                        "failureType": "Wrong",
+                        "failureDetail": "token com erro.",
+                        "id": ""
+                    }
+                ]
+            },
+            "properties": {
+                "error": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Error"
+                    }
+                }
+            },
+            "required": [
+                "error"
+            ]
+        },
+        "ErrorList": {
+            "type": "object",
+            "description": "Error list",
+            "example": {
+                "errors": [
+                    {
+                        "parameter": "customerLogin.login",
+                        "failureType": "NotNull",
+                        "failureDetail": "O login não foi informado.",
+                        "id": ""
+                    },
+                    {
+                        "parameter": "customerLogin.password",
+                        "failureType": "NotNull",
+                        "failureDetail": "A password não foi informada.",
+                        "id": ""
+                    }
+                ]
+            },
+            "properties": {
+                "error": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Error"
+                    }
+                }
+            },
+            "required": [
+                "error"
+            ]
+        },
+        "Error": {
+            "type": "object",
+            "description": "Error information",
+            "properties": {
+                "parameter": {
+                    "type": "string",
+                    "description": "This value will tell you in wich input parameter the error was found"
+                },
+                "failureType": {
+                    "type": "string",
+                    "description": "Error type. You will see values like \"NotNull\" or \"NotBlank\"."
+                },
+                "failureDetail": {
+                    "type": "string",
+                    "description": "Human readable message describing the error"
+                },
+                "ids": {
+                    "type": "string",
+                    "description": "If this error refers to a specific entity (like an sku ID in a serve that get a skuList as input), this is going to be that entity's ID."
+                }
+            },
+            "required": [
+                "parameter",
+                "failureType",
+                "failureDetail"
+            ]
+        },
+        "Customer": {
+            "type": "object",
+            "description": "Customer. This is a customer definition, contanint basic data, addresses, phone numbers and an authentication token that must be used as an HTTP header in further calls to My Account API operations",
+            "example": {
+                "customer": {
+                    "customerId": 1313225,
+                    "firstName": "Infracommerce usuário teste",
+                    "customerType": "PERSON",
+                    "birthDate": "19800101T240000-0300",
+                    "createDate": "20140213T240000-0200",
+                    "documentNumber": 75146267197,
+                    "email": "infratech.teste@gmail.com",
+                    "gender": "M",
+                    "addresses": [
+                        {
+                            "addressId": 1310339,
+                            "address": "Avenida Doutor Cardoso de Melo",
+                            "addressNumber": "1234578",
+                            "city": "São Paulo",
+                            "friendlyName": "Endereço Principal",
+                            "postalCodeFormatted": "04548-005",
+                            "quarter": "Vila Olímpia",
+                            "recipientName": "Infracommerce",
+                            "additionalInfo": "15o. andar",
+                            "countryId": "BR",
+                            "state": "SP"
+                        },
+                        {
+                            "addressId": 2711505,
+                            "address": "Rua Guaratuba",
+                            "city": "São Paulo",
+                            "friendlyName": "Endereço Principal",
+                            "postalCodeFormatted": "04310-050",
+                            "quarter": "Vila Guarani (Z Sul)",
+                            "recipientName": "Infracommerce Teste3 ",
+                            "countryId": "BR",
+                            "state": "SP"
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "areaCd": "11",
+                            "phoneTp": "MOBILE",
+                            "phoneNr": 987781001
+                        },
+                        {
+                            "areaCd": "11",
+                            "phoneTp": "HOME",
+                            "phoneNr": 28379912
+                        }
+                    ],
+                    "token": {
+                        "tokenString": "0e8983ed31900c7bdf1450fda2bbfd1a7be4f508518bbdd2ae64b5940762c0cdf6e1f8f442ee7041c7af431186d236334e4ac182c78e3c47d6a6242db449233d"
+                    },
+                    "acceptNewsletter": true
+                }
+            },
+            "properties": {
+                "customerId": {
+                    "type": "number",
+                    "description": "Customer unique identifier"
+                },
+                "firstName": {
+                    "type": "string",
+                    "description": "Customer first name"
+                },
+                "lastName": {
+                    "type": "string",
+                    "description": "Customer last name. If this is absent, please use the first name as a full name."
+                },
+                "customerType": {
+                    "type": "string",
+                    "description": "PERSON for a natural person, COMPANY for a company",
+                    "enum": [
+                        "PERSON",
+                        "COMPANY"
+                    ]
+                },
+                "birthDate": {
+                    "type": "string",
+                    "description": "Customer birth date in format \"YYYYMMDDTHHmmSS-TZ\""
+                },
+                "createDate": {
+                    "type": "string",
+                    "description": "When this customer registered in the website, in format \"YYYYMMDDTHHmmSS-TZ\""
+                },
+                "documentNumber": {
+                    "type": "string",
+                    "description": "Customer document number"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Customer email"
+                },
+                "gender": {
+                    "type": "string",
+                    "description": "Customer gender. \"M\" for male, \"F\" for female.",
+                    "enum": [
+                        "M",
+                        "F"
+                    ]
+                },
+                "addresses": {
+                    "type": "array",
+                    "description": "Customer address list",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                },
+                "phones": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Phone"
+                    }
+                },
+                "token": {
+                    "type": "object",
+                    "description": "login token information. This token must be used as an HTTP header in further calls to My Account API",
+                    "properties": {
+                        "tokenString": {
+                            "type": "string",
+                            "description": "Authentication token."
+                        }
+                    },
+                    "required": [
+                        "tokenString"
+                    ]
+                },
+                "acceptNewsletter": {
+                    "type": "boolean",
+                    "description": "If this flag is true, this customer accepts email newsletters."
+                }
+            },
+            "required": [
+                "customerId",
+                "firstName",
+                "email",
+                "token",
+                "acceptNewsletter"
+            ]
+        },
+        "Address": {
+            "type": "object",
+            "description": "Customer address",
+            "properties": {
+                "addressId": {
+                    "type": "number",
+                    "description": "Address unique identifier"
+                },
+                "friendlyName": {
+                    "type": "string",
+                    "description": "Address friendly name. This is the \"name\" of this address."
+                },
+                "recipientName": {
+                    "type": "string",
+                    "description": "The person that will be the recipient when sending an order to this address"
+                },
+                "address": {
+                    "type": "string",
+                    "description": "Street name"
+                },
+                "addressNumber": {
+                    "type": "string",
+                    "description": "Number"
+                },
+                "quarter": {
+                    "type": "string",
+                    "description": "Address quarter"
+                },
+                "city": {
+                    "type": "string",
+                    "description": "City name"
+                },
+                "state": {
+                    "type": "string",
+                    "description": "Address state"
+                },
+                "countryId": {
+                    "type": "string",
+                    "description": "2 digit country ID (\"BR\", \"MX\", etc)"
+                },
+                "postalCodeFormatted": {
+                    "type": "string",
+                    "description": "Zip code"
+                }
+            },
+            "required": [
+                "addressId",
+                "friendlyName",
+                "recipientName",
+                "address",
+                "addressNumber",
+                "quarter",
+                "city",
+                "state",
+                "postalCodeFormatted"
+            ]
+        },
+        "Phone": {
+            "type": "object",
+            "description": "Customer phone number",
+            "properties": {
+                "areaCd": {
+                    "type": "string",
+                    "description": "Area code, up to 2 digits."
+                },
+                "phoneNr": {
+                    "type": "string",
+                    "description": "Phone number"
+                },
+                "phoneTp": {
+                    "type": "string",
+                    "description": "Phone type. It cen be either \"HOME\", \"MOBILE\" or \"OFFICE\".",
+                    "enum": [
+                        "HOME",
+                        "MOBILE",
+                        "OFFICE"
+                    ]
+                }
+            },
+            "required": [
+                "areaCd",
+                "phoneNr",
+                "phoneTp"
+            ]
+        },
+        "OrderList": {
+            "type": "array",
+            "description": "Order list. This list has a simplified version of the order.",
+            "items": {
+                "$ref": "#/definitions/SimpleOrder"
+            }
+        },
+        "SimpleOrder": {
+            "type": "object",
+            "description": "Simplified version of the order. For a full version, use the API that gets the order ID as an input parameter",
+            "example": {
+                "orderId": 74015,
+                "orderMasterId": 74015,
+                "purchaseDate": "20130507T193637-0300",
+                "ecadTrackings": [
+                    {
+                        "currentTrackingStep": {
+                            "code": "ETR",
+                            "title": "Entrega em andamento",
+                            "message": "A sua entrega está com nosso transportador.",
+                            "status": "ONG",
+                            "statusDate": "20130508T173117-0300",
+                            "stepName": "DVY",
+                            "labelTrackingStep": "Em Andamento"
+                        },
+                        "order": {
+                            "code": "PEI",
+                            "title": "Pedido incluso",
+                            "message": "Confirmamos a inclusão do seu pedido em nosso sistema.",
+                            "status": "FNH",
+                            "statusDate": "20130507T193726-0300",
+                            "stepName": "ORD",
+                            "labelTrackingStep": "07/05/2013 &agrave;s 19:37"
+                        },
+                        "payment": {
+                            "code": "PAP",
+                            "title": "Pagamento aprovado",
+                            "message": "O seu pagamento foi aprovado. A partir de agora, vamos separar os itens do seu pedido e preparar sua entrega.",
+                            "status": "FNH",
+                            "statusDate": "20130507T194021-0300",
+                            "stepName": "PAY",
+                            "labelTrackingStep": "07/05/2013 &agrave;s 19:40"
+                        },
+                        "handling": {
+                            "code": "WMS",
+                            "title": "Separação e embalagem",
+                            "message": "O seu produto será separado em nosso estoque, embalado e em seguida entregue à transportadora.",
+                            "status": "ONG",
+                            "statusDate": "20130508T111403-0300",
+                            "stepName": "DIV",
+                            "labelTrackingStep": "Em Andamento"
+                        },
+                        "delivery": {
+                            "code": "ETR",
+                            "title": "Entrega em andamento",
+                            "message": "A sua entrega está com nosso transportador.",
+                            "status": "ONG",
+                            "statusDate": "20130508T173117-0300",
+                            "stepName": "DVY",
+                            "labelTrackingStep": "Em Andamento"
+                        },
+                        "stepStatus": "separacaoOk",
+                        "deliveryId": "7401501"
+                    }
+                ],
+                "orderStatusMessage": "Em Andamento",
+                "indexedOrder": true,
+                "deliveryType": "NOR",
+                "skuWarranty": {},
+                "skuWarrantyList": {},
+                "standardWarrantySlicedList": {},
+                "reusableSlot": false,
+                "slotId": "0",
+                "totalAmount": 7.15
+            },
+            "properties": {
+                "orderId": {
+                    "type": "number",
+                    "description": "Order number"
+                },
+                "orderMasterId": {
+                    "type": "number",
+                    "description": "Order master number. If this order is derived from other order (such as a order placed externally in a marketplace), thisis going to be that number."
+                },
+                "purchaseDate": {
+                    "type": "string",
+                    "description": "The date and time of the purchase in format \"YYYYMMDDTHHmmSS-TZ\""
+                },
+                "orderStatusMessage": {
+                    "type": "string",
+                    "description": "Human readable current order status"
+                },
+                "indexedOrder": {
+                    "type": "boolean",
+                    "description": "If this order is already available in Infrashop internal indexes."
+                },
+                "deliveryType": {
+                    "type": "string",
+                    "description": "Delivery Type. \"NOR\" for regular delivery, \"ECO\" for economic, etc.",
+                    "enum": [
+                        "NOR",
+                        "ECO",
+                        "SHP",
+                        "EXP",
+                        "SCH"
+                    ]
+                },
+                "skuWarranty": {
+                    "type": "object",
+                    "description": "This attribute is deprecated. It is here for backwards compatibility"
+                },
+                "skuWarrantyList": {
+                    "type": "object",
+                    "description": "This attribute is deprecated. It is here for backwards compatibility"
+                },
+                "standardWarrantySlicedList": {
+                    "type": "object",
+                    "description": "This attribute is deprecated. It is here for backwards compatibility"
+                },
+                "reusableSlot": {
+                    "type": "string",
+                    "description": "If it is possible to place a new order using the same slot then a previous order and then receive both orders as a single one"
+                },
+                "slotId": {
+                    "type": "string",
+                    "description": "Delivery slot unique identifier. If this is not a scheduled delivery order, this will be zero."
+                },
+                "totalAmount": {
+                    "type": "number",
+                    "description": "Order total amount. This is the final amount, including all discounts, shipping and handling fees."
+                },
+                "ecadTrackings": {
+                    "type": "array",
+                    "description": "Tracking information. One entry for each delivery in this order.",
+                    "items": {
+                        "$ref": "#/definitions/DeliveryTracking"
+                    }
+                }
+            },
+            "required": [
+                "orderId",
+                "orderMasterId",
+                "purchaseDate",
+                "orderStatusMessage",
+                "indexedOrder",
+                "deliveryType",
+                "slotId",
+                "totalAmount"
+            ]
+        },
+        "DeliveryTracking": {
+            "type": "object",
+            "description": "Delivery tracking information.",
+            "properties": {
+                "currentTrackingStep": {
+                    "description": "Current tracking that this delivery stands on.",
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/EcadTracking"
+                        }
+                    ]
+                },
+                "order": {
+                    "description": "Latest tracking in 'order' stage - Order stage is the first step of the order.",
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/EcadTracking"
+                        }
+                    ]
+                },
+                "payment": {
+                    "description": "Latest tracking in 'payment' stage - Payment stage is the second step of the order.",
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/EcadTracking"
+                        }
+                    ]
+                },
+                "handling": {
+                    "description": "Latest tracking in 'handling' stage - Handling stage is the third step of the order.",
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/EcadTracking"
+                        }
+                    ]
+                },
+                "delivery": {
+                    "description": "Latest tracking in 'delivery' stage - Delivery stage is the forth step of the order.",
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/EcadTracking"
+                        }
+                    ]
+                },
+                "stepStatus": {
+                    "type": "string",
+                    "description": "Delivery status. This is a human readable text that might be presented to the customer in the website."
+                },
+                "deliveryId": {
+                    "type": "string",
+                    "description": "Internal delivery unique identifier."
+                }
+            }
+        },
+        "EcadTracking": {
+            "type": "object",
+            "description": "Tracking data",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Tracking code 3 letter identifier."
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Human readable tracking short information"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Human readable tracking complete information"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Internal usage only"
+                },
+                "statusDate": {
+                    "type": "string",
+                    "description": "When this tracking happened in format \"YYYYMMDDTHHmmSS-TZ\""
+                },
+                "stepName": {
+                    "type": "string",
+                    "description": "One of the four steps of the order.",
+                    "enum": [
+                        "ORD",
+                        "PAY",
+                        "DIV",
+                        "DVY"
+                    ]
+                },
+                "labelTrackingStep": {
+                    "type": "string",
+                    "description": "Human readable message telling if this is still pending or when this was finished."
+                }
+            },
+            "required": [
+                "code",
+                "title",
+                "message",
+                "statusDate",
+                "stepName"
+            ]
+        },
+        "Order": {
+            "example": {
+                "order": {
+                    "orderId": 74015,
+                    "orderMasterId": 74015,
+                    "purchaseDate": "20130507T193637-0300",
+                    "ecadTrackings": [
+                        {
+                            "currentTrackingStep": {
+                                "code": "ETR",
+                                "title": "Entrega em andamento",
+                                "message": "A sua entrega está com nosso transportador.",
+                                "status": "ONG",
+                                "statusDate": "20130508T173117-0300",
+                                "stepName": "DVY",
+                                "labelTrackingStep": "Em Andamento"
+                            },
+                            "order": {
+                                "code": "PEI",
+                                "title": "Pedido incluso",
+                                "message": "Confirmamos a inclusão do seu pedido em nosso sistema.",
+                                "status": "FNH",
+                                "statusDate": "20130507T193726-0300",
+                                "stepName": "ORD",
+                                "labelTrackingStep": "07/05/2013 &agrave;s 19:37"
+                            },
+                            "payment": {
+                                "code": "PAP",
+                                "title": "Pagamento aprovado",
+                                "message": "O seu pagamento foi aprovado. A partir de agora, vamos separar os itens do seu pedido e preparar sua entrega.",
+                                "status": "FNH",
+                                "statusDate": "20130507T194021-0300",
+                                "stepName": "PAY",
+                                "labelTrackingStep": "07/05/2013 &agrave;s 19:40"
+                            },
+                            "handling": {
+                                "code": "WMS",
+                                "title": "Separação e embalagem",
+                                "message": "O seu produto será separado em nosso estoque, embalado e em seguida entregue à transportadora.",
+                                "status": "ONG",
+                                "statusDate": "20130508T111403-0300",
+                                "stepName": "DIV",
+                                "labelTrackingStep": "Em Andamento"
+                            },
+                            "delivery": {
+                                "code": "ETR",
+                                "title": "Entrega em andamento",
+                                "message": "A sua entrega está com nosso transportador.",
+                                "status": "ONG",
+                                "statusDate": "20130508T173117-0300",
+                                "stepName": "DVY",
+                                "labelTrackingStep": "Em Andamento"
+                            },
+                            "stepStatus": "separacaoOk",
+                            "deliveryId": "7401501"
+                        }
+                    ],
+                    "orderStatusMessage": "Em Andamento",
+                    "indexedOrder": true,
+                    "deliveryType": "NOR",
+                    "skuWarranty": {},
+                    "skuWarrantyList": {},
+                    "standardWarrantySlicedList": {},
+                    "products": [
+                        {
+                            "sku": {
+                                "name": "*RAÇÃO EVA PEQ SORTIDA, .",
+                                "unitPrice": 3.95
+                            },
+                            "lineTotal": 3.95,
+                            "quantity": 1
+                        }
+                    ],
+                    "reusableSlot": false,
+                    "slotId": "0",
+                    "totalAmount": 7.15,
+                    "billingAddress": {
+                        "addressId": 194300,
+                        "address": "Rua Antônio Francisco do Nascimento",
+                        "addressNumber": "74",
+                        "city": "São José dos Campos",
+                        "friendlyName": "Endereço Principal",
+                        "postalCodeFormatted": "12244160",
+                        "quarter": "Urbanova",
+                        "recipientName": "Daniel Parra",
+                        "countryId": "BR",
+                        "state": "SP"
+                    },
+                    "deliveryAddress": {
+                        "addressId": 194300,
+                        "address": "Rua Antônio Francisco do Nascimento",
+                        "addressNumber": "74",
+                        "city": "São José dos Campos",
+                        "friendlyName": "Endereço Principal",
+                        "postalCodeFormatted": "12244160",
+                        "quarter": "Urbanova",
+                        "recipientName": "Daniel Parra",
+                        "countryId": "BR",
+                        "state": "SP"
+                    },
+                    "totalWithoutFreight": 3.95
+                }
+            },
+            "allOf": [
+                {
+                    "$ref": "#/definitions/SimpleOrder"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "totalWithoutFreight": {
+                            "type": "number",
+                            "description": "Order amount with all discounts applied but without shipping & handling fees."
+                        },
+                        "billingAddress": {
+                            "description": "Order billing address",
+                            "$ref": "#/definitions/Address"
+                        },
+                        "deliveryAddress": {
+                            "description": "Order delivery address",
+                            "$ref": "#/definitions/Address"
+                        },
+                        "product": {
+                            "type": "array",
+                            "description": "list of items in this order",
+                            "items": {
+                                "$ref": "#/definitions/OrderLine"
+                            }
+                        }
+                    },
+                    "required": [
+                        "totalWithoutFreight",
+                        "billingAddress",
+                        "deliveryAddress",
+                        "product"
+                    ]
+                }
+            ]
+        },
+        "OrderLine": {
+            "type": "object",
+            "description": "Order line information",
+            "properties": {
+                "sku": {
+                    "type": "array",
+                    "description": "List of SKUs in this order",
+                    "items": {
+                        "$ref": "#/definitions/OrderSku"
+                    }
+                },
+                "lineTotal": {
+                    "type": "number",
+                    "description": "Product amount in this line"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "description": "Number of items in this line"
+                }
+            },
+            "required": [
+                "sku",
+                "lineTotal",
+                "quantity"
+            ]
+        },
+        "OrderSku": {
+            "type": "object",
+            "description": "Order SKU information",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "This is the name of the SKU"
+                },
+                "unitPrice": {
+                    "type": "number",
+                    "description": "SKU unit price in this order (including discounts)"
+                }
+            },
+            "required": [
+                "name",
+                "unitPrice"
+            ]
+        }
+    }
+}

@@ -1,0 +1,85 @@
+{
+	"User": {
+		"type": "object",
+		"description": "The entity user, this user is used to authentication (login) to retrieve a token and do request for the Infracommerce APIs.",
+		"properties": {
+			"name": {
+				"type": "string",
+				"description": "The name of the user, this attribute is used to retrieve a token Oauth2 and is unique in the Infracommerce APIs."
+			},
+			"password": {
+				"type": "string",
+				"description": "The password of the user, this attribute is used with the name to retrieve a token Oauth2."
+			},
+			"email": {
+				"type": "string",
+				"description": "The email of the user. This attribute needs to be a valid email."
+			},
+			"editable": {
+				"type": "boolean",
+				"description": "This attribute indicates if the user can be editable and so if is \"true\" the operations DELETE and PUT will not work for this user. In the operation POST this attribute will by \"true\" as default value."
+			},
+			"active": {
+				"type": "boolean",
+				"description": "This attribute indicates if the user will be able to get the token Oauth2. In the operation POST if this attribute is null, the default value is \"false\"."
+			},
+			"firstAccess": {
+				"type": "string",
+				"description": "This attribute indicates if the user has do an accesss in the Infracommerce APIs. This attribute is readonly"
+			},
+			"userId":{
+				"type": "number",
+				"description": "The user identified, this attribute is required to do the operations DELETE and PUT. This number has no decimal places."
+			},
+            "fullName": {
+                "type": "string",
+                "description": "The full name of the user."
+            },
+			"profile": {
+				"type":"object",
+				"description": "The profile of access that belongs to this user. The profile defines wich operations the user is allowed to call.",
+				"$ref": "#/UserProfile"
+			}
+		},
+		"required": [
+			"name",
+			"userId",
+			"profile",
+			"password"
+		]
+	},
+	"UserProfile": {
+		"type": "object",
+		"description": "The profile of access.",
+		"properties": {
+			"profileId": {
+				"type": "number",
+				"description": "The profile identified. This attribute is required to do the operation POST. This number has no decimal places."
+			},
+			"name" :{
+				"type" : "string",
+				"description" : "The name of this profile."
+			}
+		},
+		"required": [
+			"profileId"
+		]
+	},
+	"UserPassword": {
+		"type": "object",
+		"description": "This entity used to do the password update of an user.",
+		"properties": {
+			"currentPassword": {
+				"type": "string",
+				"description": "The current password of the users, this value is use to validate the process."
+			},
+			"newPassword" :{
+				"type" : "string",
+				"description" : "The new password, this value will be use to get the Oauth2 token next time."
+			}
+		},
+		"required": [
+			"profileId"
+		]
+	}
+}

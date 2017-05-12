@@ -1,0 +1,305 @@
+{
+    "Transaction": {
+        "type": "object",
+        "description": "Element that represents a transaction on the gateway",
+        "properties": {
+            "type": {
+               "type": "string",
+                "description": "Transaction type",
+                "enum": [
+                    "BILLET",
+                    "CREDIT_CARD",
+                    "DEBIT"
+                ]
+            },
+            "id": {
+                "type": "string",
+                "description": "Identification of the transaction"
+            },
+            "value": {
+                "type": "number",
+                "description": "Value of the transaction"
+            },
+            "bankCode": {
+                "type": "string",
+                "description": "Identification of the bank in which the transaction should be made. Required for BILLET and DEBIT."
+            },
+            "returnUrl": {
+                "type": "string",
+                "description": "Callback URL to be invoked when the payment is approved. Required for BILLET and DEBIT."
+            },
+            "payer": {
+                "description": "Person or company responsible for the transaction. Required for BILLET and DEBIT.",
+                "$ref": "#/TransactionPayer"
+            },
+            "urlPageSuccess": {
+                "type": "string",
+                "description": "URL to the user be redirected after the DEBIT be sucessfully processed. Required for DEBIT."
+            },
+            "urlPageFault": {
+                "type": "string",
+                "description": "URL to the user be redirected after the DEBIT process fail. Required for DEBIT."
+            },
+            "creditCard": {
+                "$ref": "#/TransactionCreditCard",
+                "description": "Credit Card details"
+            },
+            "affiliation": {
+                "description": "Affiliation specific information.",
+                "$ref": "#/TransactionAffiliation"
+            }
+        },
+        "required": [
+            "type",
+            "id",
+            "value"
+        ],
+        "example": { 
+          "type": "BILLET", 
+          "id": "123456", 
+          "value": 128.25, 
+          "bankCode": "341", 
+          "returnUrl": "http://cart.acme.com.br/accstgpg/confirm?operationName=confirmPayment&amp;OrderId=123456&amp;PaymentId=1&amp;StoreId=ACME", 
+          "payer": { 
+            "id": "3123123123123", 
+            "type": "PERSON", 
+            "name": "Jose Alves Marques Silva", 
+            "address": { 
+                "address": "Avenida Doutor Cardoso de Melo, 1855",
+                "neighborhood": "Vila Olimpia", 
+                "postalCode": "02744915", 
+                "city": "São Paulo", 
+                "state": "SP"
+            } 
+          }
+        }
+    },
+    "TransactionPayer": {
+        "type": "object",
+        "description": "Element that represents the person / company responsible for the transaction",
+        "properties": {
+            "id": {
+               "type": "string",
+                "description": "Document number of the person or company. In Brazil it should be the CPF for people and CNPJ for companies"
+            },
+            "type": {
+               "type": "string",
+                "description": "Type of the payer",
+                "enum": [
+                    "PERSON",
+                    "COMPANY"
+                ]
+            },
+            "name": {
+                "type": "string",
+                "description": "Name of the payer"
+            },
+            "address": {
+                "$ref": "#/TransactionPayerAddress",
+                "description": "Address of the payer"
+            }
+        },
+        "required": [
+            "id",
+            "type",
+            "name",
+            "address"
+        ]
+    },
+    "TransactionPayerAddress": {
+        "type": "object",
+        "description": "Element that represents the adress of the payer of the transaction",
+        "properties": {
+            "address": {
+                "type": "string",
+                "description": "Address information with the necessary complements. Ex: Avenue Dr. Cardoso de Melo, 1855"
+            },
+            "neighborhood": {
+               "type": "string",
+                "description": "Neighborhood of the address"
+            },
+            "postalCode": {
+               "type": "string",
+                "description": "Postal code"
+            },
+            "city": {
+                "type": "string",
+                "description": "City"
+            },
+            "state": {
+                "type": "number",
+                "description": "State"
+            }
+        },
+        "required": [
+            "address",
+            "neighborhood",
+            "postalCode",
+            "city",
+            "state"
+        ]
+    },
+    "TransactionAffiliation": {
+        "type": "object",
+        "description": "Element that represents the adress of the payer of the transaction",
+        "properties": {
+            "id": {
+                "type": "string",
+                "description": "Identification of the affiliation"
+            },
+            "integrationId": {
+               "type": "string",
+                "description": "Integration id of the affiliation"
+            },
+            "customerId": {
+               "type": "string",
+                "description": "Customer id of the affiliation"
+            },
+            "acquirer": {
+                "type": "string",
+                "description": "Aquirer of the affiliation"
+            },
+            "affiliationId": {
+                "type": "number",
+                "description": "Affiliation id"
+            },
+            "affiliationPassword": {
+                "type": "number",
+                "description": "Affiliation password"
+            }
+        },
+        "required": [
+        ]
+    },
+    "TransactionStatus": {
+        "type": "object",
+        "description": "Element that represents the status of a transaction",
+        "properties": {
+            "type": {
+               "type": "string",
+                "description": "Transaction type",
+                "enum": [
+                    "BILLET",
+                    "CREDIT_CARD",
+                    "DEBIT"
+                ]
+            },
+            "id": {
+                "type": "string",
+                "description": "Identification of the transaction"
+            },
+            "value": {
+                "type": "number",
+                "description": "Value of the transaction"
+            },
+            "date": {
+                "type": "string",
+                "description": "Date of the transaction"
+            },
+            "status": {
+                "type": "string",
+                "description": "Status of the transaction"
+            },
+            "dueDate": {
+                "type": "string",
+                "description": "Due date of the transaction"
+            },
+            "url": {
+                "type": "string",
+                "description": "URL of the transaction. Valid for BILLET and DEBIT"
+            },
+            "tid": {
+                "type": "string",
+                "description": "Transaction id in the acquirer"
+            },
+            "creditCard": {
+                "$ref": "#/TransactionCreditCard",
+                "description": "Credit Card details"
+            },
+            "metadata": {
+                "$ref": "#/TransactionMetadata",
+                "description": "Object that contains the metadata information. This object may be composed by none or may key/value pairs representing the metadata information."
+            },
+            "error": {
+                "$ref": "#/TransactionStatusError",
+                "description": "Error detail"
+            }
+        },
+        "required": [
+            "type",
+            "id",
+            "value",
+            "date",
+            "status"
+        ]
+    },
+    "TransactionStatusError": {
+        "type": "object",
+        "description": "Element that represents the error of a transaction",
+        "properties": {
+            "code": {
+                "type": "number",
+                "description": "Error Code"
+            },
+            "message": {
+                "type": "string",
+                "description": "Error message"
+            }
+        },
+        "required": [
+            "code"
+        ]
+    },
+    "TransactionCreditCard": {
+        "type": "object",
+        "description": "Element that represents the Credit Card information",
+        "properties": {
+            "brand": {
+                "type": "string",
+                "description": "Brand of the credit card"
+            },
+            "number": {
+                "type": "string",
+                "description": "Number of the credit card"
+            },
+            "expirationYear": {
+                "type": "string",
+                "description": "Year of the expiration of the card"
+            },
+            "expirationMonth": {
+                "type": "string",
+                "description": "Month of the expiration of the card with two digits"
+            },
+            "securityCode": {
+                "type": "string",
+                "description": "Security code of the card"
+            },
+            "name": {
+                "type": "string",
+                "description": "Name of the holder of the credit card"
+            }
+        },
+        "required": [
+        ]
+    },
+    "TransactionMetadata": {
+        "type": "object",
+        "description": "Element that represents the Metadata information",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "The name of the field is the name of the metadata and the value is the metadata itself."
+            },
+            "key2": {
+                "type": "string",
+                "description": "The name of the field is the name of the metadata and the value is the metadata itself."
+            },
+            "keyN": {
+                "type": "string",
+                "description": "The name of the field is the name of the metadata and the value is the metadata itself."
+            }
+        },
+        "required": [
+        ]
+    }
+}

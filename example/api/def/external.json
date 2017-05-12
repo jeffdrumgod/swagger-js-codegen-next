@@ -1,0 +1,43 @@
+{
+	"ExternalReference": {
+		"properties": {
+			"systemId": {
+				"type": "string",
+				"description": "System identifier"
+			},
+			"entityTp": {
+				"type": "string",
+				"description": "Entity type"
+			},
+			"entityId": {
+				"type": "string",
+				"description": "Entity identifier"
+			},
+			"parentId": {
+				"type": "string",
+				"description": "Parent identification on Infrashop"
+			},
+			"externalReference": {
+				"type": "string",
+				"description": "External reference of this entity"
+			},
+			"externalReferenceDesc": {
+				"type": "string",
+				"description": "Optional description of the external reference"
+			}
+		},
+		"example": {
+			"systemId": "NTS",
+			"entityTp": "LVL",
+			"entityId": "16020",
+			"externalReference": "3918",
+			"externalReferenceDesc": "Vestuário > Calças"
+		},
+		"required": [
+			"systemId",
+			"entityTp",
+			"entityId",
+			"externalReference"
+		]
+	}
+}

@@ -1,0 +1,132 @@
+{
+	"FreightRequest": {
+		"type": "object",
+		"description": "Freight cost and delivery time request object",
+		"example": {
+			"skus": "{104496,1,}",
+			"postalCode": "12244000"
+		},
+		"properties": {
+			"skus": {
+				"type": "string",
+				"description": "Sku ID + quantity that should be used to get freight info. This is NOT a JSON value, but has a look-alike syntax \"{SKU,QT,}\", with no quotes. If the SKU ID is 104496 and you want 2 pieces, the value would be \"{104496,2,}\", with no quotes. If you want to get freight info fot several SKUs at the same time, just use the same pattern several times, like \"{123,1,}{456,1,}{678,1,}\", again with no quotes."
+			},
+			"postalCode": {
+				"type": "string",
+				"description": "Zip Code. It doesn't have to have trailing zeroes, but it is recommeded to send always all the digits. In Brazil, always 9 digits."
+			}
+		},
+		"required": [
+			"skus",
+			"postalcode"
+		]
+	},
+	"FreightResponse": {
+		"type": "array",
+		"example": [
+			{
+				"skuId": "104496",
+				"qt": 1, 
+				"listPrice": 799,
+				"salePrice": 799,
+				"freightOptions": [
+					{
+						"deliveryTime": 6,
+						"timeCD": 0,
+						"freightTotalTime": 7,
+						"deliveryType": "NOR",
+						"friendlyName": "Normal",
+						"value": 16.99
+					}
+				]
+			},
+			{
+				"skuId": "104495",
+				"qt": 1,
+				"listPrice": 99,
+				"salePrice": 99,
+				"freightOptions": [
+					{
+						"deliveryTime": 6,
+						"timeCD": 0,
+						"freightTotalTime": 7,
+						"deliveryType": "NOR",
+						"friendlyName": "Normal",
+						"value": 16.99
+					}
+				]
+			}
+		],
+		"description": "Freight option list",
+		"items": {
+			"$ref": "#/FreightResponseItem"
+		}
+	},
+	"FreightResponseItem": {
+		"type": "object",
+		"description": "One SKU with its freight option list and prices.",
+		"properties": {
+			"skuId": {
+				"type": "string",
+				"description": "SKU unique identifier. Each SKU will have its own price and freight information."
+			},
+			"qt": {
+				"type": "number",
+				"description": "Quantity available for purchase at this moment. If you requested 10 pieces but we have only 5 available this will be 5 and the request won't fail. This number has no decimal places."
+			},
+			"listPrice": {
+				"type": "number",
+				"description": "SKU list price. This will be the same list price sent to you during price integration."
+			},
+			"salePrice": {
+				"type": "number",
+				"description": "SKU sale price. THis may or may not be the same one sent to you when the price was integrated, as promotions could may the price."
+			},
+			"freightOptions": {
+				"type": "array",
+				"description": "Freight options",
+				"items": {
+					"$ref": "#/FreightOption"
+				}
+			}
+		}
+	},
+	"FreightOption": {
+		"type": "object",
+		"description": "Freight option. Here you will se a freight delivery options, containing cost, delivery time and a few other information",
+		"properties": {
+			"deliveryTime": {
+				"type": "number",
+				"description": "Delivery time. This is the time the carrier will take to deliver the package after picking it up at the warehouse. This number has no decimal places."
+			},
+			"timeCD": {
+				"type": "number",
+				"description": "This is the handling time. This number has no decimal places."
+			},
+			"freightTotalTime": {
+				"type": "number",
+				"description": "This is the total freight time (the value that should be shown to the customer). This is the handling time (timeCD) + delivery time + worse leadtime from all SKUs provided in the request. This number has no decimal places."
+			},
+			"deliveryType": {
+				"type": "string",
+				"description": "Delivery type. \"NOR\" for normal, \"EXP\" for express and so on. Please check Delivery object enum definition for all possibilities."
+			},
+			"friendlyName": {
+				"type": "string",
+				"description": "Friendly delivery time name. This is, for example, \"Normal\" for \"NOR\" delivery type."
+			},
+			"value": {
+				"type": "number",
+				"description": "This is how much the customer must pay for this delivery type."
+			}
+		},
+		"required": [
+			"deliveryTime",
+			"timeCD",
+			"freightTotalTime",
+			"deliveryType",
+			"friendlyName",
+			"value"
+		]
+	}
+}

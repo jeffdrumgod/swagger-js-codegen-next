@@ -1,0 +1,810 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API's Infrashop Marketplace",
+        "description": "Here you can find all API's for integration of your store with Marketplaces Infrashop."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "API de autenticação",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Product Management API",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your products. Operations here include retrieving products and SKUs by their IDs and creating/updating products and SKUs - including UDAs, categories, images and base information.</font>"
+        },
+        {
+            "name": "Product Management API - Stock",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the stocks. Operations here includes retrieving stocks and updating values in batch (several in a single call) or individually.</font>"
+        },
+        {
+            "name": "Product Management API - Price",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the SKU's prices. Operations here includes retrieving prices and updating values in batch (several in a single call) or individually.</font>"
+        },
+        {
+            "name": "Order Management API - Tracking",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the Order trackings. Operations here includes retrieving trackings and create new trackings for Orders.</font>"
+        },
+        {
+            "name": "Order Feed API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with order feed engine. You will find operations to retrieve updated orders, payment and order tracking events. After retrieving and processing the information, just call DELETE operation providing processed UUIDs in order to acknowledge them.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-content-api/oauth/token": {
+			"$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-content-api/v1/products/{productId}": {
+            "put": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Updates a previously existing product",
+                "description": "This API operation will allow you to update a previously existing product & SKUs. Any non-mandatory value that you do not provide - such as category, UDA, SKU list or images - will remain unchanged. Product/SKU images can be a HTTP/HTTPS URL. In this case, Infrashop platform will download the image and resize it in order to send the product/SKU to the website.",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "description": "Product info",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The product was successfuly updated. An updated version of the product will be returned.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Retrieve the product by its ID",
+                "description": "This API operation will allow you to retrieve a product by its ID.",
+                "parameters": [
+                    {
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Sku unique identifier. If the SKU is specified, the returned product will contain only the SKU, the SKU is not informed, will be returned all product SKUs."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-stock-api/v1/stocks/{skuId}/{warehouseId}/{stockType}": {
+            "get": {
+                "tags": [
+                     "Product Management API - Stock"
+                ],
+                "summary": "Fetches the SKU stock data",
+                "description": "This API operation will fetch the SKU stock's data by the \"skuId\", \"warehouseId\" and \"stockType\" provided.",
+                "parameters": [
+                    {
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "warehouseId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Warehouse unique identifier"
+                    },
+                    {
+                        "name": "stockTypeId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Unique identifier  for Stock type. There are 3 different stock types. Reservation during checkout process tries to reserve stock from \"real\" stock (type 1) and then, if not availabe, tries to use virtual stock (type 2) and we have too the Cross-docking (type 3)",
+						"enum": [ "1", "2", "3"]
+                    },
+                    {
+                        "name": "includeKits",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean",
+                        "description": "Should the KIT's stocks in which the SKUs are included be returned too? Default is false."
+                    },
+                    {
+                        "name": "saleChannel",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "indicates the sale channel of the stock for apply the stock factor."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A paginated list containing the SKU stock's data fetched. It will contain only one register if includeKits=false and at least one otherwise (if the SKU is not included in any KIT). If the SKU is contained in 5 KITs, for example, then the result will have 6 items: the SKU stock itself + the 5 KIT's stocks.",
+                        "schema": {
+                            "$ref": "#/definitions/StockListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Stock not found",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-stock-api/v1/stocks": {
+            "post": {
+                "tags": [
+                    "Product Management API - Stock"
+                ],
+                "summary": "Updates SKU stock information.",
+                "description": "Updates stock information for a collection os SKUs.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type": "array",
+							"items": {
+								"$ref": "./api/def/itg-product.json#/Stock"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid stock information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                     "Product Management API - Stock"
+                ],
+                "summary": "Fetches a list of SKU stock's data",
+                "description": "This API operation will fetch a list of SKU stock's data paginated. In order to enhance the feching results, it's possible to provide the \"skuId\", the \"warehouseId\" and/or the \"stockType\". If no parameters were provided, all SKU stock's data (paginated) will be fetched.",
+                "parameters": [
+                    {
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "warehouseId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "description": "Warehouse unique identifier"
+                    },
+					{
+                        "name": "stockTypeId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "description": "Unique identifier  for Stock type. There are 3 different stock types. Reservation during checkout process tries to reserve stock from \"real\" stock (type 1) and then, if not availabe, tries to use virtual stock (type 2) and we have too the Cross-docking (type 3)",
+						"enum": [ "1", "2", "3"]
+                    },
+                    {
+                        "name": "includeKits",
+                        "in": "query",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean",
+                        "description": "Should the KIT's stocks in which the SKUs are included be returned too? Default is false."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated list of SKU stock's data fetched.",
+                        "schema": {
+                            "$ref": "#/definitions/StockListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/prices/{skuId}/{priceTp}": {
+            "get": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Fetches SKU price.",
+                "description": "This API operation will fetch the SKU price's data by the \"skuId\" and \"priceTp\" provided.",
+                "parameters": [
+                    {
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "priceTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+						"enum": [
+							"DFL",
+							"SLE",
+							"SLE-INT"
+						],
+						"description": "Price type. This can be \"DFL\", which is the list price; \"SLE\", which is the sale price or \"SLE-INT\" where INT is a source name of sale channel, etc."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SKU price's data fetched.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Price"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Price not found",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/prices": {
+            "get": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Feches a list of SKU price's data",
+                "description": "This API operation will fetch a collection of SKU price's data paginated. In order to enhance the fetching results, it's possible to provide the \"skuId\" and/or \"pricetp\". If no parameters were provided, all SKU price's data (paginated) will be fetched.",
+                "parameters": [
+                    {
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "priceTp",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Price type, like \"DFL\", \"SLE\" etc. This parameter is not allowed in combination with the parameter saleChannel."
+                    },
+                    {
+                        "name": "saleChannel",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Sale channel, like \"NTS\", \"WAL\", etc. When this parameter is informed then only two prices will be returned by the API: the list price and the promotional price for the sale channel. This parameter is not allowed in combination with the parameter priceTp."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated collection of SKU price's data fetched.",
+                        "schema": {
+                            "$ref": "#/definitions/PriceListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Updates SKU prices.",
+                "description": "Updates price information for a collection os SKUs.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type" : "array",
+							"items": {
+								"$ref": "./api/def/itg-product.json#/Price"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid price information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update price for these SKUs. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/trackings": {
+            "post": {
+                "tags": [
+                    "Order Management API - Tracking"
+                ],
+                "summary": "Updates order tracking information.",
+                "description": "Receives a order tracking event. This API operation should be called to inform the marketplace that this order is ready to be dispatched, was dipatched,  etc.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type" : "array",
+							"items": {
+								"$ref": "./api/def/itg-order.json#/Tracking"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid tracking information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update tracking for these orders. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/orders/{orderId}/trackings": {
+          "get": {
+                    "tags": [
+                        "Order Management API - Tracking"
+                    ],
+                    "summary": "Retrieve the tracking data filtered by order id.",
+                    "description": "Retrieve tracking data. This API operation will retrieve the order tracking data paginated.",
+                    "parameters": [
+              {
+                            "name": "orderId",
+                            "in": "path",
+                "required": true,
+                            "type": "integer",
+                "description":"The order unique identifier."
+                        },
+                        {
+                            "name": "page",
+                            "required": false,
+                            "default": 0,
+                            "description": "Page number. Starts with 0.",
+                            "type": "integer",
+                            "in": "query"
+                        },
+                        {
+                            "name": "size",
+                            "required": false,
+                            "default": 20,
+                            "description": "Page size. Cannot be higher than 20.",
+                            "type": "integer",
+                            "in": "query"
+                        },
+                        {
+                            "name": "Authorization",
+                            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                            "in": "header",
+                            "required": true,
+                            "type": "string"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "The paginated list of trackings data.",
+                            "schema": {
+                                "$ref": "#/definitions/OrderTrackingListPagination"
+                            }
+                        },
+                        "401": {
+                            "description": "Please provide a valid authentication token.",
+                            "schema": {
+                                "$ref": "./api/def/oauth.json#/InvalidToken"
+                            }
+                        },
+                        "403": {
+                            "description": "You cannot retrieve tracking data. Please check response messages.",
+                            "schema": {
+                                "$ref": "./api/def/oauth.json#/InvalidToken"
+                            }
+                        },
+                        "404": {
+                            "description": "Order not found.",
+                            "schema": {
+                                "$ref": "./api/def/mercury-base.json#/Error"
+                            }
+                        }
+                    }
+                }
+            },
+        "/ifc-feed-api/v1/feed/ord": {
+			       "$ref":"./api/feed-ord.json#/paths/ORD"
+		    },
+        "/ifc-feed-api/v1/feed/pay": {
+           "$ref":"./api/feed-ord.json#/paths/PAY"
+         }
+    },
+    "definitions": {
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "StockListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. StockList entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [
+                        {
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=1&size=20"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing StockList entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-product.json#/Stock"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "PriceListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. PriceList entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [
+                        {
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=1&size=20"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing StockList entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-product.json#/Price"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        }
+    }
+}

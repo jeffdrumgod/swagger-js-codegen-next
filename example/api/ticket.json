@@ -1,0 +1,609 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Ticket API",
+        "description": "This is Infrashop Ticket API documentation. Here you will find API operations to interact with infrashop ticket engine. You will be able to create tickets, query for tickets by several attributes (SLA, customer data, date, etc), update tickets and so on."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ifc-ticket-api",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce Ticket API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Ticket API",
+            "description": "<br><font size=\"2\">This is Infrashop Ticket API documentation. Here you will find API operations to interact with infrashop ticket engine. You will be able to create tickets, query for tickets by several attributes (SLA, customer data, date, etc), update tickets and so on.</font>"
+        }
+    ],
+    "paths": {
+        "/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/v1/tickets": {
+            "get": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Search for tickets",
+                "description": "Search ticket database for tickets. This API operation allows you to search for tickets using several filters. The more filters you add, more restritive the search will be.",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "status",
+                        "description": "Support ticket status. If you want to retrieve tickets for several status in a single call, just provide a comma separated status list.",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "customerEmail",
+                        "description": "Support ticket customer email",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "customerDocumentNr",
+                        "description": "Support ticket customer document number",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "expiredSLA",
+                        "description": "Support ticket expired SLA.If set to true, only expired SLA tickets will be returned.",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "orderId",
+                        "description": "Support ticket order ID",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Support tickets that match the provided filter, using standard pagination mechanism",
+                        "schema": {
+                            "$ref": "#/definitions/TicketPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to query for tickets",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Creates a new ticket",
+                "description": "Creates a new ticket. This API operation will create a ticket using the posted data, enqueuing it in support queue based on its nature.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Newly created ticket",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ticket info. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage tickets",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/tickets/{ticketId}": {
+            "get": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Retrieve a ticket by its ID",
+                "description": "Retrieve detailed ticket information by its ID",
+                "parameters": [
+                    {
+                        "name": "ticketId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Support ticket unique identifier."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Support ticket information",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to query for tickets",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "No ticket found with this ticket ID"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Update a ticket",
+                "description": "Update provided ticket information. This API operation is supposed to be used to change basic ticket data only (shortDescription, description, customer and order). Trying to update any other attribute will cause a 400 error. If you want to update the ticket status, use the interaction API operation.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    {
+                        "name": "ticketId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Support ticket unique identifier."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated version of this ticket",
+                        "schema": {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ticket data or trying to change data that is read only. Please check error messages for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage tickets",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "No ticket found for this ID."
+                    }
+                }
+            }
+        },
+        "/v1/tickets/{ticketId}/interaction": {
+            "get": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Retrieve all interaction entries for this ticket.",
+                "description": "Retrieve all interaction entries for this ticket.",
+                "parameters": [
+                    {
+                        "name": "ticketId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Support ticket unique identifier."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Complete interaction entries for this ticket",
+                        "schema": {
+                            "$ref": "#/definitions/InteractionArray"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to query for tickets. Please ensure also that you have access to this ticket.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "No ticket found for this ID."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ticket API"
+                ],
+                "summary": "Creates a new interaction entry",
+                "description": "Creates a new interaction entry for this ticket. When creating a new interacion you can<br> <ul><li>Update the ticket status - Just send a new status in \"newStatus\" interaction attribute.</li><li>Assign this ticket to a different user - just send the new username in the \"assignee\" attribute.</li></ul>If you do not want to change the assignee or status of the ticket, just leave those fields blank. In all cases you have to inform a detailed description of the interaction.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Interaction"
+                        }
+                    },
+                    {
+                        "name": "ticketId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Support ticket unique identifier."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Newly created Interaction.",
+                        "schema": {
+                            "$ref": "#/definitions/Interaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ticket data or trying to change ticket status to an invalid status. Please check error messages for more details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage tickets",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "No ticket found for this ID."
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "TicketPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Ticket entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing ticket entries.",
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Ticket"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "Ticket": {
+            "type": "object",
+            "description": "A ticket.",
+            "properties": {
+                "ticketId": {
+                    "type": "string",
+                    "description": "Support ticket unique identifier"
+                },
+                "shortDescription": {
+                    "type": "string",
+                    "description": "Support ticket short description. This text is the \"ticket title\" that is supposed to be rendered in lists and short views."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Complete ticket description. This is the detailed information about the ticket, and should be as complete as possible."
+                },
+                "openedBy": {
+                    "type": "string",
+                    "description": "Username that opened this ticket."
+                },
+                "assignedTo": {
+                    "type": "string",
+                    "description": "Username that is handling this ticket now."
+                },
+                "createDt": {
+                    "type": "string",
+                    "description": "Support ticket creation date. DO not inform this when creating a ticket as it will be filled with the current date/time.",
+                    "format": "date-time"
+                },
+                "updDt": {
+                    "type": "string",
+                    "description": "Support ticket last update date",
+                    "format": "date-time"
+                },
+                "orderId": {
+                    "type": "string",
+                    "description": "If this ticket is related to an order, this should contain the order number."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Support ticket status. The status defines in which step of a ticket lifecycle this ticket is. Default starting status is always OPENED.",
+                    "enum": [
+                        "OPENED",
+                        "ESCALATED",
+                        "IN_DISPUTE",
+                        "RESOLVED",
+                        "CANCELED",
+                        "CLOSED"
+                    ]
+                },
+                "customer": {
+                    "$ref": "#/definitions/TicketCustomer"
+                },
+                "domain": {
+                    "type": "string",
+                    "description": "The ticket domain defines the main subject of this ticket. ORDER, PRODUCT_DATA, CUSTOMER_REQUEST, etc. You can use anything here (as long as it is a single word, all uppercase with up to 35 letters), and then filter for this when querying for tickets."
+                },
+                "metadata": {
+                    "type": "string",
+                    "description": "This attribute might contain anything that this specific ticket domain might require. For example, if this ticket is related to product attribute approval, this metadata might contain structured data with the productId, attribute that was changed, etc. Anything that you post here will be accepted, as long as it is a valid JSON."
+                },
+                "interactions": {
+                    "type": "array",
+                    "description": "List of interactions in this ticket. This attribute will contain the complete history of this ticket, sorted by occurrence date, from the newest to the oldest.",
+                    "items": {
+                        "$ref": "#/definitions/Interaction"
+                    }
+                }
+            },
+            "required": [
+                "ticketId",
+                "shortDescription",
+                "description",
+                "openedBy",
+                "createDt",
+                "status",
+				"domain"
+            ]
+        },
+        "TicketCustomer": {
+            "type": "object",
+            "description": "If this ticket is related to a website customer, this id the customer information.",
+            "properties": {
+                "customerId": {
+                    "type": "integer",
+                    "description": "Customer unique identified. This is going to be filled when this customer is a registered customer in the website. If you inform the customerId, you do not need to inform any other customer data, as those fields will be filled with data from the current customer's data."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Customer name"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Customer email"
+                },
+                "documentNr": {
+                    "type": "string",
+                    "description": "Customer documet number. It can be any document (CPF/CNPJ, RG, Passport, etc). This is a read-only attribute, it won't be considered when creating/updating a ticket. THis will be filled only when the customer is a registered customer and the customerId was informed during the creation of the ticket."
+                },
+                "contactPhone": {
+                    "type": "string",
+                    "description": "Customer contact phone. This is a read-only attribute, it won't be considered when creating/updating a ticket. THis will be filled only when the customer is a registered customer and the customerId was informed during the creation of the ticket."
+                }
+            },
+            "required": [
+                "name",
+                "email"
+            ]
+        },
+        "Interaction": {
+            "type": "object",
+            "description": "Support ticket interaction entry. Every time a ticket is updated, a new interaction must be generated.",
+            "properties": {
+                "updatedBy": {
+                    "type": "string",
+                    "description": "User that created this interaction. You do not have to set this when posting the data, as it will be filled with the current logged user name. When retrieving interactions, this will always be filled."
+                },
+                "assignee": {
+                    "type": "string",
+                    "description": "User that this ticket will be assigned to."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Detailed description of this event."
+                },
+                "restricted": {
+                    "type": "boolean",
+                    "description": "If this is true, that means that end customers (website customers) won't see this interaction. This is useful when you want the create an interaction that is supposed to be visible only to employees, like internal redirection of this ticket.",
+                    "default": false
+                },
+                "oldStatus": {
+                    "type": "string",
+                    "description": "Old ticket status. The value domain is the same as \"status\" attribute in Ticket entity",
+                    "enum": [
+                        "OPENED",
+                        "ESCALATED",
+                        "IN_DISPUTE",
+                        "RESOLVED",
+                        "CANCELED",
+                        "CLOSED"
+                    ]
+                },
+                "newStatus": {
+                    "type": "string",
+                    "description": "New ticket status. If there is no change in the ticket status, this is the same as \"oldStatus\". The value domain is the same as \"status\" attribute in Ticket entity.",
+                    "enum": [
+                        "OPENED",
+                        "ESCALATED",
+                        "IN_DISPUTE",
+                        "RESOLVED",
+                        "CANCELED",
+                        "CLOSED"
+                    ]
+                },
+                "insDt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date and time when this interaction happened. DO not inform this when creating an interaction as it will be filled with current date/time."
+                }
+            },
+            "required": [
+                "description",
+                "updatedBy"
+            ]
+        },
+        "InteractionArray": {
+            "type": "array",
+            "items": [
+                {
+                    "$ref": "#/definitions/Interaction"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,352 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Marketplace Integration",
+        "description": "In this API documentation, you will find all the information on the APIs that must be used to integrate Infrashop e-commerce platform and your Marketplace.<br><br> This documentation was divided in two main API groups plus an authentication/authorization API, as you can see below. Feel free to browse through all of them and to try it for yourself!"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "API operations that you call",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to send information to Infrashop platform. Using these operations, you will be able to send an order, send payment status updates for an order and to request SKU freight cost and delivery time information from clients running in Infrashop.</font>"
+        },
+        {
+            "name": "API operations that you provide",
+            "description": "<br><font size=\"2\">In this group you will find the operations that you need to provide for us to call. Infrashop platform will call those operations when needed. As you can see here, you need to provide operations to update basic product/SKU data, stock and price of and also update the status of orders. Please notice that the operations provided here are samples, so you can test and see the behavior that we expect from your application.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-content-api/oauth/token": {
+			"$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-content-api/v1/products": {
+            "post": {
+                "tags": [
+                    "API operations that you provide"
+                ],
+                "summary": "Updates your product data",
+                "description": "Updates product information in the Marketplace. This operation receives a product, with or without its SKUs and updates the information.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-stock-api/v1/stocks": {
+            "post": {
+                "tags": [
+                    "API operations that you provide"
+                ],
+                "summary": "Updates SKU stock information.",
+                "description": "Updates stock information for a collection os SKUs.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type": "array",
+							"items": {
+								"$ref": "./api/def/itg-product.json#/Stock"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid stock information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/prices": {
+            "post": {
+                "tags": [
+                    "API operations that you provide"
+                ],
+                "summary": "Updates SKU prices.",
+                "description": "Updates price information for a collection os SKUs.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type" : "array",
+							"items": {
+								"$ref": "./api/def/itg-product.json#/Price"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid price information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update price for these SKUs. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/trackings": {
+            "post": {
+                "tags": [
+                    "API operations that you provide"
+                ],
+                "summary": "Updates order tracking information.",
+                "description": "Receives a order tracking event. This API operation should be called to inform the marketplace that this order is ready to be dispatched, was dipatched,  etc.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+							"type" : "array",
+							"items": {
+								"$ref": "./api/def/itg-order.json#/Tracking"
+							}
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid tracking information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update tracking for these orders. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-freight-api/v1/freights": {
+            "post": {
+                "tags": [
+                    "API operations that you call"
+                ],
+                "summary": "Provides shipping information for a shopping cart.",
+                "description": "This API provides detailed shipping fees and delivery time for a given collection of SKUs and a delivery ZIP code.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-freight.json#/FreightRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detailed shipping fees and delivery time information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-freight.json#/FreightResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "This response code should be used when the request data was not recognized and this call will be refused.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-order-api/v1/orders": {
+            "post": {
+                "tags": [
+                    "API operations that you call"
+                ],
+                "summary": "Receives an order.",
+                "description": "This API will be able to receive an order. An order should be sent as soon as it is placed by the customer, so the stock can be immediatelly reserved and any order pre-approval step of the order can be performed. Please understand that the order is sent before its payment is processed, so it is necessary to  wait for a confirmation in order to proceed with the order flow.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Order accepted successfuly.",
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Order"
+                        }
+                    },
+                    "400": {
+                        "description": "This response code should be used when any order data was not recognized and the call is refused.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-payment-api/v1/payments": {
+            "post": {
+                "tags": [
+                    "API operations that you call"
+                ],
+                "summary": "Approve/Cancel an order payment",
+                "description": "This API whould be able to receive order payment confirmation/refusal. Every time an order is paid (or refused), This API operation is called to inform that this order should proceed with the fullfilment or be canceled.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-order.json#/Payment"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment update information accepted successfuly."
+                    },
+                    "400": {
+                        "description": "This response code should be used when any payment data was not recognized and you refuse this call.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

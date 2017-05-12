@@ -1,0 +1,123 @@
+{
+	"AsyncMetadata": {
+		"properties": {
+			"asyncMetadataId": {
+				"type": "number",
+				"description": "Async metadata unique identifier. This number has no decimal places."
+			},
+			"messageBuffer": {
+				"type": "string",
+				"description": "Process buffer. Any user message, log, debug, etc. can be found here."
+			},
+			"totalRecords": {
+				"type": "number",
+				"description": "Number of records total. This number has no decimal places."
+			},
+			"processedRecords": {
+				"type": "number",
+				"description": "Number of records already processed. This includes both successful and failed records. This number has no decimal places."
+			},
+			"failedRecords": {
+				"type": "number",
+				"description": "Number of records that failed. That doesn't mean that the entire operation will fail. You should see which records failed in \"result\" attribute. This number has no decimal places."
+			},
+			"startDate": {
+				"type": "number",
+				"description": "The exate date and time this operation started. This number has no decimal places. This number has no decimal places."
+			},
+			"lastUpdate": {
+				"type": "number",
+				"description": "The last time this operation's metadata was updated. This number has no decimal places. This number has no decimal places."
+			},
+			"finishDate": {
+				"type": "number",
+				"description": "Finish date. If set, the operation can be handled as a finished operation. This number has no decimal places."
+			},
+			"inErrorState": {
+				"type": "boolean",
+				"description": "Error state flag. If true, that means that this async operation encountered a problem and is not running anymore."
+			},
+			"cancelRequested": {
+				"type": "boolean",
+				"description": "If true a cancel was requested but the process was not cancelled yet."
+			},
+			"cancelled": {
+				"type": "number",
+				"description": "If true cancelled process flag. This number has no decimal places."
+			},
+			"percentageProcessed": {
+				"type": "number",
+				"description": "Percentage of records processed. This number has no decimal places."
+			},
+			"successRecords": {
+				"type": "number",
+				"description": "Number of successful records. This number has no decimal places."
+			},
+			"type": {
+				"type": "string",
+				"description": "Type of async medatata. This is a three letter mnemonic that you can use to identify the operation type."
+			},
+			"result": {
+				"description": "Operation result. This is a JSON that is constantly updated as the operation executes.",
+				"type": "object"
+			},
+			"validationResults": {
+				"description": "Object to use for non critical validation results.",
+				"type": "object"
+			},
+			"links": {
+				"type": "array",
+				"description": "This link array will contain any donwloadable/callable link. For example, if the async operation generated a spreadsheet, this will contain the download link.",
+				"items": {
+					"$ref":"#/Link"
+				}
+			}
+		},
+		"example": {
+			"asyncMetadataId": 489171,
+			"messageBuffer": "",
+			"totalRecords": 2,
+			"processedRecords": 2,
+			"failedRecords": 0,
+			"startDate": 1464789403000,
+			"lastUpdate": 1464789446597,
+			"finishDate": 1464789446596,
+			"inErrorState": false,
+			"cancelRequested": false,
+			"cancelled": false,
+			"result": [],
+			"validationResults": [],
+			"type": "MPI",
+			"successRecords": 2,
+			"percentageProcessed": 100,
+			"links":[  
+				{  
+					"rel":"sheet",
+					"href":"https://ad-jbl.a8e.net.br/ifc-content-api/v1/sheet/file-sheet-result-import/JBL_TEMPLATE_MASTER_01_06_16_I-2016-06-01-10-56"
+				}
+			]
+		},
+		"required": [
+			"asyncMetadataId",
+			"type",
+			"inErrorState",
+			"startDate"
+		]
+	},
+	"Link": {
+		"properties": {
+			"rel": {
+				"type": "string",
+				"description": "Link type. Please refer to the specific operation in order to know which is the link type (for example, \"sheet\" for a spreadsheet, \"json\" for a JSON link call.)"
+			},
+			"href": {
+				"type": "string",
+				"description": "link do retrieve the information/content."
+			}
+		},
+		"required" : [
+			"rel",
+			"href"
+		]
+	}
+}

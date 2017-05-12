@@ -1,0 +1,38 @@
+{
+  "name": "swagger-js-codegen",
+  "version": "1.0.0",
+  "description": "A Swagger codegen for JavaScript - ES6",
+  "main": "/lib/codegen.es6.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "example1": "babel-node --presets es2015 example/example1.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jeffdrumgod/swagger-js-codegen-next.git"
+  },
+  "keywords": [
+    "swagger",
+    "codegen",
+    "js",
+    "es6"
+  ],
+  "author": "Jefferson Rafael Kozerski <jeff.drumgod@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jeffdrumgod/swagger-js-codegen-next/issues"
+  },
+  "homepage": "https://github.com/jeffdrumgod/swagger-js-codegen-next#readme",
+  "devDependencies": {
+    "babel-cli": "6.24.1",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "eslint": "3.19.0",
+    "js-beautify": "1.6.12",
+    "lodash": "4.17.4",
+    "mustache": "2.3.0"
+  }
+}

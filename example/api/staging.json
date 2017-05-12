@@ -1,0 +1,777 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Staging API",
+        "description": "This is Infrashop Staging API documentation. Here you will find API operations to interact with infrashop staging queue. You will be able to query for pending entries, enqueue a new operation, etc."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ifc-staging-api",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce Staging API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Staging API",
+            "description": "<br><font size=\"2\">This is Infrashop Staging API documentation. Here you will find API operations to interact with infrashop staging queue. You will be able to query for pending entries, enqueue a new operation, etc.</font>"
+        }
+    ],
+    "paths": {
+        "/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/v1/staging": {
+            "post": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Creates a new staging entry",
+                "description": "Enqueues a new entry. This API operation will create this entity and automatically enqueue it using provided data.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Staging"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Newly created Staging entry",
+                        "schema": {
+                            "$ref": "#/definitions/Staging"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid staging info. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage staging information for this systemId and integrationId",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "409": {
+                        "description": "There is already a staging entry using this systemId, integrationId, id and startDt.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staging/{systemId}/{integrationId}": {
+            "get": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Retrieve all entries for this systemId and integrationId",
+                "description": "Retrieve all entries for this id, systemId and integrationId. By default, only entries that are pending are returned. If \"all=true\" is provided, this API operation will return all stage entries, even already processed ones.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Page number. Starts with 0."
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20."
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "description": "If \"all=false\" or \"all=null\" retrieve queues whose status is greater than the value set."
+                    },
+                    {
+                        "name": "scheduleDt",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The start date to search. For example: 2016-08-30T14:19:10.265Z."
+                    },
+                    {
+                        "name": "all",
+                        "in": "query",
+                        "type": "boolean",
+                        "required": false,
+                        "description": "By default, only entries that are pending are returned. If \"all=true\" is provided, this API operation will return all stage entries, even already processed ones."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stage information, using standard pagination envelope",
+                        "schema": {
+                            "$ref": "#/definitions/StagingPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staging/{systemId}/{integrationId}/{id}": {
+            "get": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Retrieve all entries with this systemId, integrationId and id",
+                "description": "Retrieve all entries for this id, systemId and integrationId.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stage information. You you get an array containing all entries that match the systemId, integrationId and id.",
+                        "schema": {
+                            "$ref": "#/definitions/StagingArray"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid staging info. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staging/{systemId}/{integrationId}/{id}/{startDt}": {
+            "delete": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Deletes an unique entry with this systemId, integrationId, id and startDt.",
+                "description": "Deletes an unique entry with this systemId, integrationId, id and startDt. Any scheduling that this entry might have will be deleted as well.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "startDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Entity start time. This is the effective date of this staging entry."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Staging successfuly deleted"
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Staging not found"
+                    }
+                }
+            }
+        },
+        "/v1/staging/{systemId}/{integrationId}/{id}/{startDt}/queues": {
+            "delete": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Remove all queue entries for this id, startDt, systemId and integrationId.",
+                "description": "Remove all queue entries for this id, startDt, systemId and integrationId. This will set the staging record as \"achived\", as no further processing will be carried for this entry.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "startDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Entity start time. This is the effective date of this staging entry."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Enqueue information successfuly removed. If no enqueue entry is found to be deleted, this is returned as well."
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Staging entry not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Creates a new queue entry for this id, startDt, systemId and integrationId.",
+                "description": "Creates a new queue entry for this id, systemId and integrationId. This will sceedule the processing of this data entry on the provided date-time.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "startDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Entity start time. This is the effective date of this staging entry."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/StagingQueue"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Enqueue information successfuly created. Returns an updated version of this queue entry.",
+                        "schema": {
+                            "$ref": "#/definitions/StagingQueue"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Staging entry not found"
+                    },
+                    "409": {
+                        "description": "There is already a staging queue entry using this systemId, integrationId, id, startDt and scheduleDt.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/staging/{systemId}/{integrationId}/{id}/{startDt}/queues/{scheduleDt}": {
+            "delete": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Remove a specific queue entriy for this id, startDt, systemId, integrationId and schedule Date",
+                "description": "Remove a specific queue entry for this id, startDt, systemId, integrationId and schedule Date.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "startDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Entity start time. This is the effective date of this staging entry."
+                    },
+                    {
+                        "name": "scheduleDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Scheduling date and time."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Enqueue information successfuly removed. If no enqueue entry is found to be deleted, this is returned as well."
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Staging entry not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Staging API"
+                ],
+                "summary": "Updates queue information for this systemId, integrationId, id and startDt.",
+                "description": "Updates queue information for this systemId, integrationId, id and startDt. Using this API operation, you will be able to reschedule this entry or decrease its retry count.",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "System ID. This is a unique identifier for the system that is interacting with Infrashop."
+                    },
+                    {
+                        "name": "integrationId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Integration ID. This is a unique identifier for the concept being integrated within Infrashop."
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Entity ID. This is the unique ID identifier within this systemId and integrationId."
+                    },
+                    {
+                        "name": "startDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Entity start time. This is the effective date of this staging entry."
+                    },
+                    {
+                        "name": "scheduleDt",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Scheduling date and time."
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/StagingQueue"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Scheduling information successfuly updated. Query for staging entry for an updated version of this entity."
+                    },
+                    "400": {
+                        "description": "Invalid staging queue data provided",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Staging entry not found"
+                    },
+                    "409": {
+                        "description": "There is already a staging queue entry using this systemId, integrationId, id, startDt and scheduleDt.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "StagingPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Staging entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing staging entries.",
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Staging"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "Staging": {
+            "type": "object",
+            "description": "This entity defines a staging entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Entity identifier within this systemId and integrationId."
+                },
+                "systemId": {
+                    "type": "string",
+                    "description": "Unique system identifier."
+                },
+                "integrationId": {
+                    "type": "string",
+                    "description": "Unique integration identifier."
+                },
+                "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Staging entry start date. This entry will be enqueued for handling at this date and time."
+                },
+                "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Staging entry end date. This entry will be enqueued for handling at this date and time"
+                },
+                "operation": {
+                    "type": "string",
+                    "description": "Operation that this data refers to. I stands for \"insert\" - this entry will be created or updated if already existing. D stands for \"delete\" - this entry will be deleted.",
+                    "enum": [
+                        "I",
+                        "D"
+                    ]
+                },
+                "data": {
+                    "type": "string",
+                    "description": "This is the data that the client that will handle this staging entry will use."
+                },
+                "hash": {
+                    "type": "string",
+                    "description": "THis hash is generated based on the value of data. When applicable, if the hash is the same as before, this entry won't be enqueued again, as there is no change in its content."
+                },
+                "insDt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date this entry was created. When creating, it is set to current date time."
+                },
+                "updDt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date of the last update of this entry. WHen creating, it remains null."
+                },
+                "queues": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/StagingQueue"
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "systemId",
+                "integrationId",
+                "startDate",
+                "data"
+            ]
+        },
+        "StagingQueue": {
+            "type": "object",
+            "description": "This entity defines a staging queue entry.",
+            "properties": {
+                "priority": {
+                    "type": "integer",
+                    "description": "Queue entry priority. The lower the value, higher the priority (will be processed first)."
+                },
+                "status": {
+                    "type": "integer",
+                    "description": "Queue entry processing status. When this entry is created, the status is set to zero. At every processing attempt, if it fails, this value is decreased. Values of -5 or lower mean that no further processing attempt will be carried - i.e., a human action is required."
+                },
+                "statusMsg": {
+                    "type": "string",
+                    "description": "This is the error message of the last processing attempt."
+                },
+                "scheduleDt": {
+                    "type": "string",
+                    "description": "The date when this entry will be processed."
+                },
+                "insDt": {
+                    "type": "string",
+                    "description": "The date this queue entry was created."
+                }
+            }
+        },
+        "StagingArray": {
+            "type": "array",
+            "items": [
+                {
+                    "$ref": "#/definitions/Staging"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,673 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Stats API",
+        "description": "This is Infrashop Stats API documentation. Here you will find API operations to interact with infrashop stats queue. You will be able to query for pending entries, enqueue a new operation, etc."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ifc-stats-api",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce Stats API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Stats Order API",
+            "description": "<br><font size=\"2\">This is Infrashop Stats Order API documentation. Here you will find API operations to interact with stats orders. You will be able to query, updates or make a new operation, etc.</font>"
+        },
+        {
+            "name": "Stats Product API",
+            "description": "<br><font size=\"2\">This is Infrashop Stats Product API documentation. Here you will find API operations to interact with orders. You will be able to query, updates or make a new operation, etc.</font>"
+        }
+    ],
+    "paths": {
+        "/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/v1/stats/orders/operations": {
+            "get": {
+                "tags": [
+                    "Stats Order API"
+                ],
+                "summary": "Retrieves current order operation status",
+                "description": "This API will return a count of orders in each order state, containing counters for orders on time and delayed orders.",
+                "parameters": [
+                    {
+                        "name": "saleChannel",
+                        "description": "This parameter is the saleChannel. For example: INT.",
+                        "type": "string",
+                        "required": false,
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of order tracking operations from order index",
+                        "schema": {
+                            "$ref": "#/definitions/StatsOperations"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+						"description": "Please provide a valid authentication token.",
+						"schema": {
+							"$ref": "./api/def/oauth.json#/InvalidToken"
+						}
+					}
+                }
+            }
+        },
+        "/v1/stats/orders/slas": {
+        	"get": {
+        		"tags": [
+                    "Stats Order API"
+                ],
+                "summary": "Retrieves SLAs value",
+                "description": "Retrieve SLAs value, percentage and status for onTime orders from index.",
+        		"parameters": [
+        			{
+                        "name": "saleChannel",
+                        "description": "This parameter is the saleChannel. For example: INT.",
+                        "type": "string",
+                        "required": false,
+                        "in": "query"
+                    },
+                    {
+                    	"name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                    	"name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+        		],
+        		 "responses": {
+                    "200": {
+                        "description": "List of order slas information from order index",
+                        "schema": {
+                            "$ref": "#/definitions/SlasOperations"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+						"description": "Please provide a valid authentication token.",
+						"schema": {
+							"$ref": "./api/def/oauth.json#/InvalidToken"
+						}
+					}
+                }
+        	}
+       },
+       "/v1/stats/orders/operationsheet": {
+            "get": {
+                "tags": [
+                    "Stats Order API"
+                ],
+                "summary": "Export all orders",
+                "description": "Export all orders with delayed SLA operations",
+                "parameters": [
+                    {
+                      "name": "saleChannel",
+                        "description": "This parameter is the saleChannel. For example: INT.",
+                        "type": "string",
+                        "required": false,
+                        "in": "query" 
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "AsyncMetadataResponse with export information",
+                        "schema": {
+                            "$ref": "#/definitions/AsyncMetadataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/stats/orders/slasheet": {
+            "get": {
+                "tags": [
+                    "Stats Order API"
+                ],
+                "summary": "Export all orders with delayed SLA",
+                "description": "Export all orders with delayed SLA",
+                "parameters": [
+                    {
+                        "name": "saleChannel",
+                        "description": "This parameter is the saleChannel. For example: INT.",
+                        "type": "string",
+                        "required": false,
+                        "in": "query" 
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                  "responses": {
+                    "200": {
+                        "description": "AsyncMetadataResponse with export information",
+                        "schema": {
+                            "$ref": "#/definitions/AsyncMetadataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+       "/v1/stats/products": {
+            "get": {
+                "tags": [
+                    "Stats Product API"
+                ],
+                "summary": "Retrieves a list of stats data of products",
+                "description": "Get a list of stats data of products.",
+                "parameters": [
+                    {
+                        "name": "filterBy",
+                        "description": "FilterBy the model of filter.",
+                        "type": "string",
+                        "required": true,
+                        "in": "query"
+                    },
+                    {
+                        "name": "imageType",
+                        "description": "Type of image.",
+                        "type": "string",
+                        "default": "mpp",
+                        "required": false,
+                        "in": "query"  
+                    },
+                    {
+                        "name": "orderBy",
+                        "description": "This parameter is to use in ordination.",
+                        "type": "string",
+                        "default": "quantity",
+                        "required": false,
+                        "in": "query"  
+                    },
+                    {
+                        "name": "saleChannel",
+                        "description": "This parameter is the saleChannel. For example: INT.",
+                        "type": "string",
+                        "required": false,
+                        "in": "query"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Page number. Starts with 0."
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20."
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The rating date (in jersey date format) like <b>\"2016-06-27T17:56:53.862Z\"</b> or <b>\"2016-06-27\"</b> for instance"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                 "responses": {
+                    "200": {
+                        "description": "List of stats data of products",
+                        "schema": {
+                            "$ref": "#/definitions/StatsProducts"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameter. Please check error message for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+		"StatsOperations": {
+			 "type": "object",
+			 "description": "List of order tracking operations from order index",
+			 "properties": {
+			 	  "items": {
+                    "type": "array",
+                    "description": "List of order tracking operations from order index.",
+                    "example": [
+                        {
+							"totalOnTime": 0,
+							"totalDelayed": 0,
+							"type": "ETR",
+							"limit": 24                      	
+                        },
+                        {
+							"totalOnTime": 0,
+							"totalDelayed": 0,
+							"type": "PAP",
+							"limit": 72
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/StatsOrdersOperations"
+                        }
+                    ]
+                }
+			 },
+            "required": [
+                "items"
+            ]
+		},
+        "StatsProducts": {
+            "type": "object",
+            "description": "List of stats data of products found",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [
+                        {
+                            "rel": "self",
+                            "href": "http://localhost:7001/ifc-stats-api/v1/stats/products?page=0&size=5"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://localhost:7001/ifc-stats-api/v1/stats/products?page=0&size=5"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://localhost:7001/ifc-stats-api/v1/stats/products?page=0&size=5"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://localhost:7001/ifc-stats-api/v1/stats/products?page=0&size=5"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing the stats data of products.",
+                    "items":
+                        {
+                            "$ref": "#/definitions/StatsProductResponse"
+                        }
+
+                }
+            },
+            "required": [
+                "items"
+            ]
+        },
+        "StatsProductResponse": {
+           "type": "object",
+            "description": "The type StatsOrdersSlas.",
+            "properties": {
+                "productId": {
+                    "type": "long",
+                    "format" : "int64",
+                    "description": "The Product's identifier"
+                }
+            },
+            "example": {
+                "productId": 100991
+            },
+            "required": [
+                "productId"
+            ]
+        },
+		"SlasOperations": {
+			"type": "object",
+			"description": "List of order slas information from order index",
+			"properties": {
+				"items": {
+					"type": "array",
+					"description": "List of order slas information from order index.",
+					"example": [
+						{
+							"type": "PAP",
+							"percentage": 0,
+							"status": "CRITICAL"                     	
+                        },
+                        {
+							"type": "FAT",
+							"percentage": 0,
+							"status": "CRITICAL"                     	
+                        },
+                        {
+							"type": "ETR",
+							"percentage": 0,
+							"status": "CRITICAL"                     	
+                        },
+                        {
+							"type": "ENT",
+							"percentage": 0,
+							"status": "CRITICAL"
+                        }
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/StatsOrdersSlas"
+                        }
+                    ]
+				}
+			},
+            "required": [
+                "items"
+            ]
+		},
+		"StatsOrdersSlas": {
+			"type": "object",
+			"description": "The type StatsOrdersSlas.",
+			"properties": {
+				"type": {
+					"type": "string",
+					"description": "The type of order"
+				},
+				"percentage": {
+					"type": "number",
+					"format": "double",
+					"description": "The description of order"
+				},
+				"status": {
+					"type": "string",
+					"description": "The status of order"
+				}
+			},
+			"required": [
+                "type",
+                "percentage",
+                "status"
+            ]
+		},
+		"StatsOrdersOperations": {
+			"type": "object",
+			"description": "List",
+			"properties": {
+                "totalOnTime": {
+                    "type": "integer",
+                    "description": "The Total On Time"
+                },
+                "totalDelayed": {
+                    "type": "integer",
+                    "description": "The Total Delayed"
+                },
+                "type": {
+                	"type": "string",
+                    "description": "The type"
+                },
+                "limit": {
+                	"type": "integer",
+                    "description": "The limit"
+                }
+            },
+            "required": [
+                "totalOnTime",
+                "totalDelayed",
+                "type",
+                "limit"
+            ]
+		},
+        "AsyncMetadataResponse": {
+            "type": "object",
+            "description": "The sheet response link.",
+            "properties": {
+                "asyncMetadataId": {
+                    "type": "long",
+                    "format": "int64",
+                    "description": "Async metadata unique identifier"
+                },
+                "messageBuffer": {
+                    "type": "string",
+                    "description": "Process buffer"
+                }, 
+                "totalRecords": {
+                    "type": "long",
+                    "format": "int64",
+                    "description": "Number of records total"
+                },
+                "processedRecords": {
+                    "type": "long",
+                    "format": "int64",
+                    "description": "Number of records already processed"
+                },
+                "failedRecords": {
+                    "type": "long",
+                    "format": "int64",
+                    "description": "Number of records that failed"
+                },
+                "startDate": {
+                    "type": "date",
+                    "format": "date",
+                    "description": "Start Date"
+                },
+                "lastUpdate": {
+                    "type": "date",
+                    "format": "date",
+                    "description": "Last Update"
+                },
+                "inErrorState": {
+                    "type": "boolean",
+                    "description": "Error state flag"        
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Type of async medatata"
+                },
+                "successRecords": {
+                    "type": "long",
+                    "format": "int64",                 
+                    "description": "Number of successful records"
+                },
+                "percentageProcessed": {
+                    "type": "long",
+                    "format": "int64",                 
+                    "description": "Percentage of records processed"
+                }
+            },
+            "required": [
+                "asyncMetadataId",
+                "messageBuffer",
+                "totalRecords",
+                "processedRecords",
+                "failedRecords",
+                "startDate",
+                "lastUpdate",
+                "inErrorState",
+                "type",
+                "successRecords",
+                "percentageProcessed"
+            ],
+            "example": {
+                "asyncMetadataId": 866307,
+                "messageBuffer": "",
+                "totalRecords": 0,
+                "processedRecords": 0,
+                "failedRecords": 0,
+                "startDate": 1488384312000,
+                "lastUpdate": 1488384312273,
+                "inErrorState": false,
+                "type": "MPE",
+                "successRecords": 0,
+                "percentageProcessed": 0      
+            }
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "StagingQueue": {
+            "type": "object",
+            "description": "This entity defines a staging queue entry.",
+            "properties": {
+                "priority": {
+                    "type": "integer",
+                    "description": "Queue entry priority. The lower the value, higher the priority (will be processed first)."
+                },
+                "status": {
+                    "type": "integer",
+                    "description": "Queue entry processing status. When this entry is created, the status is set to zero. At every processing attempt, if it fails, this value is decreased. Values of -5 or lower mean that no further processing attempt will be carried - i.e., a human action is required."
+                },
+                "statusMsg": {
+                    "type": "string",
+                    "description": "This is the error message of the last processing attempt."
+                },
+                "scheduleDt": {
+                    "type": "string",
+                    "description": "The date when this entry will be processed."
+                },
+                "insDt": {
+                    "type": "string",
+                    "description": "The date this queue entry was created."
+                }
+            }
+        },
+        "StagingArray": {
+            "type": "array",
+            "items": [
+                {
+                    "$ref": "#/definitions/Staging"
+                }
+            ]
+        }
+    }
+}

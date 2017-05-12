@@ -1,0 +1,189 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Payment API",
+        "description": "This is Infrashop Payment API documentation. Here you will find API operations to interact with infrashop payments."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ckout",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Wallet API",
+            "description": "<br><font size=\"2\">...</font>"
+        },
+        {
+            "name": "Gateway API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with the payment gateway. You will find operations to create transactions (billet, credit card or debit), retrieve the status of the transactions and also to cancel them.</font>"
+        }
+    ],
+    "paths": {
+        "/v1/wallet/creadtcard/add": {
+            "post": {
+                "tags": [
+                    "Wallet API"
+                ],
+                "summary": "Save Credit Card in Database and sent to Partner",
+                "description": "Save Credit Card in Database and sent to Partner to use for Recurring purchase or another feature like one-click purchase.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "This parameter is the creditCard.",
+                        "in": "body",
+                        "type": "string",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/payment.json#CreditCard"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "./api/def/basket.json#Basket"
+						}
+					}
+                }
+            }
+        },
+        "/v1/wallet/creditcard/remove": {
+        	"get": {
+        		"tags": [
+                    "Wallet API"
+                ],
+                "summary": "Remove Credit Card",
+                "description": "Remove Credit Card from database and partner",
+        		"parameters": [
+        			{
+                        "name": "body",
+                        "type": "string",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "./api/def/payment.json#CardRegisterID"
+                        }
+                    }
+        		],
+        		 "responses": {
+                    "200": {
+						"description": "The return value is an updated shopping cart.",
+						"schema": {
+							"$ref": "./api/def/basket.json#Basket"
+						}
+					}
+                }
+        	}
+       },
+       "/v1/transactions" : {
+            "post": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Create a new transaction",
+                "description": "Create a new transaction. The transaction can be a billet, credit card or debit.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "The transaction.",
+                        "in": "body",
+                        "type": "string",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/payment.json#Transaction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/payment.json#TransactionStatus"
+                        }
+                    }
+                }
+            }
+       },
+       "/v1/transactions/{id}" : {
+            "post": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Get the status of a transaction",
+                "description": "Get the status of a transaction that was previously created.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "Transaction details. This is optional and should be sent only to override default parameters.",
+                        "in": "body",
+                        "type": "string",
+                        "required": false,
+                        "schema": {
+                            "$ref": "./api/def/payment.json#Transaction"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "Identification of the transaction. This is the same id used in the transaction creation.",
+                        "in": "request",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/payment.json#TransactionStatus"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Cancel the transaction",
+                "description": "Cancel the transaction that was previously created.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "Transaction details. This is optional and should be sent only to override default parameters.",
+                        "in": "body",
+                        "type": "string",
+                        "required": false,
+                        "schema": {
+                            "$ref": "./api/def/payment.json#Transaction"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "Identification of the transaction. This is the same id used in the transaction creation.",
+                        "in": "request",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/payment.json#TransactionStatus"
+                        }
+                    }
+                }
+            }
+       }
+    },
+    "definitions": {
+		
+    }
+}

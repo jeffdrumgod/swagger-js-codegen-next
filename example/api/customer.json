@@ -1,0 +1,2009 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Customer Management API",
+        "description": "In this API documentation, you will find operations that you\n  will call in order to manage the customers. Operations here includes the customer attributes management."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Customer Management API",
+            "description": "<br><font size=\"2\">This group contains a set of APIs to manage the customer register. Operations here includes: retrieve, create and update data of a customer identified by his/her identifier (customerId) or by his/her document number.</font>"
+        },
+        {
+            "name": "Customer Attributes Management API",
+            "description": "<br><font size=\"2\">This group contains a set of APIs to manage the customer attributes. Operations here includes: retrieve, create, update and delete customer attributes from a specific customer identified by his/her identifier (customerId) or by his/her document number.</font>"
+        },
+        {
+            "name": "Customer Group Management API",
+            "description": "<br><font size=\"2\">This group contains a set of APIs to manage customer groups. Using operations defined here you will be able to associate customer to a group, both individually and massively.</font>"
+        },
+        {
+            "name": "Async Operations API",
+            "description": "<br><font size=\"2\">In this group you will find operations that you allow you to interact with Infrashop asynchronous operaions engine. This mechanism is used every time a long running operation is fired and you need to follow its execution</font>"
+        },
+        {
+            "name": "Customer Register Notification API",
+            "description": "<br><font size=\"2\">In this group you will find the operation that you need to provide in order to receive the notification of the customer registers and/or updates.</font>"
+        },
+        {
+            "name": "Customer External Authentication API",
+            "description": "<br><font size=\"2\">In this group you will find the operations that you need to provide in order to enable the external authentication with the store's checkout process.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-customer-api/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-async-api/v1/asyncmetadata/{asyncMetadataId}": {
+            "$ref": "./api/async.json#/paths/GET_ASYNC"
+        },
+		"/ifc-customer-api/v1/customers/{customerId}/attributes/{id}": {
+            "get": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Retrieves a specific customer attribute",
+                "description": "Retrieves a specific customer attribute by the customer identifier and customer attribute identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Consultar",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Customer attribute unique identifier",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The customer attribute requested.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "put": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Updates a specific customer attribute value",
+                "description": "Updates a specific customer attribute value by the customer identifier and customer attribute identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Customer attribute unique identifier",
+						"type": "string",
+						"in": "path"
+					},
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The updated customer attribute.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "delete": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Deletes a specific customer attribute",
+                "description": "Deletes a specific customer attribute by the customer identifier and customer attribute identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "number",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Customer attribute unique identifier",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "204": {
+                        "description": "The customer attribute was successfully deleted."
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/{customerId}/attributes": {
+            "get": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Retrieves all customer attibutes",
+                "description": "Retrieves all customer attributes by the customer identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Consultar",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The list of customer attributes.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "post": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Creates a new set of customer attributes",
+                "description": "Creates a new set of customer attribute by the customer identifier and customer attribute identifier. If the attribute already exists its value will be updated.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+					{
+						"name": "overrideAll",
+						"required": false,
+						"default": false,
+						"description": "If this is set to true, all attributes will be removed and the new ones will be set for the given customer. If this is set to false, existing attributes will be updated, new ones will be created and pre-existing ones that are not in input array will remain untouched.",
+						"type": "boolean",
+						"in": "query"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The list of customer attributes created and/or updated.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/attributes": {
+            "post": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Updates massively customer attributes",
+                "description": "Updates massively customer attributes. Customer is identified by the ID.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar ",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributesByIdArray"
+                        }
+                    },
+					{
+						"name": "overrideAll",
+						"required": false,
+						"default": false,
+						"description": "If this is set to true, all attributes will be removed and the new ones will be set for the given customer. If this is set to false, existing attributes will be updated, new ones will be created and pre-existing ones that are not in input array will remain untouched.",
+						"type": "boolean",
+						"in": "query"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution. During process execution you can get information from async API's \"result\" attribute - this will be a map containing all customer IDs that failed and the reason it failed.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/{document}/attributes/{id}": {
+            "get": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Retrieves a specific customer attibute",
+                "description": "Retrieves a specific customer attibute by the customer document number.",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Customer attribute unique identifier",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The customer attribute requested.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "put": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Updates a specific customer attribute",
+                "description": "Updates a specific customer attribute value by the customer document number and customer attribute identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "The customer attribute identifier",
+						"type": "string",
+						"in": "path"
+					},
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                    {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The updated customer attribute.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttribute"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "delete": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Deletes a specific customer attribute",
+                "description": "Deletes a specific customer attribute by the customer document number and customer attribute identifier.<h4>Required Functionalities</h4> Vendas - Clientes - Gravar ",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "The customer attribute identifier",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "204": {
+                        "description": "The customer attribute was successfully deleted."
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/{document}/attributes": {
+            "get": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Retrieves all customer attibutes",
+                "description": "Retrieves all customer attributes by the customer document number and customer attribute identifier.",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "The list of customer attributes.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			},
+            "post": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Creates a new set of customer attributes",
+                "description": "Creates a new set of customer attribute by the customer document number and customer attribute identifier. If the attribute already exists its value will be updated.",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "overrideAll",
+						"required": false,
+						"default": false,
+						"description": "If this is set to true, all attributes will be removed and the new ones will be set for the given customer. If this is set to false, existing attributes will be updated, new ones will be created and pre-existing ones that are not in input array will remain untouched.",
+						"type": "boolean",
+						"in": "query"
+					},
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+                    {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    },
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+                    "200": {
+                        "description": "The list of customer attributes created and/or updated.",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributeArray"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or attribute not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/attributes": {
+            "post": {
+                "tags": [
+                    "Customer Attributes Management API"
+                ],
+                "summary": "Updates massively customer attributes",
+                "description": "Updates massively customer attributes. Customer is identified by a document number.<h4>Required Functionalities</h4>  Vendas - Clientes - Gravar",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAttributesByDocumentArray"
+                        }
+                    },
+					{
+						"name": "overrideAll",
+						"required": false,
+						"default": false,
+						"description": "If this is set to true, all attributes will be removed and the new ones will be set for the given customer. If this is set to false, existing attributes will be updated, new ones will be created and pre-existing ones that are not in input array will remain untouched.",
+						"type": "boolean",
+						"in": "query"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution. During process execution you can get information from async API's \"result\" attribute - this will be a map containing all customer IDs that failed and the reason it failed.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/{customerId}/group": {
+            "get": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Retrieves customer group",
+                "description": "Retrieves customer group information. A customer can be associated with only one customer group at a time.",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "Customer group information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroup"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/{customerId}/group/{id}": {
+            "put": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Set the customer group",
+                "description": "Sets the customer group. A customer can be associated with only one customer group at a time.",
+                "parameters": [
+					{
+						"name": "customerId",
+						"required": true,
+						"description": "The customer identifier",
+						"type": "integer",
+                        "format": "int64",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Three letter customer group ID",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "Updated customer group information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroup"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or customer group ID not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/group": {
+            "post": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Updates massively customer groups",
+                "description": "Updates massively customer groups. Customer is identified by ID. You must provide only the \"id\" attribute in customerGroup object, all other attributes will be ignored.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroupByIdArray"
+                        }
+                    },
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution. During process execution you can get information from async API's \"result\" attribute - this will be a map containing all customer IDs that failed and the reason they failed.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/{document}/group": {
+            "get": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Retrieves customer group",
+                "description": "Retrieves customer group information. A customer can be associated with only one customer group at a time.",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "Customer group information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroup"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/{document}/group/{id}": {
+            "put": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Set the customer group",
+                "description": "Sets the customer group. A customer can be associated with only one customer group at a time.",
+                "parameters": [
+					{
+						"name": "document",
+						"required": true,
+						"description": "The customer document number",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "id",
+						"required": true,
+						"description": "Three letter customer group ID",
+						"type": "string",
+						"in": "path"
+					},
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "200": {
+                        "description": "Updated customer group information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroup"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer or customer group ID not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+				}
+			}
+		},
+		"/ifc-customer-api/v1/customers/document/group": {
+            "post": {
+                "tags": [
+                    "Customer Group Management API"
+                ],
+                "summary": "Updates massively customer groups",
+                "description": "Updates massively customer groups. Customer is identified by a document number. You must provide only the \"id\" attribute in customerGroup object, all other attributes will be ignored.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomerGroupByDocumentArray"
+                        }
+                    },
+					{
+						"name": "Authorization",
+						"description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+						"in": "header",
+						"required": true,
+						"type": "string"
+					},
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+				],
+				"responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution. During process execution you can get information from async API's \"result\" attribute - this will be a map containing all customer document numbers that failed and the reason they failed.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+				}
+			}
+		},
+        "/partner/api/to/receive/notification": {
+            "post": {
+                "tags": [
+                    "Customer Register Notification API"
+                ],
+                "summary": "Receives the customer register notification.",
+                "description": "Receives the customer register notification after the customer creates a new account or updates an existing account in the store.<br/>This API must be provided by the partner that wants to be notified of these events.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notification received with success."
+                    }
+                }
+            }
+        },
+        "/ifc-customer-api/v1/customers/{customerId}": {
+            "get": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Retrieves a customer by customer identifier",
+                "description": "Retrieves customer information by customer identifier. <h4>Required Functionalities</h4>Gestão de Vendas - Gestão de Cliente - Consultar",
+                "parameters": [
+                    {
+                        "name": "customerId",
+                        "required": true,
+                        "description": "The customer identifier",
+                        "type": "integer",
+                        "format": "int64",
+                        "in": "path"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                     {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer information",
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Updates a customer",
+                "description": "Updates an existing customer.<h4>Required Functionalities</h4>Gestão de Vendas - Gestão de Cliente - Gravar",
+                "parameters": [
+					             {
+                        "name": "customerId",
+                        "required": true,
+                        "description": "The customer identifier",
+                        "type": "integer",
+                        "format": "int64",
+                        "in": "path"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Customer data to be updated.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated information of the customer.",
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid customer data.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-customer-api/v1/customers/document/{document}": {
+            "get": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Retrieves customer",
+                "description": "Retrieves customer information.<h4>Required Functionalities</h4>Gestão de Vendas - Gestão de Cliente - Consultar",
+                "parameters": [
+                    {
+                        "name": "document",
+                        "required": true,
+                        "description": "The customer document number",
+                        "type": "string",
+                        "in": "path"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "includeGuests",
+                        "required": false,
+                        "description": "The option to include customers where the type is guest.",
+                        "type": "boolean",
+                        "in": "path"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 0,
+                        "description": "Page number. Starts with 0."
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customers information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-customer-api/v1/customers": {
+            "post": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Creates a customer",
+                "description": "Creates a new customer.<h4>Required Functionalities</h4>Gestão de Vendas - Gestão de Cliente - Gravar",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Customer data. This customer must not have the ID fields filled.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    },
+                    {
+                        "name": "preRegister",
+                        "description": "This parameter defines if this API will be used to pre register the customer. The customer pre register has a mininum set of validation and required attributes. When a customer is created using this parameter its type became INCOMPLETE and will not be able to place orders until its data is update.",
+                        "in": "query",
+                        "default": false,
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated information of the customer. In this response you can get the recently created customer identifier.",
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid customer data.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "409": {
+                        "description": "Customer already exists. To update the user information use the PUT API.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-customer-api/v1/customers/{customerId}/orders/skus":{
+          "get": {
+              "tags": [
+                  "Customer Management API"
+              ],
+              "summary": "Retrieve the skusIds bought by customer.",
+              "description": "Retrieve the skuIds that customer bought in his/her last orders. The quantity of skus that will be retrieved is limited by the query parameter \"quantity\". The list returned is ordered by the purchase date where skus from most recent purchase comes first.<h4>Required Functionalities</h4> Cliente Logado <br>Vendas - Clientes - Consultar ",
+              "parameters": [
+                  {
+                      "name": "customerId",
+                      "required": true,
+                      "description": "The customer identifier",
+                      "type": "integer",
+                      "format": "int64",
+                      "in": "path"
+                  },
+                  {
+                      "name": "quantity",
+                      "description": "The quantity of skuIds that will be retrieved. By default the last fifty skus will be returned and the maximum value is 200.",
+                      "in": "query",
+                      "default": 50,
+                      "required": false,
+                      "type": "integer"
+
+                  },
+                  {
+                      "name": "Authorization",
+                      "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                      "in": "header",
+                      "required": true,
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                "200": {
+                    "description": "The skuIds bought skusId's by the Customer.",
+                    "schema": {
+                      "type":"array",
+                      "items": {
+                        "$ref": "#/definitions/CustomerOrderSkus"
+                      }
+                    }
+                },
+                "401": {
+                    "description": "User not authenticated.",
+                    "schema": {
+                        "$ref": "./api/def/oauth.json#/InvalidToken"
+                    }
+                },
+                "403": {
+                    "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                    "schema": {
+                        "$ref": "./api/def/oauth.json#/InvalidToken"
+                    }
+                },
+                "404": {
+                    "description": "Customer not found.",
+                    "schema": {
+                        "$ref": "./api/def/mercury-base.json#/Error"
+                    }
+                }
+              }
+          }
+        },
+        "/ifc-customer-api/v1/customers/{customerId}/guest":{
+          "put": {
+              "tags": [
+                  "Customer Management API"
+              ],
+              "summary": "Convert guest customer",
+              "description": "Convert the guest customer to a complete customer on our platform.<h4>Required Functionalities</h4>Gestão de Vendas - Gestão de Cliente - Gravar",
+              "parameters": [
+                     {
+                      "name": "customerId",
+                      "required": true,
+                      "description": "The customer identifier",
+                      "type": "integer",
+                      "format": "int64",
+                      "in": "path"
+                  },
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "description": "The password information to be updated on Customer.",
+                      "required": true,
+                      "schema": {
+                          "$ref": "./api/def/itg-customer.json#/CustomerPassword"
+                      }
+                  },
+                  {
+                      "name": "Authorization",
+                      "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                      "in": "header",
+                      "required": true,
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Updated information of the customer.",
+                      "schema": {
+                          "$ref": "./api/def/itg-customer.json#/CustomerPassword"
+                      }
+                  },
+                  "400": {
+                      "description": "Invalid customer password.",
+                      "schema": {
+                          "$ref": "./api/def/mercury-base.json#/Error"
+                      }
+                  },
+                  "401": {
+                      "description": "User not authenticated.",
+                      "schema": {
+                          "$ref": "./api/def/oauth.json#/InvalidToken"
+                      }
+                  },
+                  "403": {
+                      "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                      "schema": {
+                          "$ref": "./api/def/oauth.json#/InvalidToken"
+                      }
+                  }
+              }
+          }
+        },
+        "ifc-customer-api/v1/customers/{customerId}/salesauthtoken": {
+            "get": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Retrieves customer's authentication token",
+                "description": "Retrieves authentication token according to the customer identifier.<h4>Required Functionalities</h4>Vendas - Gestão de Clientes - Autenticação do Cliente - Read",
+                "parameters": [
+                    {
+                        "name": "customerId",
+                        "required": true,
+                        "description": "The customer identifier",
+                        "type": "integer",
+                        "format" : "int64",
+                        "in": "path"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The customer authorization token information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAuthToken"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                   },
+                   "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                   },
+                   "404": {
+                        "description": "Customer not found by identifier.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                   }
+               }
+            }
+        },
+        "/ifc-customer-api/v1/customers/document/{documentNumber}/salesauthtoken": {
+            "get": {
+                "tags": [
+                    "Customer Management API"
+                ],
+                "summary": "Retrieves customer's authentication token",
+                "description": "Retrieves an authentication token according to the customer document number. <h4>Required Functionalities</h4>Vendas - Gestão de Clientes - Autenticação do Cliente - Read",
+                "parameters": [
+                    {
+                        "name": "documentNumber",
+                        "required": true,
+                        "description": "The customer documentNumber",
+                        "type": "string",
+                        "in": "path"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The customer authorization token information",
+                        "schema": {
+                            "$ref": "#/definitions/CustomerAuthToken"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                   },
+                   "403": {
+                        "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                   },
+                   "404": {
+                        "description": "Customer not found by document number.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                   }
+               }
+            }
+        },
+        "/partner/api/to/authenticate/customer": {
+            "post": {
+                "tags": [
+                    "Customer External Authentication API"
+                ],
+                "summary": "Authenticate the customer.",
+                "description": "Receives the customer identifier and password and if it is successfully authenticated return its register data.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Authentication data that the partner need to authenticate the user.<br/>OBS: the customer password can be crypted according to the algorithm agreed between Infrashop and the partner.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ExternalAuthenticationData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer successfully authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/itg-customer.json#/EZCustomer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+		"CustomerAttribute": {
+			"type": "object",
+			"description": "The customer attribute object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "The customer attribute identifier"
+				},
+				"value": {
+					"type": "string",
+					"description": "The customer attribute value"
+				}
+			},
+			"example": {
+				"id": "defaultChannel",
+				"value": "C1"
+			},
+			"required": [
+				"id",
+				"value"
+			]
+		},
+		"CustomerAttributeArray": {
+			"type": "array",
+			"description": "A list of customer attributes",
+			"items": {
+				"$ref": "#/definitions/CustomerAttribute"
+			},
+			"example": [
+				{
+					"id": "defaultChannel",
+					"value": "C1"
+				},
+				{
+					"id": "cluster",
+					"value": "FrequentBuyer"
+				}
+			]
+		},
+		"CustomerAttributesByDocumentArray": {
+			"type": "array",
+			"description": "Array used to set massively customer attributes. Customer is identified by document number.",
+			"items": {
+				"$ref": "#/definitions/CustomerAttributesByDocument"
+			}
+		},
+		"CustomerAttributesByDocument": {
+			"type": "object",
+			"description": "Object used to set massively customer attributes",
+			"properties": {
+				"document": {
+					"description": "The customer document number",
+					"type": "string",
+					"example": 28953351413
+				},
+				"customerAttributes": {
+					"$ref": "#/definitions/CustomerAttributeArray"
+				}
+			},
+			"required": [
+				"document",
+				"customerAttributes"
+			]
+		},
+		"CustomerAttributesByIdArray": {
+			"type": "array",
+			"description": "Array used to set massively customer attributes. Customer is identified by ID.",
+			"items": {
+				"$ref": "#/definitions/CustomerAttributesById"
+			}
+		},
+		"CustomerAttributesById": {
+			"type": "object",
+			"description": "Object used to set massively customer attributes",
+			"properties": {
+				"customerId": {
+					"description": "The customer ID",
+					"type": "number",
+					"example": 18954546
+				},
+				"customerAttributes": {
+					"$ref": "#/definitions/CustomerAttributeArray"
+				}
+			},
+			"required": [
+				"customerId",
+				"customerAttributes"
+			]
+		},
+		"CustomerGroupByDocumentArray": {
+			"type": "array",
+			"description": "Array used to set massively customer groups. Customer is identified by document number.",
+			"items": {
+				"$ref": "#/definitions/CustomerGroupByDocument"
+			}
+		},
+		"CustomerGroupByDocument": {
+			"type": "object",
+			"description": "Object used to set massively customer groups",
+			"properties": {
+				"document": {
+					"description": "The customer document number",
+					"type": "string",
+					"example": 28953351413
+				},
+				"customerGroup": {
+					"$ref": "#/definitions/CustomerGroup"
+				}
+			},
+			"required": [
+				"document",
+				"customerGroup"
+			]
+		},
+		"CustomerGroupByIdArray": {
+			"type": "array",
+			"description": "Array used to set massively customer groups. Customer is identified by ID.",
+			"items": {
+				"$ref": "#/definitions/CustomerGroupById"
+			}
+		},
+		"CustomerGroupById": {
+			"type": "object",
+			"description": "Object used to set massively customer groups",
+			"properties": {
+				"customerId": {
+					"description": "The customer ID",
+					"type": "number",
+					"example": 18954546
+				},
+				"customerGroup": {
+					"$ref": "#/definitions/CustomerGroup"
+				}
+			},
+			"required": [
+				"customerId",
+				"customerGroup"
+			]
+		},
+		"CustomerGroup": {
+			"type": "object",
+			"description": "The customer group object",
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "Customer group unique identifier. This is a three letter mnemonic."
+				},
+				"name": {
+					"type": "string",
+					"description": "Customer group name"
+				},
+				"description": {
+					"type": "string",
+					"description": "Customer group description"
+				},
+				"b2bOnly": {
+					"type": "boolean",
+					"description": "If this is true, this customer group should be used only in B2B operations"
+				}
+			},
+			"example": {
+				"id": "NOR",
+				"name": "Normal",
+				"description": "Público Normal",
+				"b2bOnly": false
+			},
+			"required": [
+				"id",
+				"name",
+				"description",
+				"b2bOnly"
+			]
+		},
+        "ExternalAuthenticationData": {
+            "type": "object",
+            "description": "The data used to authenticate the user.",
+            "properties": {
+                "login": {
+                    "type": "string",
+                    "description": "Customer identifier. This can be the customer e-mail or the document number, depending on the store's configuration."
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Customer password. The customer password can be crypted according to the algorithm agreed between Infrashop and the partner."
+                }
+            },
+            "example": {
+                "login": "infratech.teste@gmail.com",
+                "password": "MTIzNDU2"
+            },
+            "required": [
+                "login",
+                "password"
+            ]
+        },
+        "CustomerPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Customers entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [
+                        {
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-customer-api/v1/ratings?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-customer-api/v1/ratings?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-customer-api/v1/ratings?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-customer-api/v1/ratings?page=1&size=20"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing RatingList entries.",
+                    "items":
+                        {
+                            "$ref": "./api/def/itg-customer.json#/AcecCustomer"
+                        }
+
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "CustomerOrderSkus": {
+           "type":"object",
+           "properties": {
+             "skuId": {
+                 "type": "string",
+                 "description": "The skuId."
+             }
+           },
+           "example": {
+               "skuId": "123456"
+           }
+        },
+        "CustomerAuthToken": {
+           "type":"object",
+           "properties": {
+             "authToken": {
+                 "type": "string",
+                 "description": "The customer authorization token."
+             }
+           },
+           "example": {
+               "authToken": "22793517abc78db0fded49a451f40b130ea17940996dcc6da2e89b845591ea5ed27162"
+           },
+           "required": [
+                "authToken"
+            ]
+        }
+	}
+}

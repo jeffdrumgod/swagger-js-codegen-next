@@ -1,0 +1,151 @@
+{
+	"CreditLimitResponse": {
+		"type": "object",
+		"description": "This is a list of internal coupon's essencial values",
+		"allOf": [
+			{
+				"type": "object",
+				"properties": {
+					"customerDocumentNumber": {
+						"type": "string",
+						"description": "The customer's document number (CNPJ or CPF)"
+					},
+					"codigo": {
+						"type": "number",
+						"description": "The customer's millennium code"
+					},
+					"limite": {
+						"type": "number",
+						"description": "The credit limit's initial value."
+					}
+				},
+				"required": [
+					"customerDocumentNumber",
+					"codigo",
+					"limite"
+				]
+			}
+		]
+	},
+	"CreditLimitProcessRequest": {
+		"type": "object",
+		"description": "Crredit Card Data",
+		"example": {
+			"ri": 0,
+			"rf": 99,
+			"qt": 10
+		},
+		"properties": {
+			"ri": {
+				"type": "number",
+				"description": "The initial range"
+			},
+			"rf": {
+				"type": "number",
+				"description": "The final range"
+			},
+			"qt": {
+				"type": "number",
+				"description": "The quantity of records that will be processed."
+			}
+		},
+		"required": [
+			"ri",
+			"rf",
+			"qt"
+		]
+	},
+
+	"CreditLimitProcessResponse": {
+				"properties": {
+					"Items": {
+						"type": "array",
+						"description": "This is the list of items processed",
+						"items": {
+							"$ref": "#/Item"
+						}
+					},
+					"hasNext": {
+						"type": "boolean",
+						"description": "True if has more records to process. Otherwise, false."
+					}
+				},
+				"example": {
+				"Items": [
+				{
+					"id": "123",
+      				"integrationId": "CRL",
+      				"systemId": "MLN",
+      				"storeId": "ULUP",
+      				"startDate": 10800000,
+      				"scheduleDate": 10800000,
+      				"priority": 5,
+      				"status": 0,
+      				"statusMsg": "",
+      				"insertDate": 1492716601000
+				}],
+				"hasNext": "false"
+				},
+				"required": [
+					"Items",
+					"hasNext"
+				]
+	},
+	
+	"Item": {
+		"properties": {
+			"id": {
+				"type": "string",
+				"description": "The queue ID"
+			},
+			"integrationId": {
+				"type": "string",
+				"description": "The type of integration ID"
+			},
+			"systemId": {
+				"type": "string",
+				"description": "The system ID"
+			},
+			"storeId": {
+				"type": "string",
+				"description": "The ID of the store order"
+			},
+			"startDate": {
+				"type": "date",
+				"description": "The Order start date"
+			},
+			"scheduleDate": {
+				"type": "date",
+				"description": "The Order date scheduled in queue"
+			},
+			"priority": {
+				"type": "number",
+				"description": "The Order priority"
+			},
+			"status": {
+				"type": "number",
+				"description": "The Order status"
+			},
+			"statusMsg": {
+				"type": "string",
+				"description": "The Order status error message"
+			},
+			"insertDate": {
+				"type": "date",
+				"description": "The Order date queued"
+			}
+		},
+		"required": [
+			"id",
+			"integrationId",
+			"systemId",
+			"storeId",
+			"startDate",
+			"scheduleDate",
+			"priority",
+			"status",
+			"statusMsg",
+			"insertDate"
+		]
+	}
+}

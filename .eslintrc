@@ -1,0 +1,65 @@
+{
+	"extends": "airbnb",
+	"env": {
+		"browser": true
+	},
+	"plugins": [
+		"react"
+	],
+	"parserOptions": {
+		"ecmaVersion": 7,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"settings": {
+		"import/core-modules": [ "Elements", "Components" ]
+	},
+	"globals": {
+		"_": true,
+		"infrashop": true,
+		"React": true,
+		"Redux": true,
+		"ReactRouterRedux": true,
+		"ReactRedux": true,
+		"ReduxSaga": true,
+		"ReactDOM": true,
+		"PropTypes": true,
+		"console": true,
+		"ReactRouterDOM": true,
+		"$script": true,
+		"localStorage",
+		"location": true,
+		"sessionStorage": true,
+		"axios": true
+	},
+	"rules": {
+		"indent": ["error", "tab"],
+		"no-debugger": 1,
+		"no-undef": 1,
+		"no-tabs": 0,
+		"no-console": 0,
+		"no-unused-vars": 1,
+		"react/prop-types": 1,
+		"react/jsx-indent": ["error", "tab"],
+		"react/jsx-indent-props": ["error", "tab"],
+		"react/no-unused-prop-types": 0,
+		"react/prefer-stateless-function": 0,
+		"react/forbid-component-props": 0,
+		"import/no-extraneous-dependencies": 0,
+		"import/no-unresolved": [2, { ignore: ['Elements', 'Components'] }],
+		"import/extensions": ['off', 'never'],
+		"react/forbid-prop-types": 0,
+		"react/react-in-jsx-scope": 0,
+		"react/jsx-closing-bracket-location": 0,
+		"react/jsx-first-prop-new-line": [1, 'multiline-multiprop'],
+		"comma-dangle": [1, {
+			"arrays": "only-multiline",
+			"objects": "only-multiline",
+			"imports": "only-multiline",
+			"exports": "only-multiline",
+			"functions": "never",
+		}]
+	}
+}

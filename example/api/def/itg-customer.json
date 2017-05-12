@@ -1,0 +1,1322 @@
+{
+	"Customer": {
+		"type": "object",
+		"example": {
+			"customerId": "414148961",
+			"documentNumber": "68102438525",
+			"customerType": "0",
+			"name": "Infratech Teste",
+			"email": "infratech.teste@gmail.com",
+			"phoneHome": "1138481300",
+			"phoneMobile": "",
+			"phoneOffice": "",
+			"createDt": 1454637600000,
+			"updateDt": 1454637600000,
+			"guest": "N"
+		},
+		"description": "Customer",
+		"properties": {
+			"customerId": {
+				"type": "string",
+				"description": "Customer unique identifier."
+			},
+			"documentNumber": {
+				"type": "string",
+				"description": "Document number (usually CPF or CNPJ in Brazil)."
+			},
+			"customerType": {
+				"type": "string",
+				"description": "Customer type. 0 for person (PF), 1 for company (PJ).",
+				"enum": [
+					0,
+					1
+				]
+			},
+			"name": {
+				"type": "string",
+				"description": "Full name."
+			},
+			"email": {
+				"type": "string",
+				"description": "Email."
+			},
+			"phoneHome": {
+				"type": "string",
+				"description": "Home phone."
+			},
+			"phoneOffice": {
+				"type": "string",
+				"description": "Office phone."
+			},
+			"phoneMobile": {
+				"type": "string",
+				"description": "Mobile phone."
+			},
+			"createDt": {
+				"type": "string",
+				"description": "Timestamp when this customer was created."
+			},
+			"updateDt": {
+				"type": "string",
+				"description": "Timestamp from customer last update."
+			},
+			"guest": {
+				"type": "string",
+				"description": "If this is a regular or guest customer. \"N\" for regualr customer, \"Y\" for guest."
+			}
+		}
+	},
+	"CustomerPassword": {
+		"type": "object",
+		"example": {
+			"password": "MyPassword1nfr@"
+		},
+		"description": "The customer password.",
+		"properties": {
+			"password": {
+				"type": "string",
+				"description": "The customer password to be updated."
+			}
+		}
+	},
+	"Address": {
+		"type": "object",
+		"example": {
+			"addressId": "367032062",
+			"addressType": "0",
+			"recipientNm": "Infratech Teste",
+			"address": "Avenida Doutor Cardoso de Melo",
+			"addressNr": "1855",
+			"additionalInfo": "15o. andar",
+			"quarter": "Vila Olímpia",
+			"city": "São Paulo",
+			"state": "SP",
+			"countryId": "BR",
+			"postalCd": "04548005",
+			"postalCdIntl": "04548005",
+			"friendlyNm": "Endereço Principal"
+		},
+		"description": "Order address",
+		"properties": {
+			"addressId": {
+				"type": "string",
+				"description": "Address unique identifier"
+			},
+			"addressType": {
+				"type": "string",
+				"description": "Address type. \"0\" for regular delivery address, \"1\" for gift address.",
+				"enum": [
+					0,
+					1
+				]
+			},
+			"recipientNm": {
+				"type": "string",
+				"description": "name of the person that will receive this order in this address."
+			},
+			"address": {
+				"type": "string",
+				"description": "Address (street name)."
+			},
+			"addressNr": {
+				"type": "string",
+				"description": "address number (house number)."
+			},
+			"additionalInfo": {
+				"type": "string",
+				"description": "Address additional info."
+			},
+			"quarter": {
+				"type": "string",
+				"description": "Quarter."
+			},
+			"city": {
+				"type": "string",
+				"description": "City."
+			},
+			"state": {
+				"type": "string",
+				"description": "Two digit state  (SP, MG, etc)."
+			},
+			"countryId": {
+				"type": "string",
+				"description": "Two digit country code (BR, US, etc)."
+			},
+			"postalCd": {
+				"type": "string",
+				"description": "Postal code. Always in 9 digits."
+			},
+			"postalCdIntl": {
+				"type": "string",
+				"description": "International postal code."
+			},
+			"friendlyNm": {
+				"type": "string",
+				"description": "Address name. This is the name that is show in his/her account."
+			}
+		},
+		"required": [
+			"addressId",
+			"addressType",
+			"recipientNm",
+			"address",
+			"addressNr",
+			"additionalInfo",
+			"quarter",
+			"city",
+			"state",
+			"countryId",
+			"postalCd",
+			"postalCdIntl",
+			"friendlyNm",
+			"createDt",
+			"addressExtraField1"
+		]
+	},
+	"AcecCustomer": {
+		"type": "object",
+		"description": "Customer",
+		"example": {
+			"customerId": 423235950,
+			"customerType": "PERSON",
+			"title": "MR",
+			"name": "Carlos",
+			"lastName" : "Pereira da Silva Teste",
+			"email": "infratech.teste2123123@gmail.com",
+			"maritalStatus" : "M",
+			"isGuest": "N",
+			"documentNr": 13798094365,
+			"documentRegisterNumber": "25975235",
+			"documentRegisterEmissor": "MG",
+			"documentRegisterEmissionDate": "1469792458391",
+			"occupation": "Vendedor", 
+			"salaryRange": "100.00",
+			"nationality": "Brasileiro",
+			"motherName": "Maria de Jesus",
+			"mainAddressId": 378093050,
+			"createDate": 1469792458391,
+			"updateDate": 1469792459131,
+			"gender" : "M",
+			"birthday": 1469792459131,
+			"stateSubscription": "34523452345",
+			"isFreeStateSubscription": "Y",
+			"status": 1,
+			"representativeNm": "Rafael Gouveia",
+			"customerGroupId": 0,
+			"optIn": "N",
+			"partnerOptIn": "N",
+			"smsOptIn": "N",
+			"smsTrkOptIn": "N",
+			"orderSummaryInfo": [{
+				"orderCount": 6532,
+				"orderTotal": 132165
+			}],
+			"phoneList": {
+				"phone": [{
+					"phoneId": 308232300,
+					"phoneTp": 2,
+					"areaCd": "11",
+					"phoneNr": 773737373,
+					"status": 1,
+					"createDate": 1469792458391
+				}, {
+					"phoneId": 308232301,
+					"phoneTp": 1,
+					"areaCd": "11",
+					"phoneNr": 92929292,
+					"status": 1,
+					"createDate": 1469792458391
+				}]
+			},
+			"addressList": {
+				"address": [{
+					"addressId": 378093050,
+					"addressTp": 0,
+					"isMain":"Y",
+					"status": 1,
+					"recipientNm": "Carlos Pereira da Silva Teste",
+					"address": "Praça Alfredo Egydio de Souza Aranha 100",
+					"addressNr": "100",
+					"additionalInfo": "TORRE OLAVO SETUBAL",
+					"quarter": "Parque Jabaquara",
+					"city": "São Paulo",
+					"state": "SP",
+					"countryId": "BR",
+					"postalCdIntl": "04344902",
+					"friendlyNm": "Endereço Principal",
+					"createDate": 1469792458391,
+					"postalCd": 4344902,
+					"lift": "N",
+					"intercom": "N"
+				}]
+			},			
+			"customerLogins": [{
+					"login": "infratech.teste2123123@gmail.com",
+					"nickname": "Carlos Pereira",
+					"status": 1
+			}]
+		},
+		"properties": {
+			"customerId": {
+				"type": "number",
+				"description": "Customer unique identifier. This number has no decimal places."
+			},
+			"customerType": {
+				"type": "string",
+				"enum": [ "PERSON", "COMPANY", "INCOMPLETE"],
+				"description": "The customer type. </br>\"PERSON\": The customer with an id </br> \"COMPANY\": The customer when is a company </br> \"INCOMPLETE\": The customer created with parameter \"preRegister=true\" </br> "
+			},
+			"title" : {
+				"type": "string",
+				"enum": [ "MR", "MRS", "MS", "MISS"],
+				"description": "This attribute defines the title of the customer."
+			},
+			"name": {
+				"type": "string",
+				"description": "This attribute defines the first name of the customer."
+			},
+			"lastName" : {
+				"type" : "string",
+				"description" : "This attribute defines the last name of the customer."
+			},
+			"email": {
+				"type": "string",
+				"description": "Email."
+			},
+			"maritalStatus": {
+				"type": "string",
+				"description": "The marital status, this attribute accept as value \"M\" (Married), \"S\" (Single), \"D\" (Divorced) and \"W\" (Widow)",
+				"enum": [
+					"M",
+					"S",
+					"D",
+					"W"
+				]
+			},
+			"isGuest": {
+				"type": "string",
+				"enum": [ "Y", "N"],
+				"description": "Flag thats indicates if the customer is GUEST."
+			},
+			"documentNr": {
+				"type": "string",
+				"description": "Document number (usually CPF or CNPJ in Brazil)."
+			},
+			"documentRegisterNumber" : {
+				"type": "string",
+				"description": "This attribute defines the \"RG\" of the customer and is used only in Brazil."
+			},
+			"documentRegisterEmissor" :{
+				"type": "string",
+				"description": "This attribute defines the emissor of the \"RG\" and is used only in Brazil."
+			},
+			"documentRegisterEmissionDate" : {
+				"type": "date",
+				"description": "This attribute defines the emission date of the \"RG\" and is used only in Brazil."
+			},
+			"occupation" : {
+				"type": "string",
+				"description": "This attribute defines the occupation of the customer."
+			},
+			"salaryRange" :{
+				"type": "string",
+				"description": "This attribute defines the salary range of the customer. e.g: \"Salary higher than $ 100.00\". "
+			},
+			"nationality" :{
+				"type": "string",
+				"description": "This attribute defines the nationality of the customer."
+			},
+			"motherName" : {
+				"type": "string",
+				"description": "This attribute defines the customer's mother name."
+			},
+			"mainAddressId": {
+				"type": "number",
+				"description": "Identifier of the main address. This number has no decimal places."
+			},
+			"createDate": {
+				"type": "date",
+				"description": "Timestamp when this customer was created."
+			},
+			"updateDate": {
+				"type": "date",
+				"description": "Timestamp from customer last update."
+			},
+			"gender" : {
+				"type": "string",
+				"enum": [ "M", "F"],
+				"description": "This attribute defines the gender of the customer, where \"M\" is masculine and \"F\" is female"
+			},
+			"birthDate": {
+				"type": "date",
+				"description": "This attribute defines the birthday the customer."
+			},
+			"stateSubscription": {
+				"type": "string",
+				"description": "State subscription number. Used by brazilian companies."
+			},
+			"isFreeStateSubscription": {
+				"type": "string",
+				"description": "This attribute defines if the state subcription is free."
+			},
+			"status": {
+				"type": "number",
+				"description": "Status of the customer. 1=active, 0=inactive. This number has no decimal places.",
+				"enum": [0,1]
+			},
+			"representativeNm": {
+				"type": "string",
+				"description": "Name of the person responsible for the company. Used only when customerType=COMPANY."
+			},
+			"customerGroupId": {
+				"type": "number",
+				"description": "Identifier of the customer group. This number has no decimal places."
+			},
+			"optIn": {
+				"type": "string",
+				"description": "Indicates if the customer agree with the receival of newsletters.",
+				"enum": ["Y", "N"]
+			},
+			"partnerOptIn": {
+				"type": "string",
+				"description": "Indicates if the customer wants to receive newsletters by email.",
+				"enum": ["Y", "N"]
+			},
+			"smsOptIn": {
+				"type": "string",
+				"description": "Indicates if the customer wants to receive newsletters by sms.",
+				"enum": ["Y", "N"]
+			},
+			"smsTrkOptIn": {
+				"type": "string",
+				"description": "Indicates if the customer wants to receive the order status (trackings) by sms.",
+				"enum": ["Y", "N"]
+			},
+			"orderSummaryInfo": {
+				"$ref": "#/AcecOrderSummaryInfo"
+			},			
+			"phoneList": {
+				"$ref": "#/AcecCustomerPhoneList"
+			},			
+			"addressList": {
+				"$ref": "#/AcecCustomerAddressList"
+			},
+			"customerLogins": {
+				"type": "array",
+				"description": "The customer logins.",
+				"items": {
+					"$ref": "#/AcecCustomerLogin"
+				}
+			},
+			"customerLoyalty": {
+				"type": "array",
+				"description":"The customer loyalty.",
+				"items": {
+					"$ref": "#/AcecCustomerLoyalty"
+				}
+			},
+			"lastVisitedStore": {
+				"type": "string",
+				"description": " The last store that this customer visited."
+			},
+			"newsLetterOptout": {
+				"type": "string",
+				"description": "If the customer has opted out the newsletter receiving."
+			},
+			"partnerNewsletterOptout": {
+				"type": "string", 
+				"description": "If the customer has opted out partners newsletter receiving."
+			},
+			"extraEmailList": {
+				"$ref": "#/AcecExtraEmailList"
+			}
+		},
+		"required": [
+			"customerId",
+			"documentNr",
+			"customerType",
+			"customerLogins",
+			"name",
+			"email",
+			"mainAddressId",
+			"createDate",
+			"status",
+			"customerGroupId",
+			"phoneList",
+			"addressList",
+			"gender"
+		]
+	},
+	"AcecCustomerPhoneList": {
+		"type": "object",
+		"description": "List of phones.",
+		"properties": {
+			"phone": {
+				"type": "array",
+				"description": "Phone",
+				"items": {
+					"$ref": "#/AcecCustomerPhone"
+				}
+			}
+		}
+	},
+	"AcecCustomerPhone": {
+		"type": "object",
+		"description": "Phone",
+		"properties": {
+			"phoneId": {
+				"type": "number",
+				"description": "Phone unique identifier. This number has no decimal places."
+			},
+			"phoneTp": {
+				"type": "number",
+				"description": "Phone type. 0=Home, 1=Office, 2=Mobile. This number has no decimal places.",
+				"enum": [0, 1, 2]
+			},
+			"countryCd": {
+				"type": "number",
+				"description": "Country dialing code. This number has no decimal places."
+			},
+			"areaCd": {
+				"type": "string",
+				"description": "Area code."
+			},
+			"phoneNr": {
+				"type": "number'",
+				"description": "Phone number. This number has no decimal places."
+			},
+			"encryptedPhoneNr": {
+				"type": "string",
+				"description": "Encrypted phone for greater security."
+			},
+			"extension": {
+				"type": "number'",
+				"description": "Specific branch for each communication. This number has no decimal places."
+			},
+			"status": {
+				"type": "number",
+				"description": "Status of the phone. 1=active, 0=inactive. This number has no decimal places.",
+				"enum": [0,1]
+			},
+			"createDate": {
+				"type": "date",
+				"description": "Timestamp when this phone was created."
+			},
+			"updateDate": {
+				"type": "date",
+				"description": "Timestamp from email last update."
+			}	
+		},
+		"required": [
+			"phoneId",
+			"phoneTp",
+			"areaCd",
+			"createDate",
+			"status"
+		]
+	},
+	"AcecCustomerLogin": {
+		"type": "object",
+		"description": "The customer login.",
+		"properties": {
+			"login": {
+				"type": "string",
+				"description": "The customer login identifier."
+			},
+			"password": {
+				"type": "string",
+				"description": "The customer login password."
+			},
+			"nickname": {
+				"type": "string",
+				"description": "how would you like to be called."
+			},
+			"status": {
+				"type": "number",
+				"description": "Status of the customer login. 1=active, 0=inactive. This number has no decimal places.",
+				"enum": [0,1]
+			}
+		},
+		"required": [
+			"login",
+			"password",
+			"nickname",
+			"status"
+		]
+	},
+	"AcecCustomerAddressList": {
+		"type": "object",
+		"description": "List of addressess",
+		"properties": {
+			"address": {
+				"type": "array",
+				"description": "Address",
+				"items": {
+					"$ref": "#/AcecCustomerAddress"
+				}
+			}
+		}
+	},
+	"AcecCustomerAddress": {
+		"type": "object",
+		"description": "Address",
+		"properties": {
+			"addressId": {
+				"type": "number",
+				"description": "Address unique identifier. This number has no decimal places."
+			},
+			"addressTp": {
+				"type": "number",
+				"description": "Address type. 0=Personal address, 1=Gift delivery address, 2=Shop address, 3=Fake address. This number has no decimal places.",
+				"enum": [0, 1, 2, 3]
+			},
+			"isMain": {
+				"type": "string",
+				"description": "Indicates if is main address.",
+				"enum": ["Y", "N"]
+			},
+			"streetType": {
+				"type": "string",
+				"description": "The street type of address provided, ex: avenue, street."
+			},
+			"status": {
+				"type": "number",
+				"description": "Status of the address. 1=active, 0=inactive. This number has no decimal places.",
+				"enum": [0,1]
+			},
+			"recipientNm": {
+				"type": "string",
+				"description": "Name of the person to receive the delivery in the address."
+			},
+			"address": {
+				"type": "string",
+				"description": "Address."
+			},
+			"addressNr": {
+				"type": "string",
+				"description": "Number."
+			},
+			"additionalInfo": {
+				"type": "string",
+				"description": "Additional info."
+			},
+			"quarter": {
+				"type": "string",
+				"description": "Quarter."
+			},
+			"city": {
+				"type": "string",
+				"description": "City."
+			},
+			"state": {
+				"type": "string",
+				"description": "State (UF for Brazilian addressess)."
+			},
+			"countryId": {
+				"type": "string",
+				"description": "Identifier of the country."
+			},
+			"postalCdIntl": {
+				"type": "string",
+				"description": "International postal code. Contains the CEP with eight digits in Brazilian addressess."
+			},
+			"reference": {
+				"type": "string",
+				"description": "Address reference to facilitate delivery on delivery."
+			},
+			"friendlyNm": {
+				"type": "string",
+				"description": "Friend-friendly name of the address (ex: Main address)."
+			},
+			"createDate": {
+				"type": "date",
+				"description": "Timestamp when this address was created"
+			},
+			"updateDate": {
+				"type": "date",
+				"description": "Timestamp from address last update."
+			},
+			"addressExtra1": {
+				"type": "string",
+				"description": "Additional address one."
+			},
+			"addressExtra2": {
+				"type": "string",
+				"description": "Additional address two."
+			},
+			"buildingNm": {
+				"type": "string",
+				"description": "Property's apartment number."
+			},
+			"floor": {
+				"type": "string",
+				"description": "Floor number."
+			},
+			"digicode": {
+				"type": "string",
+				"description": "Intercom password."
+			},
+			"lift": {
+				"type": "string",
+				"description": "Indicates if there is a lift in the address.",
+				"enum": ["Y", "N"]
+			},
+			"intercom": {
+				"type": "string",
+				"description": "Indicates if there is an intercom in the address.",
+				"enum": ["Y", "N"]
+			},
+			"postalCd": {
+				"type": "number",
+				"description": "Postal code (CEP in Brazilian addressess). This number has no decimal places."
+			}
+		},
+		"required": [
+			"addressId",
+			"addressTp",
+			"status",
+			"recipientNm",
+			"address",
+			"quarter",
+			"city",
+			"state",
+			"postalCd",
+			"createDate"
+		]
+	},
+	"AcecOrderSummaryInfo": {
+		"type": "object",
+		"description": "Order Summary Info.",
+		"properties": {
+			"orderCount": {
+				"type": "number",
+				"description": "Count of orders the customer has made. This number has no decimal places." 
+			},
+			"orderTotal": {
+				"type": "number",
+				"description": "Total orders made by this customer. This number has no decimal places."
+			}
+		},
+		"required": [
+			"orderCount",
+			"orderTotal"
+		] 
+	},
+	"AcecCustomerLoyalty": {
+		"type": "object",
+		"description": "Customer Loyalty.",
+		"properties": {
+			"affiliationId": {
+				"type": "string",
+				"description": "User ID in the loyalty system."
+			},
+			"custLoyaltyId": {
+				"type": "number",
+				"description": "Sequence that defines the pk of the table. This number has no decimal places."
+			},
+			"providerId": {
+				"type": "string",
+				"description": "Mnemonico of the loyalty system."
+			}
+		},
+		"required": [
+			"affiliationId",
+			"custLoyaltyId",
+			"providerId"
+		]
+	},
+	"AcecExtraEmailList": {
+		"type": "object",
+		"description": "Extra Email List.",
+		"properties": {
+			"emailType": {
+				"type": "array",
+				"description": "The email type.",
+				"items": {
+					"$ref": "#/AcecCustomerEmail"
+				}
+			}
+		}
+	},
+	"AcecCustomerEmail": {
+		"type": "object",
+		"description": "Customer Email",
+		"properties": {
+			"emailId": {
+				"type": "string",
+				"description": "The identifier of each email."
+			},
+			"emailTp": {
+				"type": "number",
+				"description": "Defines the email type of the customer. This number has no decimal places."
+			},
+			"email": {
+				"type": "string",
+				"description": "Email."
+			},
+			"encryptedEmail": {
+				"type": "string",
+				"description": "Encrypted email for greater security."
+			},
+			"status": {
+				"type": "number",
+				"description": "The email's status. Possible values: \"INATIVO\" for inactive or \"ATIVO\" for active. This number has no decimal places.",
+				"enum": ["INATIVO", "ATIVO"]
+			},
+			"createDate": {
+				"type": "date",
+				"description": "Timestamp when this email was created."
+			},
+			"updateDate": {
+				"type": "date",
+				"description": "Timestamp from email last update."
+			}
+		},
+		"required": [
+			"emailId",
+			"email",
+			"createDate"
+		]
+	},
+	"EZCustomer": {
+        "type": "object",
+        "description": "Customer information",
+        "example": {
+			  "addresses": [
+				{
+				  "additionalInfo": "casa",
+				  "address": "Avenida Andrômeda",
+				  "addressExtra1": "Complemento de Endereço 1",
+				  "addressExtra2": "Complemento de Endereço 2",
+				  "addressNr": "234",
+				  "addressTp": "PERSONAL",
+				  "buildingName": "Santo Marco Apollo",
+				  "city": "São José dos Campos",
+				  "countryId": "BR",
+				  "digicode": 1,
+				  "floorNumber": 21,
+				  "friendlyNm": "Endereço Principal",
+				  "intercom": false,
+				  "lift": false,
+				  "postalCd": 12230000,
+				  "quarter": "Jardim Satélite",
+				  "recipientNm": "nome sobrenome",
+				  "reference": "Próximo ao shopping",
+				  "state": "SP",
+				  "status": "ATIVO"
+				}
+			  ],
+			  "birthDate": 320900400000,
+			  "customerAttributes": [
+				{"id":"STATUS-WAREHOUSE-3","value":"PREAPV"},
+				{"id":"STATUS-WAREHOUSE-2","value":"PREAPV"}
+				],
+			  "customerGroup": {
+				"customerGroupId": 0
+			  },
+			  "customerTp": "PERSON",
+			  "documentNr": 85959401002,
+			  "email": "email.teste35@infracommerce.com.br",
+			  "gender": "M",
+			  "maritalStatus": "M",
+			  "motherName": "Maria Silva",
+			  "name": "Infra Teste",
+			  "nationality": "Brasileiro",
+			  "occupation": "Administrador de Empresas",
+			  "optIn": false,
+			  "partnerOptIn": false,
+			  "phones": [
+				{
+				  "areaCd": "12",
+				  "countryCd": 1,
+				  "extension": 211,
+				  "phoneNr": 33333333,
+				  "phoneTp": "HOME",
+				  "status": "ATIVO"
+				},
+				{
+				  "areaCd": "12",
+				  "countryCd": 1,
+				  "extension": 122,
+				  "phoneNr": 322222222,
+				  "phoneTp": "MOBILE",
+				  "status": "ATIVO"
+				}
+			  ],
+			  "representativeNm": "REPRESENTANTE LTDA",
+			  "smsOptIn": false,
+			  "smsTrkOptIn": false,
+			  "salaryRange": "Até R$ 1.000,00",
+			  "stateSubscription": "545467886425121",
+			  "status": "ATIVO"
+        },
+        "properties": {
+		   "addresses": {
+				"$ref": "#/EZCustomerAddressList"
+		   },
+		   "birthDate": {
+                "type": "date",
+                "description": "Customer birth date. The value is the translated value of java.util.Date object's getTime() (i.e.: the number of milliseconds since January 1, 1970, 00:00:00 GMT)."
+           },
+		   "customerAttributes": {
+				"$ref": "#/EZCustomerAttributeArray"
+           },
+		   "customerGroup": {
+                "$ref": "#/EZCustomerGroup"
+           },
+		   "customerId": {
+                "type": "number",
+                "description": "The customer identifier. Not required by POST requests. This number has no decimal places."
+           },
+		   "customerTp": {
+                "type": "string",
+                "description": "Defines the customer type which can be either a PERSON (individual) or COMPANY (legal person)",
+				"enum": ["PERSON", "COMPANY"]
+           },
+		   "documentNr": {
+                "type": "number",
+                "description": "Customer document number (like \"CPF\" in Brazil). Maximum length: 15 digits. This number has no decimal places."
+           },
+		   "email": {
+                "type": "string",
+                "description": "The customer e-mail. Maximum length: 255 bytes."
+           },
+		   "gender": {
+                "type": "string",
+                "description": "The customer gender. Possible values: \"M\" (for male) or \"F\" (for female).",
+				"enum": ["M", "F"]
+           },
+		   "maritalStatus": {
+                "type": "string",
+                "description": "The customer marital status. Possible values: \"S\" (for single), \"M\" (for married), \"D\" (for divorced) or \"W\" (for widower).",
+				"enum": ["S", "M", "D", "W"]
+           },
+		   "motherName": {
+                "type": "string",
+                "description": "The customer's mother name. Maximum length: 100 bytes."
+           },
+		   "name": {
+                "type": "string",
+                "description": "The customer's complete name. Maximum length: 100 bytes."
+           },
+		   "nationality": {
+                "type": "string",
+                "description": "The customer's nationality. Maximum length: 60 bytes."
+           },
+		   "occupation": {
+                "type": "string",
+                "description": "The customer's occuparion. Maximum length: 60 bytes."
+           },
+		   "optIn": {
+                "type": "boolean",
+                "description": "Defines if the customer wants to receive newsletter on his/her e-mail"
+           },
+		   "partnerOptIn": {
+                "type": "boolean",
+                "description": "Defines if the customer wants to receive offers and/or advertisements from partners on his/her e-mail."
+           },
+		   "phones": {
+				"$ref": "#/EZCustomerPhoneList"
+		   },
+		   "representativeNm": {
+                "type": "string",
+                "description": "The customer's representative name, if any. Maximum length: 100 bytes."
+           },
+		   "salaryRange": {
+                "type": "string",
+                "description": "The customer's salary range. Maximum length: 60 bytes."
+           },
+		   "smsOptIn": {
+                "type": "boolean",
+                "description": "Defines if customer wants to receive offers by SMS"
+           },
+		   "smsTrkOptIn": {
+                "type": "boolean",
+                "description": "Defines if customer wants to receive tracking status by SMS"
+           },
+		   "stateSubscription": {
+                "type": "string",
+                "description": "The customer's state subscription, if any. Maximum length: 20 bytes."
+           },
+		   "status": {
+                "type": "string",
+                "description": "The customer's status. Possible values: \"INATIVO\" for inactive or \"ATIVO\" for active.",
+				"enum": ["INATIVO", "ATIVO"]
+           }
+        },
+        "required": [
+			"customerId",
+			"name",
+			"customerTp",
+			"email",
+			"gender",
+			"birthDate",
+			"customerGroup",
+			"phones",
+			"addresses",
+			"status"
+        ]
+    },
+	"EZCustomerAttributeArray": {
+		"type": "object",
+		"description": "List of customer attributes",
+		"properties": {
+			"customerAttributes": {
+				"type": "array",
+				"description": "Customer attribute",
+				"items": {
+					"$ref": "#/EZCustomerAttribute"
+				}
+			}
+		}
+	},
+	"EZCustomerAttribute": {
+		"type": "object",
+		"description": "The customer attribute object",
+		"properties": {
+			"id": {
+				"type": "string",
+				"description": "The customer attribute identifier"
+			},
+			"value": {
+				"type": "string",
+				"description": "The customer attribute value"
+			}
+		},
+		"required": [
+			"id",
+			"value"
+		]
+	},
+    "EZCustomerAddressList": {
+		"type": "object",
+		"description": "List of addresses",
+		"properties": {
+			"address": {
+				"type": "array",
+				"description": "Address",
+				"items": {
+					"$ref": "#/EZCustomerAddress"
+				}
+			}
+		}
+	},
+    "EZCustomerAddress": {
+	    "type": "object",
+	    "description": "Address information",
+	    "example": {
+	        "address":{
+			  "additionalInfo": "casa",
+			  "address": "Avenida Andrômeda",
+			  "addressExtra1": "Complemento de Endereço 1",
+			  "addressExtra2": "Complemento de Endereço 2",
+			  "addressNr": "234",
+			  "addressTp": "PERSONAL",
+			  "buildingName": "Santo Marco Apollo",
+			  "city": "São José dos Campos",
+			  "countryId": "BR",
+			  "digicode": 1,
+			  "floorNumber": 21,
+			  "friendlyNm": "Endereço Principal",
+			  "intercom": false,
+			  "lift": false,
+			  "postalCd": 12230000,
+			  "quarter": "Jardim Satélite",
+			  "recipientNm": "nome sobrenome",
+			  "reference": "Próximo ao shopping",
+			  "state": "SP",
+			  "status": "ATIVO"
+	        }
+	    },
+	    "properties": {
+			"additionalInfo":{
+	            "type":"string",
+	            "description":"Additional informations to facilitate the delivery. Maximum length: 100 bytes."
+	        },
+	        "address": {
+	            "type":"string",
+	            "description": "The address name. Maximum length: 100 bytes."
+	        },
+	        "addressExtra1": {
+	            "type":"string",
+	            "description": "Additional address name. Maximum length: 100 bytes."
+	        },
+	        "addressExtra2": {
+	            "type":"string",
+	            "description": "Additional address name. Maximum length: 100 bytes."
+	        },
+	        "addressId": {
+	            "type":"number",
+	            "description": "The address identifier. Not required in POST requests. This number has no decimal places."
+	        },
+	        "addressNr":{
+	            "type":"string",
+	            "description": "The address number. Maximum length: 10 bytes."
+	        },
+	        "addressTp": {
+	            "type":"string",
+	            "description": "The address type. The allowed values are: \"PERSONAL\" (for common customer address), \"GIFT\" (when address is related a gift), \"SHOP\" (whe it's about a shop address) and \"FAKE\" (if is a fake address, used only by the system). For majory cases, please use always \"PERSONAL\".",
+                "enum": ["PERSONAL", "GIFT", "SHOP", "FAKE"]
+	        },
+	        "buildingName": {
+	            "type":"string",
+	            "description": "The building name, if any. Maximum length: 30 bytes."
+	        },
+	        "city":{
+	            "type":"string",
+	            "description":"The city of the address. Maximum length: 60 bytes."
+	        },
+	        "countryId":{
+	            "type":"string",
+	            "description":"The country identification code in \"ISO 3166-1 alpha-2\". Example: Brazil = BR, Mexico = MX. Maximum length: 2 bytes."
+	        },
+	        "digicode": {
+	            "type":"string",
+	            "description": "The intercom pass code, if any. Maximum length: 8 bytes."
+	        },
+	        "floorNumber": {
+	            "type":"number",
+	            "description": "The floor number, if any. Maximum length: 3 digits. This number has no decimal places."
+	        },
+	        "friendlyNm": {
+	            "type":"string",
+	            "description": "The \"friendly\" address name. Used to identify it among others. Maximum length: 100 bytes."
+	        },
+	        "intercom": {
+	            "type":"boolean",
+	            "description": "Indicates if the address has an intercom."
+	        },
+	        "lift": {
+	            "type":"boolean",
+	            "description": "Indicates if the address has a lift"
+	        },
+	        "postalCd": {
+	            "type": "number",
+	            "description": "The postal code of the address. Maximum length: 8 digits. This number has no decimal places."
+	        },
+	        "quarter":{
+	            "type":"string",
+	            "description":"The address quarter. Maximum length: 80 bytes."
+	        },
+	        "recipientNm":{
+	            "type":"string",
+	            "description":"The name of person that will receive the delivery. Maximum length: 100 bytes."
+	        },
+	        "reference": {
+	            "type": "string",
+	            "description": "A delivery reference. Maximum length: 100 bytes."
+	        },
+	        "state": {
+	            "type": "string",
+	            "description": "The address state. Maximum length: 60 bytes."
+	        },
+	        "status": {
+	            "type": "string",
+	            "description": "The address status. Possible values: \"INATIVO\" for inactive or \"ATIVO\" for active.",
+                "enum": ["INATIVO", "ATIVO"]
+	        }
+	    },
+	    "required": [
+			"postalCd",
+			"address",
+			"addressNr",
+			"quarter",
+			"city",
+			"state",
+			"addressId",
+	        "status",
+	        "addressTp"
+	    ]
+	},
+    "EZCustomerPhoneList": {
+		"type": "object",
+		"description": "List of phones",
+		"properties": {
+			"phone": {
+				"type": "array",
+				"description": "Phone",
+				"items": {
+					"$ref": "#/EZCustomerPhone"
+				}
+			}
+		}
+	},
+	"EZCustomerPhone": {
+        "description": "Phone information",
+        "type": "object",
+        "example": {
+		  "areaCd": "12",
+		  "countryCd": 1,
+		  "extension": 111,
+		  "phoneNr": 33333333,
+		  "phoneTp": "HOME",
+		  "status": "ATIVO"
+        },
+        "properties": {
+            "areaCd": {
+                "type": "string",
+                "description": "Area code for the phone. Maximum length: 4 bytes."
+            },
+            "countryCd": {
+                "type": "number",
+                "description": "The country code digits. Maximum length: 3 digits. This number has no decimal places."
+            },
+            "extension": {
+                "type": "number",
+                "description": "The phone extension (\"ramal\" in Brazil) code. Maximum length: 6 digits. This number has no decimal places."
+            },
+            "phoneId": {
+                "type": "number",
+                "description": "The phone identifier. Not required in POST requests. This number has no decimal places."
+            },
+            "phoneNr": {
+                "type": "number",
+                "description": "Phone number without area code. Maximum length: 20 digits. This number has no decimal places."
+            },
+            "phoneTp": {
+                "type": "string",
+                "description": "The phone type. Possible values: \"HOME\" (for home number), \"OFFICE\" (for office number) or \"MOBILE\" (for mobile number).",
+                "enum": ["HOME", "OFFICE", "MOBILE"]
+            },
+            "status": {
+                "type": "string",
+                "description": "The phone status. Possible values: \"INATIVO\" (for inactive) or \"ATIVO\" (for active).",
+                "enum": ["INATIVO", "ATIVO"]
+            }
+		},
+		"required": [
+			"status",
+			"phoneTp",
+			"phoneId",
+			"phoneNr",
+			"areaCd"
+        ]
+    },
+	"EZCustomerGroup": {
+        "description": "The customer group information",
+        "type": "object",
+        "example": {
+			"customerGroupId": 0
+        },
+        "properties": {
+            "customerGroupId": {
+                "type": "number",
+                "description": "The customer's group identifier. For \"normal customers\" always use the value 0 (zero). This number has no decimal places."
+            }
+		},
+        "required": [
+			"customerGroupId"
+        ]
+    },
+    "EZCustomerLoginList": {
+		"type": "object",
+		"description": "List of customer logins",
+		"properties": {
+			"CustomerLogin": {
+				"type": "array",
+				"description": "Customer login",
+				"items": {
+					"$ref": "#/EZCustomerLogin"
+				}
+			}
+		}
+	},
+	"EZCustomerLogin": {
+        "description": "The customer login information",
+        "type": "object",
+        "example": {
+			"createDt": 1474340400000,
+			"login": "email@email.com",
+			"nickname": "Nome Sobrenome",
+			"password": "895df6df-da63-4333-a178-87e1ad",
+			"status": "ATIVO"
+        },
+        "properties": {
+            "createDt": {
+                "type": "date",
+                "description": "Timestamp when this customer was created."
+            },
+            "login": {
+                "type": "string",
+                "description": "The customer login identifier."
+            },
+            "nickname": {
+                "type": "string",
+                "description": "How would you like to be called."
+            },
+            "password": {
+                "type": "string",
+                "description": "The customer login password."
+            },
+			"status": {
+				"type": "string",
+				"description": "Status of the customer login.",
+				"enum": ["INATIVO", "ATIVO"]
+			}
+		}
+    },
+    "EZCustomerLoyaltyList": {
+		"type": "object",
+		"description": "List of customer loyalties",
+		"properties": {
+			"CustomerLogin": {
+				"type": "array",
+				"description": "Customer loyalty",
+				"items": {
+					"$ref": "#/EZCustomerLoyalty"
+				}
+			}
+		}
+	},
+	"EZCustomerLoyalty": {
+        "description": "The customer loyalty information",
+        "type": "object",
+        "example": {
+			"custLoyaltyId": 1233,
+			"affiliationId": "2331",
+			"providerId": "31323"
+        },
+        "properties": {
+            "custLoyaltyId": {
+                "type": "number",
+                "description": "Sequence that defines the pk of the table. This number has no decimal places."
+            },
+			"affiliationId": {
+                "type": "string",
+                "description": "User ID in the loyalty system."
+            },
+			"providerId": {
+                "type": "string",
+                "description": "Mnemonico of the loyalty system."
+            }
+		}
+    },
+	"EZTitleTp": {
+        "description": "The customer title information",
+        "type": "object",
+        "example": {
+			"titleTpId": 1233,
+			"name": "Mme",
+			"description": "Madame",
+			"sourceName": "MME"
+        },
+        "properties": {
+            "titleTpId": {
+                "type": "number",
+                "description": "Table identifier. This number has no decimal places."
+            },
+			"name": {
+                "type": "string",
+                "description": "Name of title. Field used to display value. Ex: Mme, Mlle, M."
+            },
+			"description": {
+                "type": "string",
+                "description": "Description of name. Ex: Madame, Mademoiselle, Monsieur."
+            },
+			"sourceName": {
+                "type": "string",
+                "description": "Name of title. Field used to display value. Ex: Mme, Mlle, M."
+            }
+		}
+	}
+}

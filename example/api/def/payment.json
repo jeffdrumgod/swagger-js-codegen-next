@@ -1,0 +1,58 @@
+{
+    "CreditCard": {
+        "type": "object",
+        "description": "Crredit Card Data",
+        "example": {
+            "number":"376449047333005",
+            "cardOwnersName":"Name Surname",
+            "expirationMonthDate":"05",
+            "expirationYearDate":"2018",
+            "cardSecurityCode":"1234"
+        },
+        "properties": {
+            "number": {
+                "type": "number",
+				"description": "Credit Card Number"
+            },
+            "cardOwnersName": {
+                "type": "string",
+				"description": "Name of owner of Credit Card"
+            },
+            "expirationMonthDate": {
+                "type": "number",
+				"description": "Credit card expiration month"
+            },
+            "expirationYearDate": {
+                "type": "number",
+				"description": "Credit card expiration year"
+            },
+            "cardSecurityCode":{
+                "type": "number",
+				"description": "Credit card security code (CVV)"
+            }
+        },
+        "required": [
+            "number",
+            "cardOwnersName",
+            "expirationMonthDate",
+            "expirationYearDate",
+            "cardSecurityCode"
+        ]
+    },
+    "CardRegisterID": {
+        "type": "object",
+        "description": "Credit Card Registration ID to remove card",
+        "example": {
+            "cardRegisterId":"87587647654"
+        },
+        "properties": {
+            "cardRegisterId": {
+                "type": "number",
+				"description": "Credit Card Registration ID"
+            }
+        },
+        "required": [
+            "cardRegisterId"
+        ]
+    }
+}

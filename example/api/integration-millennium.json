@@ -1,0 +1,73 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Integration Millennium API"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "CreditLimit integration API",
+            "description": "<br><font size=\"2\">This is the list of APIs that integrate the Credit Limits with Millennium</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-integration-millennium-api/v1/creditlimits": {
+            "get": {
+                "tags": [
+                    "CreditLimit integration API"
+                ],
+                "summary": "Retrieve the new Credit Limits from Millennium",
+                "description": "Retrieve the new millennium credit limits and queue them up on our platform.",
+                "parameters": [
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is a list with internal coupons's essencial information.",
+                        "schema": {
+                            "$ref": "./api/def/integration-millennium.json#/CreditLimitResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-integration-millennium-api/v1/creditlimits ": {
+            "post": {
+                "tags": [
+                    "CreditLimit integration API"
+                ],
+                "summary": "Process the new Credit Limits",
+                "description": "Process the Credit Limits, queued on our platform, brought from Millennium.",
+                "parameters": [
+                {
+                        "name": "body",
+                        "description": "The body is filled with 'ri', 'rf' and 'qt'.",
+                        "in": "body",
+                        "type": "string",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/integration-millennium.json#/CreditLimitProcessRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is a list of items that have been processed and if there is more data in the queue.",
+                        "schema": {
+                            "$ref": "./api/def/integration-millennium.json#/CreditLimitProcessResponse"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

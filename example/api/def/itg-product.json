@@ -1,0 +1,1522 @@
+{
+	"Product": {
+		"type": "object",
+		"description": "A Product.",
+		"example": {
+			  "productId": 10,
+			  "mainCategoryLevel1": {
+			    "id": 1,
+			    "name": "Console",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel2": {
+			    "id": 2,
+			    "name": "Sony",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel3": {
+			    "id": 3,
+			    "name": "Playstation",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel4": {
+			    "id": 4,
+			    "name": "Games",
+			    "isMain": true
+			  },
+			  "productType": "NOR",
+			  "description": "PlayStation 4, foi esperado com ansiedade pelos apaixonados por videogames, a Sony lançou o aparelho no ano de 2013. A Sony Computer Entertainment mostrou ao mundo sua mais nova joia: o PS4.",
+			  "title": "Playstation 4",
+			  "metaDescription": "PS4",
+			  "metaKeywords": "Playstation;PS4;Sony;Console;Games",
+			  "metaRobots": "INDEX,FOLLOW",
+			  "tagHeading1": "Playstation 4",
+			  "viewUnavailable": true,
+			  "friendlyURL": "/consoles/ps4",
+			  "redirectType": "PERMANENT",
+			  "udaList": {
+			    "uda": [
+			      {
+			        "id": 1,
+			        "name": "Cor",
+			        "value": "Preto"
+			      },
+			      {
+			        "id": 2,
+			        "name": "Memória",
+			        "value": "8 GB"
+			      },
+			      {
+			        "id": 3,
+			        "name": "Processador",
+			        "value": "X86-64 da AMD"
+			      }
+			    ]
+			  },
+			  "categoryList": {
+			    "productCategory": [
+			      {
+			        "id": 4,
+				    "name": "Games",
+				    "isMain": true
+			      },
+			       {
+				    "id": 556,
+				    "name": "Eletrônicos",
+				    "isMain": false
+				  }
+			    ]
+			  },
+			  "sellingTitleList": {
+			    "productSellingTitle": [
+			      {
+			        "saleChannel": 1,
+			        "sellingTitle": "Playstation 4 - Preto",
+			        "shortSellingTitle": "Playstation 4 - Preto"
+			      }
+			    ]
+			  },
+			  "videoList": {
+			    "productVideo": [
+			      {
+			        "id": 1,
+			        "videoTp": "YOU",
+			        "url": "Jw8HCFZkBds",
+			        "name": "Playstation 4",
+			        "thumbUrl": "SRC/1/8/760/PS4.jpg",
+			        "html": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Jw8HCFZkBds\" frameborder=\"0\" allowfullscreen></iframe>"
+			      }
+			    ]
+			  },
+			  "skuList": {
+			    "sku": [
+			      {
+			        "skuId": "PS41940388",
+			        "name": "Playstation 4 Sony - Preto",
+			        "fiscalStatus": true,
+			        "status": "A",
+			        "main": true,
+			        "comercialStatus": true,
+			        "visible": "Y",
+			        "productionStatus": true,
+			        "height": 0.30,
+			        "width": 0.60,
+			        "length": 0.90,
+			        "weight": 2.500,
+			        "transportType": 1,
+			        "skuOwnerType": "DFL",
+			        "manufacturerWarranty": 0,
+			        "saleClassification": "C",
+			        "eanlist": {
+			          "ean": [
+			            {
+			              "eanvalue": "711719100359"
+			            }
+			          ]
+			        },
+			        "udaList": {
+			          "uda": [
+				        {
+				          "id": 5,
+				          "name": "Voltagem",
+				          "value": "220V"
+				        }
+			          ]
+			        },
+			        "imageList": {
+			          "image": [
+			            {
+			              "id": 70,
+			              "imageTp": "SRC",
+			              "url": "SRC/playstation-4-preto_70_PS41940388.jpg",
+			              "isMain": true,
+			              "resizeList": {
+			                "resize": [
+			                  {
+			                    "id": 1,
+			                    "imageTp": "pvg",
+			                    "url": "pvg/playstation-4-preto_1_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 3,
+			                    "imageTp": "ppp",
+			                    "url": "ppp/playstation-4-preto_3_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 5,
+			                    "imageTp": "pg",
+			                    "url": "pg/playstation-4-preto_5_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 9,
+			                    "imageTp": "mpp",
+			                    "url": "mpp/playstation-4-preto_9_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 10,
+			                    "imageTp": "gp",
+			                    "url": "gp/playstation-4-preto_10_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 11,
+			                    "imageTp": "gm",
+			                    "url": "gm/playstation-4-preto_11_PS41940388.jpg"
+			                  }
+			                ]
+			              }
+			            }
+			          ]
+			        },
+			        "relatedSkuList": [
+			          {
+			            "relationTp": "acs",
+			            "skuList": [
+			              "PS41940388CONTROLE",
+			              "PS41940388JOGO"
+			            ]
+			          },
+			          {
+			            "relationTp": "crs",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          },
+					  {
+			            "relationTp": "ups",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          }
+			        ]
+			      },
+			      {
+			        "skuId": "PS41940388",
+			        "name": "Playstation 4 Sony - Preto",
+			        "fiscalStatus": true,
+			        "status": "A",
+			        "main": true,
+			        "comercialStatus": true,
+			        "visible": "Y",
+			        "productionStatus": true,
+			        "height": 0.30,
+			        "width": 0.60,
+			        "length": 0.90,
+			        "weight": 2.500,
+			        "transportType": 1,
+			        "skuOwnerType": "DFL",
+			        "manufacturerWarranty": 0,
+			        "saleClassification": "C",
+			        "eanlist": {
+			          "ean": [
+			            {
+			              "eanvalue": "711719100355"
+			            }
+			          ]
+			        },
+			        "udaList": {
+			          "uda": [
+				        {
+				          "id": 5,
+				          "name": "Voltagem",
+				          "value": "110V"
+				        }
+			          ]
+			        },
+			        "imageList": {
+			          "image": [
+			            {
+			              "id": 70,
+			              "imageTp": "SRC",
+			              "url": "SRC/playstation-4-preto_70_PS41940388.jpg",
+			              "isMain": true,
+			              "resizeList": {
+			                "resize": [
+			                  {
+			                    "id": 1,
+			                    "imageTp": "pvg",
+			                    "url": "pvg/playstation-4-preto_1_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 3,
+			                    "imageTp": "ppp",
+			                    "url": "ppp/playstation-4-preto_3_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 5,
+			                    "imageTp": "pg",
+			                    "url": "pg/playstation-4-preto_5_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 9,
+			                    "imageTp": "mpp",
+			                    "url": "mpp/playstation-4-preto_9_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 10,
+			                    "imageTp": "gp",
+			                    "url": "gp/playstation-4-preto_10_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 11,
+			                    "imageTp": "gm",
+			                    "url": "gm/playstation-4-preto_11_PS41940388.jpg"
+			                  }
+			                ]
+			              }
+			            }
+			          ]
+			        },
+			        "relatedSkuList": [
+			          {
+			            "relationTp": "acs",
+			            "skuList": [
+			              "PS41940388CONTROLE",
+			              "PS41940388JOGO"
+			            ]
+			          },
+			          {
+			            "relationTp": "crs",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          },
+					  {
+			            "relationTp": "ups",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          }
+			        ]
+			      }
+			    ]
+			  }
+		},
+		"properties": {
+			"productId": {
+				"type": "number",
+				"description": "Product unique identifier. This number has no decimal places."
+			},
+			"mainCategoryLevel1": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel2": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel3": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel4": {
+				"$ref": "#/ProductCategory"
+			},
+			"productType": {
+				"type": "string",
+				"description": "Product type. \"NOR\" is a regular product, \"SER\" is for a service, \"FFR\" for a Gift.",
+				"enum": [
+					"NOR",
+					"SER",
+					"FFR"
+				]
+			},
+			"description": {
+				"type": "string",
+				"description": "Product main description. This can take HTML code."
+			},
+			"title": {
+				"type": "string",
+				"description": "Product default selling title. It will be replaced by sale channel base title if present"
+			},
+			"metaDescription": {
+				"type": "string",
+				"description": "Product meta description HTML tag. This will be rendered in product page."
+			},
+			"metaKeywords": {
+				"type": "string",
+				"description": "Product meta keywords HTML tag. This will be rendered in product page."
+			},
+			"metaRobots": {
+				"type": "string",
+				"description": "Product meta robots HTML tag. This will be rendered in product page."
+			},
+			"tagHeading1": {
+				"type": "string",
+				"description": "Product H1 html tag. This will be rendered in product page."
+			},
+			"viewUnavailable": {
+				"type": "boolean",
+				"description": "If this product must be visible in the website even if it is out of stock."
+			},
+			"friendlyURL": {
+				"type": "string",
+				"description": "Complete alternative URL for this product, starting with \"/\". It must be a relative URL, without the domain (example: \"/promo/ps4\")."
+			},
+			"redirectType": {
+				"type": "string",
+				"description": "Redirect type defined the behavior of the server when redirecting the user from friendlyURL above to the actual product page. Valid values are: \"TEMPORARY\", which is the HTTP code 302; \"PERMANENT\", which is the HTTP code 301 and \"PROXY\", which is a transparent redirect - the user will not know that there is a redirect in place.",
+				"enum": [
+					"TEMPORARY",
+					"PERMANENT",
+					"PROXY"
+				]
+			},
+			"udaList": {
+				"$ref": "#/UdaList"
+			},
+			"categoryList": {
+				"$ref": "#/ProductCategoryList"
+			},
+			"sellingTitleList": {
+				"$ref": "#/ProductSellingTitleList"
+			},
+			"videoList": {
+				"$ref": "#/VideoList"
+			},
+			"skuList": {
+				"$ref": "#/SkuList"
+			}
+		},
+		"required": [
+			"productId",
+			"productType",
+			"description",
+			"title",
+			"viewUnavailable"
+		]
+	},
+	"ProductSku": {
+		"type": "object",
+		"description": "A Product.",
+		"example": {
+			  "productId": 10,
+			  "mainCategoryLevel1": {
+			    "id": 1,
+			    "name": "Console",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel2": {
+			    "id": 2,
+			    "name": "Sony",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel3": {
+			    "id": 3,
+			    "name": "Playstation",
+			    "isMain": true
+			  },
+			  "mainCategoryLevel4": {
+			    "id": 4,
+			    "name": "Games",
+			    "isMain": true
+			  },
+			  "productType": "NOR",
+			  "description": "PlayStation 4, foi esperado com ansiedade pelos apaixonados por videogames, a Sony lançou o aparelho no ano de 2013. A Sony Computer Entertainment mostrou ao mundo sua mais nova joia: o PS4.",
+			  "title": "Playstation 4",
+			  "metaDescription": "PS4",
+			  "metaKeywords": "Playstation;PS4;Sony;Console;Games",
+			  "metaRobots": "INDEX,FOLLOW",
+			  "tagHeading1": "Playstation 4",
+			  "viewUnavailable": true,
+			  "friendlyURL": "/consoles/ps4",
+			  "redirectType": "PERMANENT",
+			  "udaList": {
+			    "uda": [
+			      {
+			        "id": 1,
+			        "name": "Cor",
+			        "value": "Preto"
+			      },
+			      {
+			        "id": 2,
+			        "name": "Memória",
+			        "value": "8 GB"
+			      },
+			      {
+			        "id": 3,
+			        "name": "Processador",
+			        "value": "X86-64 da AMD"
+			      }
+			    ]
+			  },
+			  "categoryList": {
+			    "productCategory": [
+			      {
+			        "id": 4,
+				    "name": "Games",
+				    "isMain": true
+			      },
+			       {
+				    "id": 556,
+				    "name": "Eletrônicos",
+				    "isMain": false
+				  }
+			    ]
+			  },
+			  "sellingTitleList": {
+			    "productSellingTitle": [
+			      {
+			        "saleChannel": 1,
+			        "sellingTitle": "Playstation 4 - Preto",
+			        "shortSellingTitle": "Playstation 4 - Preto"
+			      }
+			    ]
+			  },
+			  "videoList": {
+			    "productVideo": [
+			      {
+			        "id": 1,
+			        "videoTp": "YOU",
+			        "url": "Jw8HCFZkBds",
+			        "name": "Playstation 4",
+			        "thumbUrl": "SRC/1/8/760/PS4.jpg",
+			        "html": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Jw8HCFZkBds\" frameborder=\"0\" allowfullscreen></iframe>"
+			      }
+			    ]
+			  },
+			  "skuList": {
+			    "sku": [
+			      {
+			        "skuId": "PS41940388",
+			        "name": "Playstation 4 Sony - Preto",
+			        "fiscalStatus": true,
+			        "status": "A",
+			        "main": true,
+			        "comercialStatus": true,
+			        "visible": "Y",
+			        "productionStatus": true,
+			        "height": 0.30,
+			        "width": 0.60,
+			        "length": 0.90,
+			        "weight": 2.500,
+			        "transportType": 1,
+			        "skuOwnerType": "DFL",
+			        "manufacturerWarranty": 0,
+			        "saleClassification": "C",
+			        "eanlist": {
+			          "ean": [
+			            {
+			              "eanvalue": "711719100355"
+			            }
+			          ]
+			        },
+			        "udaList": {
+			          "uda": [
+				        {
+				          "id": 5,
+				          "name": "Voltagem",
+				          "value": "110V"
+				        }
+			          ]
+			        },
+			        "imageList": {
+			          "image": [
+			            {
+			              "id": 70,
+			              "imageTp": "SRC",
+			              "url": "SRC/playstation-4-preto_70_PS41940388.jpg",
+			              "isMain": true,
+			              "resizeList": {
+			                "resize": [
+			                  {
+			                    "id": 1,
+			                    "imageTp": "pvg",
+			                    "url": "pvg/playstation-4-preto_1_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 3,
+			                    "imageTp": "ppp",
+			                    "url": "ppp/playstation-4-preto_3_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 5,
+			                    "imageTp": "pg",
+			                    "url": "pg/playstation-4-preto_5_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 9,
+			                    "imageTp": "mpp",
+			                    "url": "mpp/playstation-4-preto_9_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 10,
+			                    "imageTp": "gp",
+			                    "url": "gp/playstation-4-preto_10_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 11,
+			                    "imageTp": "gm",
+			                    "url": "gm/playstation-4-preto_11_PS41940388.jpg"
+			                  }
+			                ]
+			              }
+			            }
+			          ]
+			        },
+			        "relatedSkuList": [
+			          {
+			            "relationTp": "acs",
+			            "skuList": [
+			              "PS41940388CONTROLE",
+			              "PS41940388JOGO"
+			            ]
+			          },
+			          {
+			            "relationTp": "crs",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          },
+					  {
+			            "relationTp": "ups",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          }
+			        ]
+			      }
+			    ]
+			  }
+		},
+		"properties": {
+			"productId": {
+				"type": "number",
+				"description": "Product unique identifier. This number has no decimal places."
+			},
+			"mainCategoryLevel1": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel2": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel3": {
+				"$ref": "#/ProductCategory"
+			},
+			"mainCategoryLevel4": {
+				"$ref": "#/ProductCategory"
+			},
+			"productType": {
+				"type": "string",
+				"description": "Product type. \"NOR\" is a regular product, \"SER\" is for a service, \"FFR\" for a Gift.",
+				"enum": [
+					"NOR",
+					"SER",
+					"FFR"
+				]
+			},
+			"description": {
+				"type": "string",
+				"description": "Product main description. This can take HTML code."
+			},
+			"title": {
+				"type": "string",
+				"description": "Product default selling title. It will be replaced by sale channel base title if present"
+			},
+			"metaDescription": {
+				"type": "string",
+				"description": "Product meta description HTML tag. This will be rendered in product page."
+			},
+			"metaKeywords": {
+				"type": "string",
+				"description": "Product meta keywords HTML tag. This will be rendered in product page."
+			},
+			"metaRobots": {
+				"type": "string",
+				"description": "Product meta robots HTML tag. This will be rendered in product page."
+			},
+			"tagHeading1": {
+				"type": "string",
+				"description": "Product H1 html tag. This will be rendered in product page."
+			},
+			"viewUnavailable": {
+				"type": "boolean",
+				"description": "If this product must be visible in the website even if it is out of stock."
+			},
+			"friendlyURL": {
+				"type": "string",
+				"description": "Complete alternative URL for this product, starting with \"/\". It must be a relative URL, without the domain (example: \"/promo/ps4\")."
+			},
+			"redirectType": {
+				"type": "string",
+				"description": "Redirect type defined the behavior of the server when redirecting the user from friendlyURL above to the actual product page. Valid values are: \"TEMPORARY\", which is the HTTP code 302; \"PERMANENT\", which is the HTTP code 301 and \"PROXY\", which is a transparent redirect - the user will not know that there is a redirect in place.",
+				"enum": [
+					"TEMPORARY",
+					"PERMANENT",
+					"PROXY"
+				]
+			},
+			"udaList": {
+				"$ref": "#/UdaList"
+			},
+			"categoryList": {
+				"$ref": "#/ProductCategoryList"
+			},
+			"sellingTitleList": {
+				"$ref": "#/ProductSellingTitleList"
+			},
+			"videoList": {
+				"$ref": "#/VideoList"
+			},
+			"skuList": {
+				"$ref": "#/SkuList"
+			}
+		},
+		"required": [
+			"productId",
+			"productType",
+			"description",
+			"title",
+			"viewUnavailable"
+		]
+	},
+	"ProductCategoryList": {
+		"type": "object",
+		"description": "Product category list.",
+		"properties": {
+			"productCategory": {
+				"type": "array",
+				"description": "Product category.",
+				"items": {
+					"$ref": "#/ProductCategory"
+				}
+			}
+		}
+	},
+	"ProductCategory": {
+		"type": "object",
+		"description": "Product Category",
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "Product category ID. This must be a pre-existing valid category ID. This number has no decimal places."
+			},
+			"name": {
+				"type": "string",
+				"description": "Category name. When updating a product category, this is ignored - category name won't be updated."
+			},
+			"isMain": {
+				"type": "boolean",
+				"description": "Use Y if this is the product's main category. Please notice that a product can have only one main category"
+			}
+		},
+		"required": [
+			"id",
+			"isMain"
+		]
+	},
+	"ProductSellingTitleList": {
+		"type": "object",
+		"description": "Product selling title list",
+		"properties": {
+			"productSellingTitle": {
+				"type": "array",
+				"description": "Product selling title",
+				"items": {
+					"$ref": "#/ProductSellingTitle"
+				}
+			}
+		}
+	},
+	"ProductSellingTitle": {
+		"type": "object",
+		"description": "Sale channel based product selling title",
+		"properties": {
+			"saleChannel": {
+				"type": "number",
+				"description": "Sale channel identification. Use always 1. This number has no decimal places.  This number has no decimal places."
+			},
+			"sellingTitle": {
+				"type": "string",
+				"description": "Complete product selling title for this sale channel."
+			},
+			"shortSellingTitle": {
+				"type": "string",
+				"description": "Short product selling title for this sale channel. Up to 55 chars."
+			}
+		},
+		"required": [
+			"saleChannel",
+			"sellingTitle",
+			"shortSellingTitle"
+		]
+	},
+	"VideoList": {
+		"type": "object",
+		"description": "Product video list. Currently each product can have only one video. If you try to create more than one video, an error will be returned.",
+		"properties": {
+			"productVideo": {
+				"type": "array",
+				"description": "Product video.",
+				"items": {
+					"$ref": "#/ProductVideo"
+				}
+			}
+		}
+	},
+	"ProductVideo": {
+		"type": "object",
+		"description": "Product video information. A video can be a external video (like youtube) or an internal video (FLV).",
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "Video unique identifier. This number has no decimal places."
+			},
+			"videoTp": {
+				"type": "string",
+				"description": "3 letter mnemonic defining the video type. API updating is only supported for Youtube video type",
+				"enum": [
+					"YOU",
+					"FLV"
+				]
+			},
+			"url": {
+				"type": "string",
+				"description": "Video URL. For youtube videos, this is only the youtube video ID (like 'Yo6LXD7uzn4')."
+			},
+			"name": {
+				"type": "string",
+				"description": "Video name."
+			},
+			"thumbUrl": {
+				"type": "string",
+				"description": "Image thumbnail URL. This is the path for the image provided in Administrative aplication. It cannot be set for API created videos."
+			},
+			"html": {
+				"type": "string",
+				"description": "HTML for the video. This is usually an embed from YouTube, but if the html is not provided it is used the url value as value for html."
+			}
+		},
+		"required": [
+			"id",
+			"videoTp",
+			"url",
+			"name"
+		]
+	},
+	"SkuList": {
+		"type": "object",
+		"description": "SKU list",
+		"properties": {
+			"sku": {
+				"type": "array",
+				"description": "SKU",
+				"items": {
+					"$ref": "#/Sku"
+				}
+			}
+		}
+	},
+	"Sku": {
+		"type": "object",
+		"description": "A Sku.",
+		"example": {
+			        "skuId": "PS41940388",
+							"productId": "226042",
+			        "name": "Playstation 4 Sony - Preto",
+			        "fiscalStatus": true,
+			        "status": "A",
+			        "main": true,
+			        "comercialStatus": true,
+			        "visible": "Y",
+			        "productionStatus": true,
+			        "height": 0.30,
+			        "width": 0.60,
+			        "length": 0.90,
+			        "weight": 2.500,
+			        "transportType": 1,
+			        "skuOwnerType": "DFL",
+			        "manufacturerWarranty": 0,
+			        "saleClassification": "C",
+			        "eanlist": {
+			          "ean": [
+			            {
+			              "eanvalue": "711719100355"
+			            }
+			          ]
+			        },
+			        "udaList": {
+			          "uda": [
+				        {
+				          "id": 5,
+				          "name": "Voltagem",
+				          "value": "220V"
+				        }
+			          ]
+			        },
+			        "imageList": {
+			          "image": [
+			            {
+			              "id": 70,
+			              "imageTp": "SRC",
+			              "url": "SRC/playstation-4-preto_70_PS41940388.jpg",
+			              "isMain": true,
+			              "resizeList": {
+			                "resize": [
+			                  {
+			                    "id": 1,
+			                    "imageTp": "pvg",
+			                    "url": "pvg/playstation-4-preto_1_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 3,
+			                    "imageTp": "ppp",
+			                    "url": "ppp/playstation-4-preto_3_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 5,
+			                    "imageTp": "pg",
+			                    "url": "pg/playstation-4-preto_5_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 9,
+			                    "imageTp": "mpp",
+			                    "url": "mpp/playstation-4-preto_9_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 10,
+			                    "imageTp": "gp",
+			                    "url": "gp/playstation-4-preto_10_PS41940388.jpg"
+			                  },
+			                  {
+			                    "id": 11,
+			                    "imageTp": "gm",
+			                    "url": "gm/playstation-4-preto_11_PS41940388.jpg"
+			                  }
+			                ]
+			              }
+			            }
+			          ]
+			        },
+			        "relatedSkuList": [
+			          {
+			            "relationTp": "acs",
+			            "skuList": [
+			              "PS41940388CONTROLE",
+			              "PS41940388JOGO"
+			            ]
+			          },
+			          {
+			            "relationTp": "crs",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          },
+					  {
+			            "relationTp": "ups",
+			            "skuList": [
+			              "TV194038860",
+			              "RACK194038890"
+			            ]
+			          }
+			        ]
+		},
+
+		"properties": {
+			"skuId": {
+				"type": "string",
+				"description": "Sku unique identifier."
+			},
+			"productId": {
+				"type": "number",
+				"description": "The product id that this SKU belongs. This number has no decimal places."
+			},
+			"name": {
+				"type": "string",
+				"description": "SKU Name."
+			},
+			"fiscalStatus": {
+				"type": "boolean",
+				"description": "If this SKU has approval regarding fiscal classification. SKUs without fiscal classification are not sellable."
+			},
+			"status": {
+				"type": "string",
+				"description": "Sku status. \"A\" for active and \"C\" for canceled.",
+				"enum": [
+					"A",
+					"C"
+				]
+			},
+			"main": {
+				"type": "boolean",
+				"description": "Main SKU flag. A product must have one and only one main SKU."
+			},
+			"comercialStatus": {
+				"type": "boolean",
+				"description": "If this SKU has a commercial team approval. Use \"true\" or \"false\". SKUs without commercial approval are not sellable."
+			},
+			"visible": {
+				"type": "string",
+				"description": "SKU visibility flag. Use \"Y\" for visible, \"N\" for not visible.",
+				"enum": [
+					"Y",
+					"N"
+				]
+			},
+			"productionStatus": {
+				"type": "boolean",
+				"description": "This is a read only attribute. If all pre-requisites are fullfiled (main category, images, visible, all required UDAs), this SKU is produced."
+			},
+			"height": {
+				"type": "number",
+				"description": "SKU height. e.g: 0.1"
+			},
+			"width": {
+				"type": "number",
+				"description": "SKU width. e.g: 0.1"
+			},
+			"length": {
+				"type": "number",
+				"description": "SKU length. e.g: 0.1"
+			},
+			"weight": {
+				"type": "number",
+				"description": "SKU weight. e.g: 0.1"
+			},
+			"transportType": {
+				"type": "number",
+				"description": "SKU transport type. This can be \"1\", for courrier, and \"2\" for heavy transport. This number has no decimal places."
+			},
+			"skuOwnerType": {
+				"type": "string",
+				"description": "SKU Owner within Infracommerce platform. Always use \"DFL\"."
+			},
+			"manufacturerWarranty": {
+				"type": "number",
+				"description": "Manufactere warranty, in months. This number has no decimal places."
+			},
+			"saleClassification": {
+				"type": "string",
+				"description": "SKU sale classification. It can be \"A\" (top seller), \"B\" (above average) and \"C\" (regular)."
+			},
+			"eanList": {
+				"$ref": "#/EANList"
+			},
+			"udaList": {
+				"$ref": "#/UdaList"
+			},
+			"imageList": {
+				"$ref": "#/ImageList"
+			},
+			"relatedSkuList": {
+				"type": "array",
+				"description": "Related SKUs list. This will contain all related SKUs and the relation type. For each relation type there is an arraylist of SKU ids.",
+				"items": {
+					"$ref": "#/RelatedSkuList"
+				}
+			}
+		},
+		"required" :
+		[
+		 "skuId",
+		 "name",
+		 "fiscalStatus",
+		 "status",
+		 "main",
+		 "commercialStatus",
+		 "visible",
+		 "productionStatus",
+		 "height",
+		 "width",
+		 "length",
+		 "weight",
+		 "transportType",
+		 "skuOwnerType"
+		]
+	},
+	"EANList": {
+		"type": "object",
+		"description": "EAN list",
+		"properties": {
+			"ean": {
+				"type": "array",
+				"description": "EAN",
+				"items": {
+					"$ref": "#/EAN"
+				}
+			}
+		}
+	},
+	"EAN": {
+		"type": "object",
+		"description": "SKU EAN",
+		"properties": {
+			"eanvalue": {
+				"type": "string",
+				"description": "SKU EAN"
+			}
+		},
+		"required": [
+			"eanvalue"
+		]
+	},
+	"UdaList": {
+		"type": "object",
+		"description": "User defined attributes list",
+		"properties": {
+			"uda": {
+				"type": "array",
+				"description": "Product/SKU user defined attributes",
+				"items": {
+					"$ref": "#/Uda"
+				}
+			}
+		}
+	},
+	"Uda": {
+		"type": "object",
+		"description": "User defined attributes. If a UDA is a SKU UDA, it is a \"variant\" UDA.",
+		"example":{
+			    "id": 1,
+			    "name": "Cor",
+			    "value": "Preto",
+                "removeEmpty": false
+		},
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "User defined attribute unique identifier. It has to be a previously existing UDA. This number has no decimal places."
+			},
+			"name": {
+				"type": "string",
+				"description": "User defined attribute name. It has to be a previously existing UDA. The UDA name will be updated if filled (case sensitive)."
+			},
+			"value": {
+				"type": "string",
+				"description": "User defined attribute value for this SKU/Product. If this value is <b>null</b> or empty, the object UDA will be ignored."
+			},
+            "deleteEmpty": {
+                "type": "boolean",
+                "description" : "Flag indicating if the UDA should be removed from the SKU/Product if its value is empty."
+            }
+		},
+		"required": [
+			"id",
+			"value"
+		]
+	},
+	"ImageList": {
+		"type": "object",
+		"description": "Image list",
+		"properties": {
+			"image": {
+				"type": "array",
+				"description": "Image",
+				"items": {
+					"$ref": "#/Image"
+				}
+			}
+		}
+	},
+	"Image": {
+		"type": "object",
+		"description": "Product/SKU image. When creating an image, if this is posted as a HTTP link, Infrashop platform will download the image and create its inner representation.",
+		"example" : {
+		  "id": 70,
+		  "imageTp": "SRC",
+		  "url": "SRC/playstation-4-preto_70_PS41940388.jpg",
+		  "isMain": true,
+		  "resizeList": {
+			"resize": [
+			  {
+				"id": 1,
+				"imageTp": "pvg",
+				"url": "pvg/playstation-4-preto_1_PS41940388.jpg"
+			  },
+			  {
+				"id": 3,
+				"imageTp": "ppp",
+				"url": "ppp/playstation-4-preto_3_PS41940388.jpg"
+			  },
+			  {
+				"id": 5,
+				"imageTp": "pg",
+				"url": "pg/playstation-4-preto_5_PS41940388.jpg"
+			  },
+			  {
+				"id": 9,
+				"imageTp": "mpp",
+				"url": "mpp/playstation-4-preto_9_PS41940388.jpg"
+			  },
+			  {
+				"id": 10,
+				"imageTp": "gp",
+				"url": "gp/playstation-4-preto_10_PS41940388.jpg"
+			  },
+			  {
+				"id": 11,
+				"imageTp": "gm",
+				"url": "gm/playstation-4-preto_11_PS41940388.jpg"
+			  }
+			]
+		  }
+		},
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "Image unique identifier. This number has no decimal places."
+			},
+			"imageTp": {
+				"type": "string",
+				"description": "2, 3 or 4 letter mnemonic that defines the image type. An image type defines its size and placement in the website. When creating, do not fill this field."
+			},
+			"url": {
+				"type": "string",
+				"description": "Image URL. This is a read-only attribute, as it is derived from product selling title. When creating, post the HTTP URL for the image in this field."
+			},
+			"resizeList": {
+				"$ref": "#/ResizeList"
+			},
+			"externalImage": {
+				"type": "boolean",
+				"description": "Flag indicating if the image is externally hosted. When this is true it means that the image is not provided at the store domain, it is provided by an external domain instead. When this is true the fields externalUrl and externalUrlSecure should be used instead of the field url."
+			},
+			"externalUrl": {
+				"type": "string",
+				"description": "Image URL when it is externally hosted. This is the complete URL, including the the protocol, host, context and file name (when it is applied)."
+			},
+			"externalUrlSecure": {
+				"type": "string",
+				"description": "Image URL in a secure context (HTTPS) when it is externally hosted. This is the complete URL, including the the protocol, host, context and file name (when it is applied)"
+			},
+			"isMain": {
+				"type": "boolean",
+				"description": "If this is the main image group, this is set to true. A SKU can have only one main image (for each type, which are resizes of the same image)."
+			}
+		},
+		"required": [
+			"id",
+			"url",
+			"main"
+		]
+	},
+	"ResizeList": {
+		"type": "object",
+		"description": "List of resizes that this image has. This list is a read-only list and cannot be managed by this API, as every time you create/delete an image, this is auto generated by resizing the image you provide.",
+		"properties": {
+			"resize": {
+				"type": "array",
+				"description": "Resize entry",
+				"items": {
+					"$ref": "#/Resize"
+				}
+			}
+		}
+	},
+	"Resize": {
+		"type": "object",
+		"description": "Product/SKU image. When creating an image, if this is posted as a HTTP link, Infrashop platform will download the image and create its inner representation.",
+		"properties": {
+			"id": {
+				"type": "number",
+				"description": "Image unique identifier. This number has no decimal places."
+			},
+			"imageTp": {
+				"type": "string",
+				"description": "2, 3 or 4 letter mnemonic that defines the image type. An image type defines its size and placement in the website. When creating, do not fill this field."
+			},
+			"url": {
+				"type": "string",
+				"description": "Image URL. This is a read-only attribute, as it is derived from product selling title."
+			}
+		},
+		"required": [
+			"id",
+			"imageTp",
+			"url"
+		]
+	},
+	"RelatedSkuList": {
+		"type": "object",
+		"description": "SKU relations definition. Each relation has a list of SKUs.",
+		"properties": {
+			"relationTp": {
+				"type": "string",
+				"description": "Relation type. The relation type is configured for each store. Most common ones are 'crs' (Cross Selling), 'ups' (Up Selling) and 'acs' (Accessories)."
+			},
+			"skuList": {
+				"type": "array",
+				"description": "List of SKU unique identifiers that are part of this relationship.",
+				"items":
+					{
+						"type": "string"
+					}
+			}
+		},
+		"required": [
+			"relationTp",
+			"skuList"
+		]
+	},
+	"StockList": {
+		"type": "object",
+		"description": "SKU Stock list",
+		"properties": {
+			"stock": {
+				"type": "array",
+				"description": "Stock information.",
+				"items": {
+					"$ref": "#/Stock"
+				}
+			}
+		}
+	},
+	"Stock": {
+		"type": "object",
+		"description": "Stock information.",
+		"example": {
+			"skuId": "104496",
+			"wareHouseId": 1,
+			"warehouseCnpj": "11111111111111",
+			"stockType": 1,
+			"stockTypeSourceName": "PHY",
+			"leadTime": 0,
+			"quantity": 10000
+		},
+		"properties": {
+			"skuId": {
+				"type": "string",
+				"description": "SKU unique identifier."
+			},
+			"warehouseId": {
+				"type": "number",
+				"description": "This is your warehouse ID inside Infracommerce platform. This number has no decimal places. Obs: Must be required only on POST."
+			},
+			"warehouseCnpj": {
+				"type": "string",
+				"description": "This is your warehouse CNPJ inside Infracommerce platform."
+			},
+			"stockType": {
+				"type": "number",
+				"enum": [
+					1,
+					2,
+					3
+				],
+				"description": "Stock type. There are 2 different stock types. Reservation during checkout process tries to reserve stock from real stock (type 1) and then , if not availabe, tries to use virtual stock (type 2). This number has no decimal places."
+			},
+			"stockTypeSourceName": {
+				"type": "string",
+				"description": "Source name of the Stock Type. This is the text identifier of the stock type."
+			},
+			"leadTime": {
+				"type": "number",
+				"description": "Stock leadtime. This number of days will be added to the delivery time when an user places an order with this SKU. This number has no decimal places."
+			},
+			"quantity": {
+				"type": "number",
+				"description": "Number of pieces in stock. This number has no decimal places."
+			}
+		},
+		"required": [
+			"skuId",
+			"warehouseCnpj",
+			"stockType",
+			"quantity"
+		]
+	},
+	"Price": {
+		"type": "object",
+		"description": "Price information.",
+		"example": {
+			"skuId": "104496",
+			"productPriceList": {
+				"productPrice": [
+					{
+						"priceTp": "DFL",
+						"priceValue": 22.9
+					},
+					{
+						"priceTp": "SLE",
+						"priceValue": 19.9
+					}
+				]
+			}
+		},
+		"properties": {
+			"skuId": {
+				"type": "string",
+				"description": "SKU unique identifier."
+			},
+			"productPriceList": {
+				"$ref": "#/ProductPriceList"
+			}
+		},
+		"required": [
+			"skuId",
+			"productPriceList"
+		]
+	},
+	"ProductPriceList": {
+		"type": "object",
+		"description": "Product/SKU price list.",
+		"properties": {
+			"productPrice": {
+				"type": "array",
+				"description": "Product/SKU price list.",
+				"items": {
+					"$ref": "#/ProductPrice"
+				}
+			}
+		},
+		"required": [
+			"productPrice"
+		]
+	},
+	"ProductPrice": {
+		"type": "object",
+		"description": "Defines a SKU/Product price.",
+		"example": {
+			"priceTp": "DFL",
+			"priceValue": 19
+		},
+		"properties": {
+			"priceTp": {
+				"type": "string",
+				"enum": [
+					"DFL",
+					"SLE",
+					"SLE-INT"
+				],
+				"description": "Price type. This can be \"DFL\", which is the list price; \"SLE\", which is the sale price or \"SLE-INT\" where INT is a source name of sale channel, etc."
+			},
+			"priceValue": {
+				"description": "Price value. It must be a positive value, greater than 0.01 and with no more than 2 decimal digits.",
+				"type": "number"
+			}
+		},
+		"required": [
+			"priceTp",
+			"priceValue"
+		]
+	},
+	"ProductArray": {
+		"type": "array",
+		"example": [{  
+			"productId": 279257,  
+			"productType": "NOR",  
+			"metaDescription": "Compre 2 PORTA LATAS NAUTIKA em oferta. Tudo de Caixas e Bolsas Térmicas para praticar o esporte que você é apaixonado. Acesse a Decathlon agora!",  
+			"metaKeywords": "2,porta,latas,nautika", 
+			"metaRobots": "INDEX,FOLLOW", 
+			"tagHeading1": "2 PORTA LATAS Nautika", 
+			"description": "<p>Ótimo para manter a temperatura da sua bebida em lata.</p><p>Ideal par a seu camping.</p><p>Porta latas térmico.</p><p>Mantém a lata de b ebida isolada do calor da mão.<br />Compacto e fácil de armazenar. <br />Embalagem com 2 unidades.<br />Disponivel apenas na cor azul</p><p>Materia l: Neopreme com elastana com espessura total de 3mm</p><p>Altura: 8,00cm<br />La rgura: 8,00 cm<br />Profundidade: 22,00 cm<br />Peso: 70,00 g</p>",  
+			"viewUnavailable": false,  
+			"sellingTitleList": {    
+				"sellingTitle": [{        
+				"saleChannel": 1,        
+				"sellingTitle": "2 PORTA LATAS Nautika",        
+				"shortSellingTitle": "2 PORTA LATAS Nautika"      
+				}]  
+			}
+		}]
+	},
+	"RelatedTypes" : {
+		"type" : "object",
+		"description" :  "Defines the related types, this related types are used to created a relationship between entities, for example, a SKU related with another SKU.",
+		"example" : {
+			"relationTp" : "crs",
+			"description" : "Produtos de CrossSelling",
+			"name" : "CrossSelling"
+		},
+		"properties": {
+			"relationTp": {
+				"type": "string",
+				"description": "The identifier of a related type, this is a unique in the Infrashop platform. The value of this attribute will always lower case and is used to do the operations of PUT,DELETE and POST.",
+				"maximum" : 3
+			},
+			"description": {
+				"description": "The sort description of the related type. This attribute is only required in the operation of POST.",
+				"type": "string",
+				"maximum" : 255
+			},
+			"name" : {
+				"description": "The name of this related type.  This attribute is only required in the operation of POST.",
+				"type": "stirng",
+				"maximum" : 100
+			}
+		},
+		"required": [
+			"relationTp",
+			"description",
+			"name"
+		]
+	},
+	"ProductFiltersRequest": {
+		"type": "object",
+		"description": "User parameters to filter the content to be exported to the spreadsheet",
+		"example":{
+			   "categories":["1234","456"],
+			   "skus":["1234","456"],
+			   "status": "active"
+		},
+		"properties": {
+			"categories": {
+				"type": "array",
+				"description": "The categories unique identifiers to retrieve in the spreadsheet.",
+				"items": {
+					"type": "string"
+				}
+			},
+			"skus": {
+				"type": "array",
+				"description": "The SKUs unique identifiers to retrieve in the spreadsheet.",
+				"items": {
+					"type": "string"
+				}
+			},
+			"status": {
+				"type": "string",
+				"enum": [
+					"active",
+					"inactive"
+				],
+				"description": "The production status to filter. When 'active', only produced SKUs will be returned. When 'inactive', only NOT produced will be returned. When not specified, the spreadsheet will contain SKUs of any production status."
+			}
+		}		
+	},
+	"SkuFiltersRequest": {
+		"type": "object",
+		"description": "User parameters to filter the content to be exported to the spreadsheet",
+		"example":{
+			   "categories":[1234,456],
+			   "skus":["1234","456"],
+			   "status": "active",
+			   "productionStatus": "active"
+		},
+		"properties": {
+			"categories": {
+				"type": "array",
+				"description": "The categories unique identifiers to retrieve in the spreadsheet.",
+				"items": {
+					"type": "long"
+				}
+			},
+			"skus": {
+				"type": "array",
+				"description": "The SKUs unique identifiers to retrieve in the spreadsheet.",
+				"items": {
+					"type": "string"
+				}
+			},
+			"status": {
+				"type": "string",
+				"enum": [
+					"active",
+					"inactive"
+				],
+				"description": "The SKU status to filter. When 'active', only active SKUs will be returned. When 'inactive', only canceled SKUs will be returned. When not specified, the spreadsheet will contain SKUs of any status."
+			},
+			"productionStatus": {
+				"type": "string",
+				"enum": [
+					"active",
+					"inactive"
+				],
+				"description": "The production status to filter. When 'active', only produced SKUs will be returned. When 'inactive', only NOT produced will be returned. When not specified, the spreadsheet will contain SKUs of any production status."
+			}
+		}		
+	}
+}

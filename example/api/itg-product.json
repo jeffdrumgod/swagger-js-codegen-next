@@ -1,0 +1,2769 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Product Management API",
+        "description": "In this API documentation, you will find operations that you\n  will call in order to manage your products. Operations here include retrieving\n  products and SKUs by their IDs and creating/updating products and SKUs - including UDAs,\n  categories, images and base information. Feel free to\nbrowse through all of them and to try it for yourself!"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [{
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Product Management API",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your products. Operations here include retrieving products and SKUs by their IDs and creating/updating products and SKUs - including UDAs, categories, images and base information.</font>"
+        },
+        {
+            "name": "Product Management API - UDAs",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your products and SKUs UDAs. Operations here include retrieving UDAs, setting values in batch (several in a single call) and managing UDA values individually.</font>"
+        },
+        {
+            "name": "Product Management API - Images",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your SKUs images. Operations here include retrieving images, setting values in batch (several in a single call) and managing images individually.</font>"
+        },
+        {
+            "name": "Product Management API - Stock",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the stocks. Operations here includes retrieving stocks and updating values in batch (several in a single call) or individually.</font>"
+        },
+        {
+            "name": "Product Management API - Price",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the SKU's prices. Operations here includes retrieving prices and updating values in batch (several in a single call) or individually.</font>"
+        },
+        {
+            "name": "Product Feed API",
+            "description": "<br><font size=\"2\">In this group you will find batch API operations. Batch operations usually deal with a lot of data - like updating several products in a single call or retrieving all updated products since a predefined date. Usually these API operations are combined with Async Operations API in order to retrieve status of a batch operation.</font>"
+        },
+        {
+            "name": "Async Operations API",
+            "description": "<br><font size=\"2\">In this group you will find operations that you allow you to interact with Infrashop asynchronous operaions engine. This mechanism is used every time a long running operation is fired and you need to follow its execution</font>"
+        },
+        {
+            "name": "Product Management API - Related",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your related SKUs their related types. Operations here include retrieving/creating/updating/removing related SKUs their related types by their IDs and others informations.</font>"
+        },
+        {
+            "name": "Product Management API - Related Sheet",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your related SKUs their related types using a Sheet. Operations here include retrieving/creating/updating/removing related SKUs their related types.</font>"
+        },
+        {
+            "name": "Product Master API",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage your products using a Sheet. Operations here include retrieving/creating/updating the products.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-content-api/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-async-api/v1/asyncmetadata/{asyncMetadataId}": {
+            "$ref": "./api/async.json#/paths/GET_ASYNC"
+        },
+        "/ifc-content-api/v1/products": {
+            "post": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Create a new product into infrashop",
+                "description": "This API operation will allow you to create a new product into infrashop platform. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "description": "Product info",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The product was created.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot create this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+
+        "/ifc-content-api/v1/products/{productId}": {
+            "put": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Updates a previously existing product",
+                "description": "This API operation will allow you to update a previously existing product & SKUs. Any non-mandatory value that you do not provide - such as category, UDA, SKU list or images - will remain unchanged. Product/SKU images can be a HTTP/HTTPS URL. In this case, Infrashop platform will download the image and resize it in order to send the product/SKU to the website. If you provide an UDA ID and UDA name, the UDA name will be updated (case sensitive). It has to be a previously existing UDA.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier."
+                    },
+                    {
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "description": "Product info",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The product was successfuly updated. An updated version of the product will be returned.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Retrieve the product by its ID",
+                "description": "This API operation will allow you to retrieve a product by its ID. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Sku unique identifier. If the SKU is specified, the returned product will contain only the SKU, the SKU is not informed, will be returned all product SKUs."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this product. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/products/{productId}/udainfos": {
+            "get": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Retrieve product UDAs.",
+                "description": "Retrieve all product UDAs. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "Product UDA information.",
+                        "examples": {
+                            "application/json": [{
+                                    "id": 1,
+                                    "name": "Memória",
+                                    "value": "8 GB"
+                                },
+                                {
+                                    "id": 4,
+                                    "name": "4K",
+                                    "value": "Sim"
+                                }
+                            ]
+                        },
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Set product UDAs.",
+                "description": "Set product UDAs. Please notice that existing UDAs will remain untouched. If you provide a UDA that is already present in the product data, it will be updated. If you provide an UDA that does not have a value for this product, it will be added.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product UDA information.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid UDA information provided. Please check error messages for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Delete a list of product UDAs.",
+                "description": "Delete a list of product UDAs. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "udaIds",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "List of UDA IDs to remove",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "UDAs successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/products/{productId}/udainfos/{udaId}": {
+            "get": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Retrieve product UDA.",
+                "description": "Retrieve product uda information. This will return the value of this UDA for this product. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product UDA information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Uda"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this UDA. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found or UDA not found for this product.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Update current product UDA value.",
+                "description": "Set product UDA value.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Uda"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product UDA information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Uda"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid UDA information provided. Please check error messages for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found or UDA not found for this product.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Delete a specific product UDA.",
+                "description": "Delete a specific product UDA. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Product unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "UDA successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this UDA. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found or UDA not found for this product.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+
+        "/ifc-content-api/v1/skus": {
+            "post": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Create a new SKU into infrashop platform",
+                "description": "This API operation will allow you to create a new SKU into infrashop platform. <h4>Required Functionalities.</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Sku"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The SKU was created.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Sku"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot create this SKU. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+
+        "/ifc-content-api/v1/skus/{skuId}": {
+            "put": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Updates a previously existing SKU",
+                "description": "This API operation will allow you to update a previously existing SKU. Any non-mandatory value that you do not provide - such as category, UDA os images - will remain unchanged. This API won't change anything related to this SKU's product. <h4>Required Functionalities. If you provide an UDA ID and UDA name, the UDA name will be updated (case sensitive). It has to be a previously existing UDA.</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Sku"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SKU was successfuly updated. An updated version of the SKU will be returned.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Sku"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this SKU. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Product Management API"
+                ],
+                "summary": "Retrieve the SKU by its ID",
+                "description": "This API operation will allow you to retrieve a SKU by its ID. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Sku"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this SKU. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/related": {
+            "get": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Retrieve all SKUs related of a SKU",
+                "description": "This API operation allow you to retrieve all SKUs related of a SKU \"father\". This API will returned an array/list of SKUs related. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\"unique identifier"
+                    },
+                    {
+                        "name": "skuRelated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU related unique identifier. If the SKU related is not related with the SKU \"father\" , the API will returned an empty array/list."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The array/list of SKUs related of the SKU \"father\".",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/RelatedSkuList",
+                                "example": {
+                                    "relationTp": "acs",
+                                    "skuList": [
+                                        "PS41940388CONTROLE",
+                                        "PS41940388JOGO"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve the array/list of SKUs related. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\" not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Create the relationships between one SKU to many SKUs",
+                "description": "This API operation allow you to create the relationships between one SKU to many SKUs based on the related types in the Infrashop platform. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\" unique identifier"
+                    },
+                    {
+                        "in": "body",
+                        "required": true,
+                        "name": "body",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/RelatedSkuList",
+                                "example": {
+                                    "relationTp": "acs",
+                                    "skuList": [
+                                        "PS41940388CONTROLE",
+                                        "PS41940388JOGO"
+                                    ]
+                                }
+                            }
+
+                        },
+                        "description": "The array/list with related type and the SKUs to create the relationships. Is not allow to send two items with same \"relationTp\""
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The array/list of SKUs related of the SKU \"father\".",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/RelatedSkuList",
+                                "example": {
+                                    "relationTp": "acs",
+                                    "skuList": [
+                                        "PS41940388CONTROLE",
+                                        "PS41940388JOGO"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot create the relationships between one SKU to many SKUs. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\", SKU related or related type not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "400": {
+                        "description": "Two or more items in the array/list has the same related type",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/related/{relationTp}": {
+            "get": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Retrieve the SKUs related of a SKU and a related type",
+                "description": "This API operation allow you to retrieve all SKUs related of a SKU \"father\" and a related type. This API will returned one object with SKUs related and related type. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\"unique identifier"
+                    },
+                    {
+                        "name": "relationTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The related type such as crs (CrossSelling)"
+                    },
+                    {
+                        "name": "skuRelated",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU related unique identifier. If the SKU related is not related with the SKU \"father\" , the API will returned HTTP STATUS 404."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SKUs related and related type of the SKU \"father\".",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/RelatedSkuList",
+                            "example": {
+                                "relationTp": "crs",
+                                "skuList": [
+                                    "PS41940388CONTROLE",
+                                    "PS41940388JOGO"
+                                ]
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid product information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve the SKUs related. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\", related type or SKU related not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Update the relationships between one SKU to many SKUs of a related type",
+                "description": "This API operation allow you to update the relationships between one SKU to many SKUs based on the related types received. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\" unique identifier"
+                    },
+                    {
+                        "name": "relationTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The related type such as crs (CrossSelling)"
+                    },
+                    {
+                        "in": "body",
+                        "required": true,
+                        "name": "body",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/RelatedSkuList"
+                        },
+                        "description": "The array/list of SKUs to update the relationships.",
+                        "example": {
+                            "skuList": [
+                                "PS41940388CONTROLE",
+                                "PS41940388JOGO"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The array/list of SKUs related of the SKU \"father\".",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/RelatedSkuList",
+                            "example": {
+                                "relationTp": "acs",
+                                "skuList": [
+                                    "PS41940388CONTROLE",
+                                    "PS41940388JOGO"
+                                ]
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update the relationships between one SKU to many SKUs of related type. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\", SKU related, related type or relationship not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Delete the relationships between one SKU to many SKUs of a related type",
+                "description": "This API operation allow you to delete the relationships between one SKU to many SKUs based on the related types received. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\" unique identifier"
+                    },
+                    {
+                        "name": "relationTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The related type such as crs (CrossSelling)"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The relationships deleted for the related type and SKU \"father\""
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update the relationships between one SKU to many SKUs of related type. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\", SKU related, related type or relationship not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/related/{relationTp}/{skuIdRelated}": {
+            "delete": {
+                "tags": [
+                    "Product Management API - Related"
+                ],
+                "summary": "Delete the relationship between SKU and SKU related of a related type",
+                "description": "This API operation allow you to delete the relationship between SKU and SKU related based on the related types received. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU \"father\" unique identifier"
+                    },
+                    {
+                        "name": "relationTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The related type such as crs (CrossSelling)"
+                    },
+                    {
+                        "name": "skuIdRelated",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The SKU related unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The relationship deleted for the related type and SKU \"father\" and SKU related"
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update the relationships between one SKU to many SKUs of related type. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU \"father\", SKU related, related type or relationship not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/relatedsheets/import": {
+            "post": {
+                "tags": ["Product Management API - Related Sheet"],
+                "summary": "Process the import of the SKUs and their SKUs related",
+                "description": "This API operation allow you to update, create and delete the SKUs and their SKUs related in an asynchronous process using a spreadsheet. To follow the status of the asynchronous process use the [Async Operations API]. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "delete",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean",
+                        "default": false,
+                        "description": "This attribute indicates if the process will be used to delete the SKUs and their SKUs related."
+                    },
+                    {
+                        "name": "sheet",
+                        "in": "query",
+                        "required": true,
+                        "type": "file",
+                        "description": "The SKUs and their SKUs related spreadsheet XLS file to be imported. The SKUs related needs to be split using , (comma) or enter (Key Enter) or | (pipe) and needs to respect the header."
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The infrashop will proccess the import of the SKUs and their SKUs related.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/relatedsheets/export": {
+            "post": {
+                "tags": ["Product Management API - Related Sheet"],
+                "summary": "Process the exportation of all the SKUs and their SKUs related",
+                "description": "This API operation allow you to start an asynchronous process to retrieve all the SKUs and their SKUs related in a spreadsheet. To follow the status of the asynchronous process use the [Async Operations API]. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/SkuFiltersRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The infrashop will proccess the exportation of the SKUs and their SKUs related in a spreadsheet.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/images": {
+            "get": {
+                "tags": [
+                    "Product Management API - Images"
+                ],
+                "summary": "Retrieve SKU images.",
+                "description": "Retrieve SKU images. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU Image information.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Image"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this Image list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - Images"
+                ],
+                "summary": "Set SKU Images.",
+                "description": "Set SKU images. Please notice that all existing images will be replaced by the ones you are providing here.<br/> SKU images can be a HTTP/HTTPS URL. In this case, Infrashop platform will download the image and resize it in order to send the product/SKU to the website.</br> Images will be added to the SKU (and to all other SKUs that share images with this one) in the same order you provided in the input, being the first image the main one. This API will return the HTTP status 202 because the Infrashop will proccess the resize of images in a batch proccess.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Image"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The Infrashop receive the list of images and will proccess the resize."
+
+                    },
+                    "400": {
+                        "description": "Invalid image information provided. Please check error messages for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this image list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - Images"
+                ],
+                "summary": "Delete a list of SKU images",
+                "description": "Delete a list of SKU images. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "imageIds",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "List of image IDs to remove",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Images successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this Image list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/images/{imageId}": {
+            "delete": {
+                "tags": [
+                    "Product Management API - Images"
+                ],
+                "summary": "Delete a SKU image",
+                "description": "Delete a SKU image. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "imageId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Image unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Image successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this image. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found or image not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/udainfos": {
+            "get": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Retrieve SKU UDAs.",
+                "description": "Retrieve all SKU UDAs. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU UDA information.",
+                        "examples": {
+                            "application/json": [{
+                                "id": 3,
+                                "name": "Voltagem",
+                                "value": "220V"
+                            }]
+                        },
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Set SKU UDAs.",
+                "description": "Set SKU UDAs. Please notice that existing UDAs will remain untouched. If you provide a UDA that is already present in the SKU data, it will be updated. If you provide an UDA that does not have a value for this SKU, it will be added.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU UDA information.",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid UDA information provided. Please check error messages for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Delete a list of SKU UDAs.",
+                "description": "Delete a list of SKU UDAs. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "udaIds",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "List of UDA IDs to remove",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "UDAs successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/skus/{skuId}/udainfos/{udaId}": {
+            "get": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Retrieve SKU UDA.",
+                "description": "Retrieve SKU uda information. This will return the value of this UDA for this SKU. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU UDA information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Uda"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this UDA. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found or UDA not found for this SKU.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Update current SKU UDA value.",
+                "description": "Set SKU UDA value.<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Uda"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "SKU UDA information.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Uda"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid UDA information provided. Please check error messages for more info.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this UDA list. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found or UDA not found for this SKU.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Management API - UDAs"
+                ],
+                "summary": "Delete a specific SKU UDA.",
+                "description": "Delete a specific SKU UDA. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "udaId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "UDA unique identifier"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "UDA successfuly deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot delete this UDA. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "SKU not found or UDA not found for this SKU.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-feed-api/v1/feedlist/prd": {
+            "$ref": "./api/feed-prd.json#/paths/PRD_LIST"
+        },
+        "/ifc-content-api/v1/lists/product": {
+            "post": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Update a collection of products in a single API call",
+                "description": "This API operation will allow you to update a collection of products <br/> As this is a resource consumig operation, it will be fired on the background and you should use asynchronous API in order to retrieve its exectuion. After it is finished, you will be able to retrieve the execution result (which products were updated, which products failed, etc).<h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "object",
+                        "description": "Products that will be updated in Infrashop platform.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/ProductArray"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Async process information. Please use async API in order to follow its execution.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "asyncMetadataId": 489171,
+                                "messageBuffer": "",
+                                "totalRecords": 200,
+                                "processedRecords": 100,
+                                "failedRecords": 10,
+                                "startDate": 1464789403000,
+                                "lastUpdate": 1464789446597,
+                                "finishDate": null,
+                                "inErrorState": false,
+                                "result": [],
+                                "validationResults": [],
+                                "type": "PAE",
+                                "successRecords": 90,
+                                "percentageProcessed": 50,
+                                "links": []
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Product list provided. Please check error message for details.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update products using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-feed-api/v1/feed/prd": {
+            "$ref": "./api/feed-prd.json#/paths/PRD"
+        },
+        "/ifc-stock-api/v1/stocks/{skuId}/{warehouseId}/{stockTypeId}": {
+            "get": {
+                "tags": [
+                    "Product Management API - Stock"
+                ],
+                "summary": "Fetches the SKU stock data",
+                "description": "This API operation will fetch the SKU stock's data by the \"skuId\", \"warehouseId\" and \"stockTypeId\" provided.",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier."
+                    },
+                    {
+                        "name": "warehouseId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Warehouse unique identifier."
+                    },
+                    {
+                        "name": "stockTypeId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "description": "Unique identifier  for Stock type. There are 3 different stock types. Reservation during checkout process tries to reserve stock from \"real\" stock (type 1) and then, if not availabe, tries to use virtual stock (type 2) and we have too the Cross-docking (type 3).",
+                        "enum": ["1", "2", "3"]
+                    },
+                    {
+                        "name": "includeKits",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean",
+                        "description": "Should the KIT's stocks in which the SKUs are included be returned too? Default is false."
+                    },
+                    {
+                        "name": "saleChannel",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Indicates the sale channel of the stock to apply the stock factor."
+                    },
+                    {
+                        "name": "enableWarehouseId",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean",
+                        "description": "It indicates whether the warehouse code is returned in response."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A paginated list containing the SKU stock's data fetched. It will contain only one register if includeKits=false and at least one otherwise (if the SKU is not included in any KIT). If the SKU is contained in 5 KITs, for example, then the result will have 6 items: the SKU stock itself + the 5 KIT's stocks.",
+                        "schema": {
+                            "$ref": "#/definitions/StockListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Stock not found",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-stock-api/v1/stocks": {
+            "post": {
+                "tags": [
+                    "Product Management API - Stock"
+                ],
+                "summary": "Updates SKU stock information.",
+                "description": "Updates stock information for a collection os SKUs. <h4>Required Functionalities</h4>Vendas - Estoque - Gravar <br> Vendas - Estoque - Estoque do tipo Fisico",
+                "parameters": [{
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Stock"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid stock information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Product Management API - Stock"
+                ],
+                "summary": "Fetches a list of SKU stock's data",
+                "description": "This API operation will fetch a list of SKU stock's data paginated. In order to enhance the feching results, it's possible to provide the \"skuId\", the \"warehouseId\" and/or the \"stockTypeId\". If no parameters were provided, all SKU stock's data (paginated) will be fetched.",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "warehouseId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "description": "Warehouse unique identifier"
+                    },
+                    {
+                        "name": "stockTypeId",
+                        "in": "query",
+                        "required": false,
+                        "type": "integer",
+                        "description": "Unique identifier  for Stock type. There are 3 different stock types. Reservation during checkout process tries to reserve stock from \"real\" stock (type 1) and then, if not availabe, tries to use virtual stock (type 2) and we have too the Cross-docking (type 3)",
+                        "enum": ["1", "2", "3"]
+                    },
+                    {
+                        "name": "includeKits",
+                        "in": "query",
+                        "required": false,
+                        "default": false,
+                        "type": "boolean",
+                        "description": "Should the KIT's stocks in which the SKUs are included be returned too? Default is false."
+                    },
+                    {
+                        "name": "enableWarehouseId",
+                        "in": "query",
+                        "required": false,
+                        "type": "boolean",
+                        "description": "It indicates whether the warehouse code is returned in response"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated list of SKU stock's data fetched.",
+                        "schema": {
+                            "$ref": "#/definitions/StockListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/prices/{skuId}/{priceTp}": {
+            "get": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Fetches SKU price.",
+                "description": "This API operation will fetch the SKU price's data by the \"skuId\" and \"priceTp\" provided.<h4>Required Functionalities</h4> Vendas - Preco - Consultar <br> Sale Management Price Read for channel INT",
+                "parameters": [{
+                        "name": "skuId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "priceTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": [
+                            "DFL",
+                            "SLE",
+                            "SLE-INT"
+                        ],
+                        "description": "Price type. This can be \"DFL\", which is the list price; \"SLE\", which is the sale price or \"SLE-INT\" where INT is a source name of sale channel, etc."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The SKU price's data fetched.",
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/Price"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Price not found",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/prices": {
+            "get": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Feches a list of SKU price's data",
+                "description": "This API operation will fetch a collection of SKU price's data paginated. In order to enhance the fetching results, it's possible to provide the \"skuId\" and/or \"pricetp\". If no parameters were provided, all SKU price's data (paginated) will be fetched.<h4>Required Functionalities</h4> Vendas - Preco - Consultar <br> Sale Management Price Read for channel INT",
+                "parameters": [{
+                        "name": "productId",
+                        "in": "path",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Product unique identifier. This number has no decimal places."
+                    },
+                    {
+                        "name": "skuId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "SKU unique identifier"
+                    },
+                    {
+                        "name": "priceTp",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Price type, like \"DFL\", \"SLE\" etc. This parameter is not allowed in combination with the parameter saleChannel."
+                    },
+                    {
+                        "name": "saleChannel",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Sale channel, like \"NTS\", \"WAL\", etc. When this parameter is informed then only two prices will be returned by the API: the list price and the promotional price for the sale channel. This parameter is not allowed in combination with the parameter priceTp."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The paginated collection of SKU price's data fetched.",
+                        "schema": {
+                            "$ref": "#/definitions/PriceListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Updates SKU prices.",
+                "description": "Updates price information for a collection os SKUs.<h4>Required Functionalities</h4> Vendas - Preco - Gravar <br> Sale Management Price Write for channel INT",
+                "parameters": [{
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "./api/def/itg-product.json#/Price"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The information was accepted by the marketplace and will be updated."
+                    },
+                    "400": {
+                        "description": "Invalid price information provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update price for these SKUs. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/pricessheet/export": {
+            "post": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Process the exportation of price by SKU's spreadsheet asynchronously",
+                "description": "This API operation starts the exportation process of price by SKU's spreadsheet asynchronously. This API will return the HTTP status 202 because the Infrashop will proccess the exportation in a batch proccess.",
+                "parameters": [{
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/ProductFiltersRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The Infrashop will proccess the exportation of price by SKU's spreadsheet.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/pricessheet/import": {
+            "post": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Process the importation of price by SKU's spreadsheet asynchronously",
+                "description": "This API operation starts the importation process of price by SKU's spreadsheet asynchronously. This API will return the HTTP status 202 because the Infrashop will proccess the importation in a batch proccess.",
+                "parameters": [{
+                        "name": "sheet",
+                        "in": "query",
+                        "required": true,
+                        "type": "file",
+                        "description": "The price by SKU's spreadsheet XLS file to be imported"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The Infrashop will proccess the exportation of price by SKU's spreadsheet.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "400": {
+                        "description": "Invalid price by SKU's spreadsheet XLS file provided. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-price-api/v1/pricessheet/{uuid}/{filename}": {
+            "get": {
+                "tags": [
+                    "Product Management API - Price"
+                ],
+                "summary": "Downloads the exported price by SKU's spreadsheet file",
+                "description": "This API operation downloads the exported price by SKU's spreadsheet file. It requires the <b>UUID</b> and <b>filename</b> to identify which file should be downloaded.",
+                "parameters": [{
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The UUID of the file"
+                    },
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "The file name"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The exported price by SKU's spreadsheet file",
+                        "type": "file"
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "The request spreadsheet file was not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/skus/master/sheetimport": {
+            "post": {
+                "tags": ["Product Master API"],
+                "summary": "Process the import of the products and SKUs from a spreadsheet",
+                "description": "This API operation allow you to update and/or create products and SKUs in an asynchronous process using a spreadsheet. To follow the status of the asynchronous process use the [Async Operations API]. <h4>Required Functionalities</h4> Produtos - Produtos - Gravar",
+                "parameters": [{
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "sheet",
+                        "in": "query",
+                        "required": true,
+                        "type": "file",
+                        "description": "The spreadsheet XLS file with the products and their SKUs to be imported."
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The infrashop will process the import of the products.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/skus/master/sheetexport": {
+            "post": {
+                "tags": ["Product Master API"],
+                "summary": "Process the export of the products and SKUs to a spreadsheet file",
+                "description": "This API operation allow you to export the existing products and SKUs in an asynchronous process to an spreadsheet file. To follow the status of the asynchronous process use the [Async Operations API]. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/itg-product.json#/ProductFiltersRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "The infrashop will process the export of the products.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/skus/master/template": {
+            "get": {
+                "tags": ["Product Master API"],
+                "summary": "Process the export of spreadsheet template file of products and SKUs",
+                "description": "This API operation allow you to export the spreadsheet template file of products and SKUs in an asynchronous process. To follow the status of the asynchronous process use the [Async Operations API]. <h4>Required Functionalities</h4> Produtos - Produtos - Consultar",
+                "parameters": [{
+                    "name": "Authorization",
+                    "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                    "in": "header",
+                    "required": true,
+                    "type": "string"
+                }],
+                "responses": {
+                    "202": {
+                        "description": "The infrashop will process the export of the template.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Your profile doesn't grant you access to this operation. Please login with an appropriate user.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },
+        "StockListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. StockList entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [{
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-stock-api/v1/stocks?page=1&size=20"
+                        }
+                    ],
+                    "items": [{
+                        "$ref": "#/definitions/Link"
+                    }]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing StockList entries.",
+                    "items": {
+                        "$ref": "./api/def/itg-product.json#/Stock"
+                    }
+
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "PriceListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. PriceList entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [{
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-price-api/v1/prices?page=1&size=20"
+                        }
+                    ],
+                    "items": [{
+                        "$ref": "#/definitions/Link"
+                    }]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing StockList entries.",
+                    "items": {
+                        "$ref": "./api/def/itg-product.json#/Price"
+                    }
+
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        }
+    }
+}

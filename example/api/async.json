@@ -1,0 +1,81 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Async Operations API",
+        "description": "In this API documentation, you will find operations that you allow you to interact with Infrashop asynchronous operations engine. This mechanism is used every time a long running operation is fired and you need to follow its execution. Feel free to\nbrowse through all of them and to try it for yourself!"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/ifc-async-api",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Async Operations API",
+            "description": "<br><font size=\"2\">In this group you will find operations that you allow you to interact with Infrashop asynchronous operaions engine. This mechanism is used every time a long running operation is fired and you need to follow its execution</font>"
+        }
+    ],
+    "paths": {
+        "/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "GET_ASYNC": {
+            "get": {
+                "tags": [
+                    "Async Operations API"
+                ],
+                "summary": "Retrieve Async Operation Metadata",
+                "description": "This operation allow you to retrieve detailed information about an asynchonous operation - either running or already finished.",
+                "parameters": [
+                    {
+                        "name": "asyncMetadataId",
+                        "description": "Asynchronous operation unique identifier. This number has no decimal places.",
+                        "required": true,
+                        "type": "number",
+                        "in": "path"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Async Operation Metadata information.",
+                        "schema": {
+                            "$ref": "./def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Async metadata not found"
+                    }
+                }
+            }
+        }
+    }
+}

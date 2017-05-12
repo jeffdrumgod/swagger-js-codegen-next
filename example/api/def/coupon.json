@@ -1,0 +1,92 @@
+{
+	"Parameters": {
+		"type": "object",
+		"description": "Crredit Card Data",
+		"example": {
+			"issuer": "39",
+			"initialValue": "321999"
+		},
+		"properties": {
+			"issuer": {
+				"type": "number",
+				"description": "The issuer identification"
+			},
+			"initialValue": {
+				"type": "number",
+				"description": "The credit limit's value"
+			}
+		},
+		"required": [
+			"issuer",
+			"initialValue"
+		]
+	},
+	"Coupon": {
+		"type": "object",
+		"description": "Basket. This objects maps current user's basket, and it is a superset of a shopping cart's information.",
+		"allOf": [
+			{
+				"type": "object",
+				"properties": {
+					"couponId": {
+						"type": "string",
+						"description": "The coupon identification"
+					},
+					"value": {
+						"type": "number",
+						"description": "The creditLimit's available value"
+					},
+					"dueDate": {
+						"type": "XMLGregorianCalendar",
+						"description": "The due date"
+					},
+					"status": {
+						"type": "string",
+						"description": "The creditLimit's status"
+					},
+					"customerDocumentNr": {
+						"type": "number",
+						"description": "The customer's document number"
+					},
+					"voucherType": {
+						"type": "string",
+						"description": "The voucher type ('CRL' for credit limit)"
+					},
+					"issuer": {
+						"type": "string",
+						"description": "The issuer identification"
+					},
+					"initialValue": {
+						"type": "number",
+						"description": "The creditLimit's initial value"
+					}
+				},
+				"required": [
+					"couponId",
+					"value",
+					"dueDate",
+					"status",
+					"customerDocumentNr",
+					"voucherType",
+					"issuer"
+				]
+			}
+		]
+	},
+	"CardRegisterID": {
+		"type": "object",
+		"description": "Credit Card Registration ID to remove card",
+		"example": {
+			"cardRegisterId": "87587647654"
+		},
+		"properties": {
+			"cardRegisterId": {
+				"type": "number",
+				"description": "Credit Card Registration ID"
+			}
+		},
+		"required": [
+			"cardRegisterId"
+		]
+	}
+}

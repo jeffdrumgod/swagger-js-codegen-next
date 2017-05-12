@@ -1,0 +1,1674 @@
+{
+	"Tracking": {
+		"type": "object",
+		"description": "Tracking information. Tracking is an event that happens to an order that updates it status. Like \"the order is ready to be picket up by the carrier\", \"the order was dispatched\" or \"the order was delivered\". Each tracking has a 3 letter code, described in controlPointId enum.",
+		"example": {
+			"orderId": 1703386,
+			"deliveryId": 170338601,
+			"controlPointId": "PEI",
+			"controlPointNm": "Pedido incluido!",
+			"occurrenceDt": "2016-02-28T09:30:10-03:00",
+			"erpDeliveryId": 170338601,
+			"carrierId": 8680,
+			"carrierNm": "CORREIOS",
+			"contractId": "string",
+			"receiverNm": "SDR:ESTEFANA RAQUEL ORTIZ ROJAS",
+			"carrierMessage": "Enviado pelo Distribuidor: Entregue a Transportadora",
+			"ctrcNumber": "A015002390611604101473",
+			"carrierURL": "https://nfe.fazenda.sp.gov.br/ConsultaNFe/consulta/publica/ConsultarNFe.aspx?chaveAcesso=35150919493442000145550010000063271811952743", 
+			"invoiceURL": "https://nfe.fazenda.sp.gov.br/ConsultaNFe/consulta/publica/ConsultarNFe.aspx?chaveAcesso=35150919493442000145550010000063271811952743"
+		},
+		"properties": {
+			"orderId": {
+				"type": "number",
+				"description": "Order unique identification. This is the ID that the customer saw when the order was placed. This number has no decimal places."
+			},
+			"deliveryId": {
+				"type": "number",
+				"description": "Delivery within the order to whom this tracking should be created. This number has no decimal places."
+			},
+			"controlPointId": {
+				"type": "string",
+				"description": "Tracking identification. This represents the actual event that is hapenning to the order.",
+				"enum": [
+					"PEI",
+					"ACR",
+					"REC",
+					"PAP",
+					"PNA",
+					"CAN",
+					"WMS",
+					"NFS",
+					"ETR",
+					"ENT"
+				]
+			},
+			"controlPointNm": {
+				"type": "string",
+				"description": "Description of the event. This is the information that is shown to the customer when he/she sees the order in his/her account."
+			},
+			"occurrenceDt": {
+				"type": "string",
+				"description": "Date and time when this tracking actually happened.  This date should be provided in XMLGregorianCalendar format."
+			},
+			"erpDeliveryId": {
+				"type": "number",
+				"description": "The Erp Delivery's id. This number has no decimal places."
+			},
+			"carrierId": {
+				"type": "number",
+				"description": "The carrier's identification code. This number has no decimal places."
+			},
+			"carrierNm": {
+				"type": "string",
+				"description": "The name of the carrier."
+			},
+			"contractId": {
+				"type": "string",
+				"description": "The contract's identification code."
+			},
+			"receiverNm": {
+				"type": "string",
+				"description": "Name of person responsible for receiving delivery."
+			},
+			"carrierMessage": {
+				"type": "string",
+				"description": "Messages with comments on delivery made by deliverer."
+			},
+			"ctrcNumber": {
+				"type": "string",
+				"description": "Delivery tracking code number."
+			},
+			"carrierURL": {
+				"type": "string",
+				"description": "URL for query of the order on the carrier."
+			},
+			"invoiceURL": {
+				"type": "string",
+				"description": "The URL of the order's invoice."
+			}
+		},
+		"required": [
+			"orderId",
+			"deliveryId",
+			"controlPointId",
+			"controlPointNm",
+			"occurrenceDt"
+		]
+	},
+    "AcecTracking": {
+        "type": "object",
+        "description": "Tracking information. Tracking is an event that happens to an order that updates it status. Like \"the order is ready to be picket up by the carrier\", \"the order was dispatched\" or \"the order was delivered\". Each tracking has a 3 letter code, described in controlPointId enum.",
+        "example": {
+            "orderId": 1855503,
+            "deliveryId": 185550301,
+            "erpDeliveryId": 185550301,
+            "controlPointId": "NFS",
+            "controlPointNm": "PEDIDO COMPLETAMENTE FATURADO. ",
+            "occurrenceDt": 1488578721000,
+            "carrierMessage": "Enviado pelo Distribuidor: Pedido completamente faturado. ",
+            "invoiceInfo": {
+                "invoiceNumber": 185550301,
+                "invoiceSerialNumber": "1",
+                "invoiceEmissionDate": 1488578721058,
+                "invoiceEletronicKey": "185550302",
+                "objectDataList": {
+                    "objectData": [{
+                        "objectId": "DFV9798P95943BRS"
+                    }]
+                }
+            },
+            "skuDeliveryTrackingList": {
+                "skuDeliveryTracking": [{
+                    "orderId": 1855503,
+                    "deliveryId": 185550301,
+                    "skuId": "7791293991054",
+                    "preparedQt": 3,
+                    "unitPrice": 8.84,
+                    "totalPrice": 26.52,
+                    "kitSkuId": "107272",
+                    "occurrenceDt": 1488578721000,
+                    "invoiceNumber": 185550301,
+                    "invoiceSerialNumber": "1"
+                }]
+            }
+        },
+        "properties": {
+            "orderId": {
+                "type": "number",
+                "description": "Order unique identification. This is the ID that the customer saw when the order was placed. This number has no decimal places."
+            },
+            "deliveryId": {
+                "type": "number",
+                "description": "Delivery within the order to whom this tracking should be created. This number has no decimal places."
+            },
+            "erpDeliveryId": {
+                "type": "number",
+                "description": "Delivery within the order to whom this tracking should be created. This number has no decimal places."
+            },
+            "controlPointId": {
+                "type": "string",
+                "description": "Tracking identification. This represents the actual event that is hapenning to the order.",
+                "enum": [
+                    "PEI", 
+                    "ACR", 
+                    "REC",
+                    "PAP",
+                    "PNA",
+                    "CAN",
+                    "WMS",
+                    "NFS", 
+                    "ETR", 
+                    "ENT"
+                ]
+            },
+            "controlPointNm": {
+                "type": "string",
+                "description": "Description of the event. This is the information that is shown to the customer when he/she sees the order in his/her account."
+            },
+            "occurrenceDt": {
+                "type": "string",
+                "description": "Date and time when this tracking actually happened. This date should be provided in XMLGregorianCalendar format."
+            },
+            "carrierMessage": {
+                "type": "string",
+                "description": "Observations by the carrier."
+            },
+            "invoiceUrl": {
+                "type": "string",
+                "description": "Url of invoice eletronic."
+            },
+            "invoiceInfo": {
+                "$ref": "#/InvoiceInfo"
+            },
+            "skuDeliveryTrackingList": {
+                "$ref": "#/SkuDeliveryTrackingList"
+            }
+        },
+        "required": [
+            "orderId", 
+            "deliveryId",
+            "controlPointId", 
+            "controlPointNm", 
+            "occurrenceDt"
+        ]
+    },
+    "InvoiceInfo": {
+        "type": "object",
+        "description": "",
+        "properties": {
+        	"issuerDocumentNr": {
+                "type": "string",
+                "description": "Issuer document number."
+            },
+            "invoiceNumber": {
+                "type": "string",
+                "description": "Invoice number."
+            },
+            "invoiceSerialNumber": {
+                "type": "number",
+                "description": "Invoice serial number. This number has no decimal places."
+            },
+            "invoiceEmissionDate": {
+                "type": "string",
+                "description": "Date and time when this invoice actually was emission."
+            },
+            "invoiceEletronicKey": {
+                "type": "string",
+                "description": "Invoice eletronic key."
+            },
+            "objectDataList": {
+                "$ref": "#/ObjectDataList"
+            }
+        },
+        "required": ["invoiceNumber"]
+    },
+    "ObjectDataList": {
+        "type": "object",
+        "description": "Object Data List.",
+        "properties": {
+            "objectData": {
+                "type": "array",
+                "description": "Object Data.",
+                "items": {
+                    "$ref": "#/ObjectData"
+                }
+            }
+        },
+        "required": ["objectData"]
+    },
+    "ObjectData": {
+        "type": "object",
+        "description": "Obeject Data.",
+        "properties": {
+            "objectId": {
+                "type": "string",
+                "description": "Object."
+            }
+        },
+        "required": ["objectId"]
+    },
+    "SkuDeliveryTrackingList": {
+        "type": "object",
+        "description": "Sku Delivery Tracking List.",
+        "properties": {
+            "skuDeliveryTracking": {
+                "type": "array",
+                "description": "Sku Delivery Tracking.",
+                "items": {
+                    "$ref": "#/SkuDeliveryTracking"
+                }
+            }
+        },
+        "required": ["skuDeliveryTracking"]
+    },
+    "SkuDeliveryTracking": {
+        "type": "object",
+        "description": "",
+        "properties": {
+            "orderId": {
+                "type": "number",
+                "description": "Order unique identifier. This number has no decimal places."
+            },
+            "deliveryId": {
+                "type": "number",
+                "description": "Delivery unique identifier. This number has no decimal places."
+            },
+            "skuId": {
+                "type": "string",
+                "description": "SKU unique identifier. This number has no decimal places."
+            },
+            "preparedQt": {
+                "type": "number",
+                "description": "Number of pieces of this SKU."
+            },
+            "unitPrice": {
+                "type": "number",
+                "description": "Sale price of htis sku units."
+            },
+            "totalPrice": {
+                "type": "number",
+                "description": "Total price of all sku units."
+            },
+            "kitSkuId": {
+                "type": "string",
+                "description": "SKU KIT unique identifier"
+            },
+            "occurrenceDt": {
+                "type": "string",
+                "description": "Date and time when this tracking actually happened."
+            },
+            "invoiceNumber": {
+                "type": "string",
+                "description": "Invoice number."
+            },
+            "invoiceSerialNumber": {
+                "type": "string",
+                "description": "Invoice serial number."
+            }
+        },
+        "required": [
+            "orderId", 
+            "deliveryId", 
+            "skuId", 
+            "preparedQt", 
+            "unitPrice", 
+            "totalPrice", 
+            "kitSkuId", 
+            "occurrenceDt", 
+            "invoiceNumber", 
+            "invoiceSerialNumber"
+        ]
+    },
+	"Payment": {
+		"type": "object",
+		"description": "Order payment confirmation/refusal.",
+		"example": {
+			"orderId": "1732919",
+			"paymentId": 1,
+			"amount": 290.5,
+			"status": "CAPTURED"
+		},
+		"properties": {
+			"orderId": {
+				"type": "string",
+				"description": "Order unique identifier"
+			},
+			"paymentId": {
+				"type": "number",
+				"description": "Payment identification. This is the ID within the order."
+			},
+			"amount": {
+				"type": "number",
+				"description": "Amount that was handled in this payment. It is important to compare the payment amount in the order with this value to ensure that all operations are valid."
+			},
+			"status": {
+				"type": "string",
+				"description": "Payment status. \"CAPTURED\" indicate that the payment was successfully approved. \"DENIED\" indicates that the payment was not approved and the order must be canceled. Only thos two should be used one approving/refusing a payment. When getting payment information, you can also get \"NEW\" for payments not yet processed, \"PENDING\" for payments awayting for confirmation/refusal and \"ERROR\" for payments that require attention ",
+				"enum": [
+					"CAPTURED",
+					"DENIED",
+					"ERROR",
+					"NEW",
+					"PENDING"
+				]
+			}
+		}
+	},
+	"Order": {
+		"type": "object",
+		"description": "An order.",
+		"example": {
+			"orderId": "1732919",
+			"customerId": "414148961",
+			"totalAmount": 290.5,
+			"totalDiscountAmount": 0,
+			"purchaseDate": 1457642122240,
+			"visitorIp": "192.168.7.2",
+			"visitorId": "8b6d6740-e6ff-11e5-b5bb-d87005e6ddc1",
+			"salesOperatorId": "FAC",
+			"shopId": 1461,
+			"sessionCreationDate": 1457642093492,
+			"applicationVersion": "ACEC_V1",
+			"saleChannel": "OMP",
+			"orderType": "NORMAL",
+			"storeId": "RECCO",	
+			"orderMasterId": "1742922",
+			"shopInfo": {
+				"shopId": "1463",
+				"shopCode": "001",
+				"shopName": "Teste",
+				"classification": "2",
+				"state": "SP",
+				"shopTp": "3",
+				"documentNr": "43214321"
+			},
+			"deliveries": {
+				"delivery": [
+					{
+						"deliveryId": "173291901",
+						"orderId": "1732919",
+						"deliveryType": "NOR",
+						"status": "0",
+						"totalAmount": 290.5,
+						"totalDiscountAmount": 0,
+						"totalLoyaltyCreditEarningAmount": 251.0,
+						"loyaltyCreditEarningRoundingAmount": 500.0,
+						"invoiceNumber": "4564565745",
+						"invoiceSeries": "54565645",
+						"scheduledPeriod":  "1454637600000",
+						"scheduledDate": "1454637600000",
+						"relatedDeliveryId": "662",
+						"discountRoundingAmount": 0,
+						"billingAddressId": "367032062",
+						"deliveryAddressId": "367032062",
+						"orderLineList": {
+							"orderLine": [
+								{
+									"orderLineId": "",
+									"sku": "104491",
+									"skuType": "NOR",
+									"quantity": 1,
+									"catalogListPrice": 230,
+									"listPrice": 230,
+									"salePrice": 230,
+									"unconditionalDiscountAmount": 0,
+									"conditionalDiscountAmount": 0,
+									"roundingDiscountAmount": 0,
+									"freight": {
+										"chargedAmount": 60.5,
+										"actualAmount": 60.5,
+										"commercialAmount": 0,
+										"freightTime": 6,
+										"pickupLeadTime": 1,
+										"logisticContract": "NORMAL"
+									},
+									"leadTime": 0,
+									"orderLinePropertyList": {
+										"orderLineProperty": [
+											{
+												"orderLinePropertyId": "GIFT",
+												"orderLinePropertyValue": "false"
+											}
+										]
+									},
+									"inventoryType": "PHY",
+									"service": false,
+									"skuName": "J55i",
+									"productBrandName": "NONE"
+								}
+							]
+						},
+						"freightAmount": {
+							"chargedAmount": 60.5,
+							"actualAmount": 60.5,
+							"commercialAmount": 0,
+							"freightTime": 6,
+							"pickupLeadTime": 1,
+							"logisticContract": "NORMAL"
+						},
+						"wareHouseId": 1,
+						"wareHouseCNPJ": 2345678901234,
+						"carrierCode": "797",
+						"deliveryAddress": {
+							"addressId": "367032062",
+							"addressType": "0",
+							"recipientNm": "Infratech Teste",
+							"address": "Avenida Doutor Cardoso de Melo",
+							"addressNr": "1855",
+							"additionalInfo": "15o. andar",
+							"quarter": "Vila Olímpia",
+							"city": "São Paulo",
+							"state": "SP",
+							"countryId": "BR",
+							"postalCd": "04548005",
+							"postalCdIntl": "04548005",
+							"friendlyNm": "Endereço Principal"
+						}
+					}
+				]
+			},
+			"orderPropertyList": {
+				"orderProperty": [
+					{
+						"orderPropertyId": "JSessionID",
+						"orderPropertyValue": "gyk4WhhN7lTQCWlCyY8LClv4LJC3FFQpHy6drRp7CcVppsjXvH7Q!-1468512738!NONE!1457642093480"
+					},
+					{
+						"orderPropertyId": "browserName",
+						"orderPropertyValue": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36"
+					}
+				]
+			},
+			"customer": {
+				"customerId": "414148961",
+				"documentNumber": "68102438525",
+				"customerClassification": "NOR",
+				"customerType": "0",
+				"name": "Infratech Teste",
+				"email": "infratech.teste@gmail.com",
+				"phoneMobile": "1138481352",
+				"phoneHome": "1138481300",
+				"phoneOffice": "1138486532",
+				"createDt": 1454637600000,
+				"updateDt": 1454637600000
+			},
+			"billingAddress": {
+				"addressId": "367032062",
+				"addressType": "0",
+				"recipientNm": "Infratech Teste",
+				"address": "Avenida Doutor Cardoso de Melo",
+				"addressNr": "1855",
+				"additionalInfo": "15o. andar",
+				"quarter": "Vila Olímpia",
+				"city": "São Paulo",
+				"state": "SP",
+				"countryId": "BR",
+				"postalCd": "04548005",
+				"postalCdIntl": "04548005",
+				"friendlyNm": "Endereço Principal"
+			},
+			"paymentList": {
+				"payment": [
+					{
+						"abstractPayment": {
+							"paymentId": "1",
+							"paymentType": "EXTERNALLY",
+							"paymentKey": "EXTERNALLY",
+							"value": 290.5,
+							"interestRate": 0,
+							"interestAmount": 0,
+							"dueDate": 1465418195802,
+							"status": "0",
+							"paymentPropertyList": {
+								"paymentProperty": [
+									{
+										"paymentPropertyId": "ORDER_PAYMENT_TP_ID",
+										"paymentPropertyValue": "8"
+									},
+									{
+										"paymentPropertyId": "APPROVAL_DAYS",
+										"paymentPropertyValue": "45"
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"freightChargedAmount": 60.5,
+			"freightActualAmount": 60.5,
+			"freightCommercialAmount": 0,
+			"countDistinctSku": 1,
+			"orderOwnerTp": 2
+		},
+		"properties": {
+			"orderId": {
+				"type": "string",
+				"description": "Order unique identifier. Must be a numeric value. If this order comes from an external source (like a marketplace), this order ID will be stored within Infrashop platform under \"orderMasterId\" but a new one will be assigned and returned to you in tis field."
+			},
+			"customerId": {
+				"type": "string",
+				"description": "Customer unique identification. Must be a numeric value. If this order comes from an external source (like a marketplace), a new customer ID will be generated and returned to you in this field."
+			},
+			"totalAmount": {
+				"type": "number",
+				"description": "Order total amount. This is the amount that the customer paid for this order."
+			},
+			"totalDiscountAmount": {
+				"type": "number",
+				"description": "Order total discount amount. This includes all product and subtotal discounts in this order."
+			},
+			"purchaseDate": {
+				"type": "string",
+				"description": "Date and time when this order was placed. This date should be provided in XMLGregorianCalendar format."
+			},
+			"visitorIp": {
+				"type": "string",
+				"description": "Customer's IP address."
+			},
+			"visitorId": {
+				"type": "string",
+				"description": "Customer's website unique visitor identifier."
+			},
+			"salesOperatorId": {
+				"type": "string",
+				"description": "The sales operations identifier."
+			},
+			"sessionCreationDate": {
+				"type": "string",
+				"description": "Date and time when the HTTP session that placed the order was created. This date should be provided in XMLGregorianCalendar format."
+			},
+			"applicationVersion": {
+				"type": "string",
+				"description": "Website application version. Any value."
+			},
+			"shopId": {
+				"type": "string",
+				"description": "The shop's identifier."
+			},
+			"saleChannel": {
+				"type": "string",
+				"description": "Order sale channel."
+			},
+			"orderType": {
+				"type": "string",
+				"description": "Order type. If this order comes from an external source (like a marketplace), always use NORMAL."
+			},
+			"storeId": {
+				"type": "string",
+				"description": 	"The store identifier."
+			},
+			"orderMasterId": {
+				"type": "string",
+				"description": "If this order comes from an external source (like a marketplace), this is you order number. Otherwise, please provide the same value as order id."
+			},
+			"shopInfo": {
+				"$ref": "#/ShopInfo"
+			},
+			"deliveries": {
+				"$ref": "#/DeliveryList"
+			},
+			"orderPropertyList": {
+				"$ref": "#/OrderPropertyList"
+			},
+			"customer": {
+				"$ref": "./itg-customer.json#/Customer"
+			},
+			"billingAddress": {
+				"$ref": "./itg-customer.json#/Address"
+			},
+			"paymentList": {
+				"$ref": "#/OrderPaymentList"
+			},
+			"freightChargedAmount": {
+				"type": "number",
+				"description": "Total freight amount that the user paid for this order. If there is a free delivery promotion, this must be zero."
+			},
+			"freightActualAmount": {
+				"type": "number",
+				"description": "Total freight amount without any discounts applied."
+			},
+			"freightCommercialAmount": {
+				"type": "number",
+				"description": "How much of freightActualAmount is a commercial margin. This value is already included in freightChargedAmount."
+			},
+			"countDistinctSku": {
+				"type": "number",
+				"description": "How many distinct SKUs we have in this order. This will be calculated every time an order is created. This number has no decimal places."
+			},
+			"orderOwnerTp": {
+				"type": "number",
+				"description": "If this order comes from an external source (like a marketplace), always use 2. This number has no decimal places."
+			}
+		},
+		"required": [
+			"orderId",
+			"totalAmount",
+			"totalDiscountAmount",
+			"purchaseDate",
+			"visitorIp",
+			"visitorId",
+			"saleChannel",
+			"storeId",
+			"customer",
+			"shopInfo",
+			"billingAddress",
+			"paymentList",
+			"salesOperatorId",
+			"listId",
+			"freightChargedAmount",
+			"freightActualAmount",
+			"freightCommercialAmount"
+		]
+	},
+	"DeliveryList": {
+		"type": "object",
+		"description": "Delivery list.",
+		"properties": {
+			"delivery": {
+				"type": "array",
+				"description": "Delivery list",
+				"items": {
+					"$ref": "#/Delivery"
+				}
+			}
+		},
+		"required": [
+			"delivery"
+		]
+	},
+	"Delivery": {
+		"type": "object",
+		"description": "A delivery within an order",
+		"properties": {
+			"deliveryId": {
+				"type": "string",
+				"description": "Delivery unique identifier. Usually it is the order ID followed by a two digit number, starting with 01. If this order comes from an external source (like a marketplace), this will be calculated automatically."
+			},
+			"orderId": {
+				"type": "string",
+				"description": "Order unique identifier. Same value as in order object."
+			},
+			"deliveryType": {
+				"type": "string",
+				"description": "Delivery type. \"NOR\" for normal; \"ECO\" for economic; \"EXP\" for express delivery; \"SCH\" for scheduled, \"SHP\" for in shop delivery.",
+				"enum": [
+					"NOR",
+					"EXP",
+					"SCH",
+					"ECO",
+					"SHP"
+				]
+			},
+			"relatedDeliveryId": {
+				"type": "string",
+				"description": ""
+			},
+			"status": {
+				"type": "string",
+				"description": "If this order comes from an external source (like a marketplace), always use 0."
+			},
+			"totalAmount": {
+				"type": "number",
+				"description": "Delivery total amount, This is the value with all discounts applied."
+			},
+			"totalDiscountAmount": {
+				"type": "number",
+				"description": "Delivery total discount amount."
+			},
+			"discountRoundingAmount": {
+				"type": "number",
+				"description": "If there is any rounding adjustment, this is the value. If there is none, use zero."
+			},
+			"totalLoyaltyCreditEarningAmount": {
+				"type": "number",
+				"description": "The total loyalty credit earning with this delivery."
+			},
+			"loyaltyCreditEarningRoundingAmount": {
+				"type": "number",
+				"description": "The rounding amount of the loyalty credit earned."
+			},
+			"billingAddressId": {
+				"type": "string",
+				"description": "Billing address unique identifier. If this order comes from an external source (like a marketplace), this will be generated for you. Always use the same value as order.billingAddress.addressId."
+			},
+			"deliveryAddressId": {
+				"type": "string",
+				"description": "Delivery address unique identifier. If this order comes from an external source (like a marketplace), this will be generated for you. Always use the same value as delivery.deliveryAddress.addressId."
+			},
+			"orderLineList": {
+				"$ref": "#/OrderLineList"
+			},
+			"trackingOrder": {
+				"$ref": "#/TrackingOrder"
+			},
+			"freightAmount": {
+				"$ref": "#/DeliveryFreight"
+			},
+			"wareHouseId": {
+				"type": "number",
+				"description": "Warehouse unique identifier. The same one used in stock API. If you provide the CNPJ below, you do not have to provide this. This number has no decimal places."
+			},
+			"wareHouseCNPJ": {
+				"type": "number",
+				"description": "Warehouse CNPJ. If this order comes from an external source (like a marketplace), this will be defined by Infrashop (you do not have to provide it). This number has no decimal places."
+			},
+			"carrierCode": {
+				"type": "string",
+				"description": "Carrier unique identifier. If this order comes from an external source (like a marketplace), this will be defined by Infrashop (you do not have to provide it)."
+			},
+			"deliveryAddress": {
+				"$ref": "./itg-customer.json#/Address"
+			},
+			"scheduledPeriod": {
+				"type": "string",
+				"description": "During which the delivery will take place, for example morning, afternoon or evening."
+			},
+			"scheduledDate": {
+				"type": "string",
+				"description": "Field that stores scheduled delivery date."
+			}
+		},
+		"required": [
+			"deliveryType",
+			"totalAmount",
+			"totalDiscountAmount",
+			"discountRoundingAmount",
+			"freightAmount",
+			"orderLineList",
+			"trackingOrder",
+			"wareHouseId",
+			"wareHouseCNPJ",
+			"carrierCode",
+			"deliveryAddress"
+		]
+	},
+	"DeliveryFreight": {
+		"type": "object",
+		"description": "Delivery freight information. If the order has one delivery only, these numbers are the same as the order.",
+		"properties": {
+			"chargedAmount": {
+				"type": "number",
+				"description": "Total freight amount that the user paid for in this delivery. If there is a free delivery promotion, this must be zero."
+			},
+			"actualAmount": {
+				"type": "number",
+				"description": "Total freight amount without any discounts applied."
+			},
+			"freightRoundingAmount": {
+				"type": "number",
+				"description": "Rounded freigth value."
+			},
+			"commercialAmount": {
+				"type": "number",
+				"description": "How much of freightActualAmount is a commercial margin. This value is already included in freightCommercialAmount."
+			},
+			"freightTime": {
+				"type": "number",
+				"description": "The freight estimated time. This number has no decimal places."
+			},
+			"pickupLeadTime": {
+				"type": "number",
+				"description": "The lead time for delivery. This number has no decimal places."
+			},
+			"logisticContract": {
+				"type": "string",
+				"description": "The logistic contract."
+			},
+			"expectedDeliveryDate": {
+				"type": "string",
+				"description": "Estimated delivery date for the order."
+			},
+			"adjustedDeliveryDate": {
+				"type": "string",
+				"description": "Set expected delivery date for the order."
+			}
+		},
+		"required": [
+			"chargedAmount",
+			"actualAmount",
+			"commercialAmount"
+		]
+	},
+	"OrderLineList":{
+		"type": "object",
+		"description": "Order Line list. This is the list of SKUs in the order",
+		"properties": {
+			"orderLine": {
+				"type": "array",
+				"description": "Order Line list.",
+				"items": {
+					"$ref": "#/OrderLine"
+				}
+			}
+		},
+		"required": [
+			"orderLine"
+		]
+	},
+	"TrackingOrder":{
+		"type": "object",
+		"description": "Tracking list. This is the list of tracking in the delivery",
+		"properties": {
+			"trackingId": {
+				"type": "string",
+				"description": "The identifier of this tracking."
+			},
+			"trackingCode": {
+				"type": "string",
+				"description": "The code of tracking."
+			},
+			"trackingStep": {
+				"type": "string",
+				"description": "The step of the tracking."
+			},
+			"trackingTitle": {
+				"type": "string",
+				"description": "The title of the tracking."
+			},
+			"trackingMessage": {
+				"type": "string",
+				"description": "The message of the tracking."
+			},
+			"trackingStepStatus": {
+				"type": "string",
+				"description": "The status of the tracking step."
+			},
+			"adjustedDeliveryDt": {
+				"type": "string",
+				"description": "The elivery adjustment data."
+			},
+			"carrierURL": {
+				"type": "string",
+				"description": "URL for query of the order on the carrier."
+			},
+			"invoiceURL": {
+				"type": "string",
+				"description": "The URL of the order's invoice."
+			},
+			"invoiceInfo": {
+				"$ref": "#/InvoiceInfo"
+			},
+			"trackingPropertyList": {
+				"$ref": "#/TrackingPropertyList"
+			},
+			"skuDeliveryTrackingList": {
+                "$ref": "#/SkuDeliveryTrackingList"
+            },
+            "deliveryPropertyList": {
+            	"$ref": "#/DeliveryPropertyList"
+            }
+		},
+		"required": [
+			"trackingCode",
+			"trackingDate",
+			"trackingStep",
+			"trackingTitle",
+			"trackingMessage",
+			"trackingStepStatus"
+		]
+	},
+	"DeliveryPropertyList": {
+		"type": "object",
+		"description": "The property of delivery list",
+		"properties": {
+			"deliveryProperty": {
+				"type": "array",
+				"description": "Property Delivery",
+				"items": {
+					"$ref": "#/DeliveryProperty"
+				}
+			}
+		}
+	},
+	"DeliveryProperty": {
+		"type": "object",
+		"description": "",
+		"properties": {
+			"deliveryPropertyId":{
+				"type": "string",
+				"description": "The identifier of this delivery property."
+			},
+			"deliveryPropertyValue":{
+				"type": "string",
+				"description": ""
+			}
+		}
+	},
+	"TrackingPropertyList": {
+		"type": "object",
+		"description": "Tracking property list. Any arbitrary property should be stored in this key-value list.",
+		"properties": {
+			"trackingProperty": {
+				"type": "array",
+				"description": "Tracking property list. Any arbitrary property should be stored in this key-value list.",
+				"items": {
+					"$ref": "#/TrackingProperty"
+				}
+			}
+		},
+		"required": [
+			"trackingProperty"
+		]
+	},
+	"TrackingProperty": {
+		"type": "object",
+		"description": "Order line. This is a SKU definition within an order.",
+		"properties": {
+			"trackingPropertyId": {
+				"type": "string",
+				"description": "The identifier properties of tracking."
+			},
+			"trackingPropertyValue": {
+				"type": "string",
+				"description": "The valeu properties of tracking."
+			}
+		},
+		"required": [
+			"trackingPropertyId",
+			"trackingPropertyValue"
+		]
+	},
+	"OrderLine": {
+		"type": "object",
+		"description": "Order line. This is a SKU definition within an order.",
+		"properties": {
+			"orderLineId": {
+				"type": "string",
+				"description": "The identifier of this order line."
+			},
+			"sku": {
+				"type": "string",
+				"description": "SKU unique identifier."
+			},
+			"skuIdOrigin": {
+				"type": "string",
+				"description": ""
+			},
+			"skuType": {
+				"type": "string",
+				"description": "Sku type. \"NOR\" for a regular SKU, \"SER\" for a service, \"FFR\" for gifts. It is the same value provided in SKU definition."
+			},
+			"quantity": {
+				"type": "number",
+				"description": "Number of pieces of this SKU in this order line. This number has no decimal places."
+			},
+			"measureUnit": {
+				"type": "string",
+				"description": "Unit of measure of product (PIECE, KG, L)."
+			},
+			"catalogListPrice": {
+				"type": "number",
+				"description": "Regular unit price of this SKU in product catalog. This is not the final price. If this order comes from an external source (like a marketplace), you do not have to provide this if it is the same of listPrice."
+			},
+			"listPrice": {
+				"type": "number",
+				"description": "Regular unit price of this SKU."
+			},
+			"salePrice": {
+				"type": "number",
+				"description": "Final unit sale price this SKU, with discounts applied."
+			},
+			"replenishmentInfo": {
+				"$ref": "#/ReplenishmentInfo"
+			},
+			"unconditionalDiscountAmount": {
+				"type": "number",
+				"description": "Total unconditional discount amount in this order line. Use zero if there is no discount."
+			},
+			"conditionalDiscountAmount": {
+				"type": "number",
+				"description": "Total conditional discount amount in this order line. Use zero if there is no discount."
+			},
+			"roundingDiscountAmount": {
+				"type": "number",
+				"description": "Any eventual discount rounding amount. This is zero if there is no rounding."
+			},
+			"loyaltyCreditEarningAmount": {
+				"type": "number",
+				"description": "Loyalty credit earned of value."
+			},
+			"roundingLoyaltyCreditEarningAmount": {
+				"type": "number",
+				"description": "Rouding loyalty credit eraning value."
+			},
+			"promotionList": {
+				"$ref": "#/PromotionPropertyList"
+			},
+			"loyaltyCredit": {
+				"$ref": "#/LoyaltyCreditPropertyList"
+			},
+			"freight": {
+				"$ref": "#/OrderLineFreight"
+			},
+			"leadTime": {
+				"type": "number",
+				"description": "Number of days to add to the delivery time os this delivery. This number has no decimal places."
+			},
+			"giftCard": {
+				"$ref": "#/GiftCard"
+			},
+			"giftWrap": {
+				"$ref": "#/GiftWrap"
+			},
+			"kitSkuId": {
+				"type": "string",
+				"description": "SKU of the kit, if this line is part of one."
+			},
+			"kitSkuName": {
+				"type": "string",
+				"description": "Kit name, if this line is part of one." 
+			},
+			"kitItemQuantity": {
+				"type": "number",
+				"description": "Kit item quantity, if this line is part of one. This number has no decimal places."
+			},
+			"reference": {
+				"$ref": "#/Reference"
+			},
+			"catalogId": {
+				"type": "string",
+				"description": "Home in the catalog where the product was when added to the cart."
+			},
+			"catalogReference": {
+				"type": "string",
+				"description": "Product position within Home."
+			},		
+			"inventoryType": {
+				"type": "string",
+				"description": "PHY for regular stock, FEI for virtual stock."
+			},
+			"service": {
+				"type": "boolean",
+				"description": "True if this is a service, false otherwise. Is SKU type is SER, you have to prive this field as true."
+			},
+			"skuName": {
+				"type": "string",
+				"description": "Sku name."
+			},
+			"productBrandName": {
+				"type": "string",
+				"description": "ProductSKU brand name."
+			},
+			"orderLinePropertyList": {
+				"$ref": "#/OrderLinePropertyList"
+			}
+		},
+		"required": [
+			"orderLineId",
+			"sku",
+			"skuType",
+			"quantity",
+			"listPrice",
+			"salePrice",
+			"unconditionalDiscountAmount",
+			"conditionalDiscountAmount",
+			"roundingDiscountAmount",
+			"freight",
+			"leadTime",
+			"inventoryType",
+			"service",
+			"skuName"
+		]
+	},
+	"GiftCard": {
+		"type": "object",
+		"description": "The gift card of order line.",
+		"properties": {
+			"from": {
+				"type": "string",
+				"description": "The sender of the gift card."
+			},
+			"to": {
+				"type": "string",
+				"description": "The recipient of the gift card."
+			},
+			"message": {
+				"type": "string",
+				"description": "The gift card message."
+			}
+		}
+	},
+	"GiftWrap": {
+		"type": "object",
+		"description": "The gift wrap of gift.",
+		"properties": {
+			"from": {
+				"type": "string",
+				"description": ""
+			},
+			"to": {
+				"type": "string",
+				"description": "The recipient of the gift wrap."
+			},
+			"msg": {
+				"type": "string",
+				"description": "The wrap card message."
+			},
+			"giftWrapType": {
+				"type": "string",
+				"description": "The type of gift wrap."
+			},
+			"giftWrapPrice": {
+				"type": "number",
+				"description": "The price of gift wrap."	
+			},
+			"giftWrapPriceTotal": {
+				"type": "number",
+				"description": "The total price of gift wrap."
+			},
+			"quantity": {
+				"type": "number",
+				"description": "The quantity of gift wrap. This number has no decimal places."
+			},
+			"skuId": {
+				"type": "string",
+				"description": "The sku's identifier of gift wrap."
+			}
+		}
+	},
+	"Reference": {
+		"type": "object",
+		"description": "The reference list the sku identifier",
+		"properties": {
+			"reference": {
+				"type": "array",
+				"description": "The Sku's identifier.",
+				"items": {
+					"$ref": "#/SkuIdList"
+				}
+			}
+		}
+	},
+	"SkuIdList": {
+		"type": "object",
+		"description": "The list the sku identifier of reference.",
+		"properties": {
+			"skuId": {
+				"type": "string",
+                "description": "SKU unique identifier."
+			}
+		}
+	},
+	"ReplenishmentInfo": {
+		"type": "object",
+		"description": "Stock replenishment information.",
+		"properties": {
+			"quantity": {
+				"type": "string",
+				"description": "Quantity determined in stock."
+			},
+			"stockStartDate": {
+				"type": "string",
+				"description": "The date when a given stock started."
+			}
+		},
+		"required": [
+			"quantity",
+			"stockStartDate"
+		]
+	},
+	"PromotionPropertyList": {
+		"type": "object",
+		"description": "Promotion property list. Any arbitrary property should be stored in this key-value list.",
+		"properties": {
+			"promotionProperty": {
+				"type": "array",
+				"description": "Property Promotion",
+				"items": {
+					"$ref": "#/PromotionProperty"
+				}
+			}
+		} 
+	},
+	"PromotionProperty": {
+		"type": "object",
+		"description": "",
+		"properties": {
+			"promotionId": {
+				"type":"string",
+				"description": "The identifier of this promotion."
+			},
+			"promotionName": {
+				"type": "string",
+				"description": "The name of this promotion."
+			},
+			"promotionStartDate": {
+				"type": "string",
+				"description": "The date on which a certain promotion started."
+			},
+			"promotionEndDate": {
+				"type": "string",
+				"description": "The date on which a certain promotion finish."
+			},
+			"campaignId": {
+				"type": "string",
+				"description": "The identifier of this campaign."
+			},
+			"label": {
+				"type": "string",
+				"description": "The promotion label."
+			},
+			"type": {
+				"type": "string",
+				"description": "Types of promotions possible."
+			},
+			"amount": {
+				"type": "number",
+				"description": "Amount of promotions."
+			},
+			"roundingAmount": {
+				"type": "string",
+				"description": "Rounded amount of promotions."
+			},
+			"minimumQuantity": {
+				"type": "number",
+				"description": "The minimum quantity required to be eligible in the promotion. This number has no decimal places."
+			},
+			"paidBySupplier": {
+				"type": "boolean",
+				"description": "If the promotion is to be paid by the supplier."
+			},
+			"couponPromo": {
+				"type": "boolean",
+				"description": "Coupon used in promotion."
+			},
+			"giftSkuTrigger": {
+				"type": "string",
+				"description": "Promotion trigger SKU."
+			},
+			"kitItemSku": {
+				"type": "string",
+				"description": "Kit item sku, if this line is part of some."
+			},
+			"kitItemQuantity": {
+				"type": "string",
+				"description": "Kit item quantity, if this line is part of some."
+			},
+			"quantityApplied": {
+				"type": "number",
+				"description": "The quantity applied in the promotion. This number has no decimal places."
+			}
+		},
+		"required": [
+			"promotionId",
+			"promotionName",
+			"type",
+			"amount",
+			"roundingAmount"
+		]
+	},
+	"LoyaltyCreditPropertyList": {
+		"type": "object",
+		"description": "The list of loyalty credit property of order",
+		"properties": {
+			"loyaltyCreditPropertyList": {
+				"type": "array",
+				"description": "Loyalty credit property list. Any arbitrary property should be stored in this key-value list.",
+				"items": {
+					"$ref": "#/LoyaltyCreditProperty"
+				}
+			}
+		}
+	},
+	"LoyaltyCreditProperty": {
+		"type": "object",
+		"description": "The loyalty credit property of order",
+		"properties": {
+			"days": {
+				"type": "number",
+				"description": "Number of credit fidelity days. This number has no decimal places."
+			}
+		},
+		"required": [
+			"days"
+		]
+	},
+	"OrderLinePropertyList": {
+		"type": "object",
+		"description": "Order Line property list. Any arbitrary property should be stored in this key-value list.",
+		"properties": {
+			"orderLineProperty": {
+				"type": "array",
+				"description": "Order Line property list. Any arbitrary property should be stored in this key-value list.",
+				"items": {
+					"$ref": "#/OrderLineProperty"
+				}
+			}
+		},
+		"required": [
+			"orderLineProperty"
+		]
+	},
+	"OrderLineProperty": {
+		"type": "object",
+		"description": "Order line generic key-value property list",
+		"properties": {
+			"orderLinePropertyId": {
+				"type": "string",
+				"description": "Order line property unique identifier."
+			},
+			"orderLinePropertyValue": {
+				"type": "string",
+				"description": "Order line property value."
+			}
+		},
+		"required": [
+			"orderLinePropertyId",
+			"orderLinePropertyValue"
+		]
+	},
+	"ShopInfo": {
+		"type": "object",
+		"description": "The Shop information",
+		"properties": {
+			"shopId": {
+				"type": "string",
+				"description": "The identifier of physical shop."
+			},
+			"shopCode": {
+				"type": "string",
+				"description": "The code of shop."
+			},
+			"legacyShopId": {
+				"type": "string",
+				"description": "The store identifier physical in legacy."
+			},
+			"shopName": {
+				"type": "string",
+				"description": "The name of shop."
+			},
+			"shopService": {
+				"type": "string",
+				"description": "The service of shop."
+			},
+			"classification": {
+				"type": "string",
+				"description": "The shop classification."
+			},
+			"state": {
+				"type": "string",
+				"description": "The state of shop (Ex: SP)."
+			},
+			"shopTp": {
+				"type": "string",
+				"description": "The shop of type."
+			},
+			"documentNr": {
+				"type": "string",
+				"description": "The document number of shop."
+			}
+		},
+		"required": [
+			"shopId",
+			"shopCode",
+			"legacyShopId",
+			"shopName",
+			"shopService",
+			"classification",
+			"state",
+			"shopTp",
+			"documentNr"
+		]
+	},
+	"OrderLineFreight": {
+		"type": "object",
+		"description": "Order line freight information",
+		"properties": {
+			"freightChargedAmount": {
+				"type": "number",
+				"description": "Total freight amount that the user paid for in this delivery. If there is a free delivery promotion, this must be zero."
+			},
+			"freightActualAmount": {
+				"type": "number",
+				"description": "Total freight amount without any discounts applied."
+			},
+			"freightCommercialAmount": {
+				"type": "number",
+				"description": "How much of freightActualAmount is a commercial margin. This value is already included in freightCommercialAmount."
+			},
+			"freightTime": {
+				"type": "number",
+				"description": "This is the transport time for this order line. This number has no decimal places."
+			},
+			"pickupLeadTime": {
+				"type": "number",
+				"description": "This is the handling time for this order line. This number has no decimal places."
+			},
+			"logisticContract": {
+				"type": "string",
+				"description": "Logistic contract unique identifier. If this order comes from an external source (like a marketplace), this will be defined by Infrashop (you do not have to provide it)."
+			}
+		},
+		"required": [
+			"freightChargedAmount",
+			"freightActualAmount",
+			"freightCommercialAmount",
+			"freightTime",
+			"pickupLeadTime",
+			"logisticContract"
+		]
+	},
+	"OrderPropertyList": {
+		"type": "object",
+		"description": "Order property list. Any arbitrary property should be stored in this key-value list.",
+		"properties": {
+			"orderProperty": {
+				"type": "array",
+				"description": "Order property list. Any arbitrary property should be stored in this key-value list.",
+				"items": {
+					"$ref": "#/OrderProperty"
+				}
+			}
+		},
+		"required": [
+			"orderProperty"
+		]
+	},
+	"OrderProperty": {
+		"type": "object",
+		"description": "Order generic key-value property list",
+		"properties": {
+			"orderPropertyId": {
+				"type": "string",
+				"description": "Order property unique identifier."
+			},
+			"orderPropertyValue": {
+				"type": "string",
+				"description": "Order property value."
+			}
+		},
+		"required": [
+			"orderPropertyId",
+			"orderPropertyValue"
+		]
+	},
+	"OrderPaymentList": {
+		"type": "object",
+		"description": "Order payment list",
+		"properties": {
+			"payment": {
+				"type": "array",
+				"description": "Order payment list",
+				"items": {
+					"$ref": "#/OrderPayment"
+				}
+			}
+		},
+		"required": [
+			"payment"
+		]
+	},
+	"OrderPayment": {
+		"type": "object",
+		"description": "Order payment information.",
+		"properties": {
+			"abstractPayment": {
+				"$ref": "#/AbstractPayment"
+			}
+		}
+	},
+	"AbstractPayment": {
+		"type": "object",
+		"description": "Generic payment information.",
+		"properties": {
+			"paymentId": {
+				"type": "string",
+				"description": "Payment identification. This is a number, starting with 1 for the first payment, and incrementing by 1 on each payment. If this order comes from an external source (like a marketplace), you have to provide a valid number, but this will be replaced by an internal ID."
+			},
+			"transactionId": {
+				"type": "string",
+				"description": "The transaction identification."
+			},
+			"paymentType": {
+				"type": "string",
+				"description": "Payment type. If this order comes from an external source (like a marketplace), always use \"EXTERNALLY\"."
+			},
+			"paymentKey": {
+				"type": "string",
+				"description": "Payment key. If this order comes from an external source (like a marketplace), always use \"EXTERNALLY\"."
+			},
+			"documentNumber":{
+				"type": "string",
+				"description": "Reference number (voucher code, financing number)."
+			},
+			"value": {
+				"type": "number",
+				"description": "Amount paid by the customer."
+			},
+			"interestRate": {
+				"type": "number",
+				"description": "Interest rate (percentage), if any. Use 0 if there is no interest."
+			},
+			"interestAmount": {
+				"type": "number",
+				"description": "Interest amount, if any. Use 0 if there is no interest."
+			},
+			"dueDate": {
+				"type": "number",
+				"description": "Exact date/time when this payment will expire. This number has no decimal places."
+			},
+			"status": {
+				"type": "string",
+				"description": "The status of the payment."
+			},
+			"bankCode": {
+				"type": "number",
+				"description": "The bank identification code. This number has no decimal places."
+			},
+			"agencyCode": {
+				"type": "number",
+				"description": "The bank agency identification code. This number has no decimal places."
+			},
+			"accountNumber": {
+				"type": "number",
+				"description": " Account number of payment. This number has no decimal places."
+			},
+			"paymentPropertyList": {
+				"$ref": "#/PaymentPropertyList"
+			}
+		},
+		"required": [
+			"paymentId",
+			"transactionId",
+			"paymentType",
+			"paymentKey",
+			"value",
+			"interestRate",
+			"interestAmount",
+			"dueDate"
+		]
+	},
+	"PaymentPropertyList": {
+		"type": "object",
+		"description": "Generic key-value list. If this order comes from an external source (like a marketplace), two properties are required here. ORDER_PAYMENT_TP_ID, with value 8 and APPROVAL_DAYS, with the number of days that we should wait for this order's approval.",
+		"properties": {
+			"paymentProperty": {
+				"type": "array",
+				"description": "Generic key-value list.",
+				"items": {
+					"$ref": "#/PaymentProperty"
+				}
+			}
+		}
+	},
+	"PaymentProperty": {
+		"type": "object",
+		"description": "Payment generic key-value",
+		"properties": {
+			"paymentPropertyId": {
+				"type": "string",
+				"description": "Payment property unique identifier."
+			},
+			"paymentPropertyValue": {
+				"type": "string",
+				"description": "Payment property value."
+			}
+		},
+		"required": [
+			"paymentPropertyId",
+			"paymentPropertyValue"
+		]
+	},
+	"OrderSalesPagination": {
+		"type":"object",
+		"description":"Standard pagination envelope response. Order entries will be available in \"items\".",
+		"properties":{
+		"links":{
+		   "type":"array",
+		   "description":"Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+		   "example":[
+			  {
+				 "rel":"self",
+				 "href":"http://ws-mystore.a8e.net.br/ifc-order-sales-api/v1/orders?page=0&size=20"
+			  },
+			  {
+				 "rel":"first",
+				 "href":"http://ws-mystore.a8e.net.br/ifc-order-sales-api/v1/orders?page=0&size=20"
+			  },
+			  {
+				 "rel":"last",
+				 "href":"http://ws-mystore.a8e.net.br/ifc-order-sales-api/v1/orderspage=1&size=20"
+			  },
+			  {
+				 "rel":"next",
+				 "href":"http://ws-mystore.a8e.net.br/ifc-order-sales-api/v1/orders?page=1&size=20"
+			  }
+		   ],
+		   "items": {
+				 "$ref": "#/Link"
+			}
+		},
+		"items":{
+		   "type": "array",
+		   "description": "Array containing order entries.",
+		   "items":{
+				 "$ref": "#/Order"
+			}
+		}
+		},
+		"required":[
+			"links",
+			"items"
+		]
+	},
+	"Link": {
+		"type": "object",
+		"description": "Page link.",
+		"properties": {
+			"rel": {
+				"type": "string",
+				"description": "Link type"
+			},
+			"href": {
+				"type": "string",
+				"description": "Complete link"
+			}
+		},
+		"required": [
+			"rel",
+			"href"
+		]
+	}
+}

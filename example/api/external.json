@@ -1,0 +1,573 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop External Reference Management API",
+        "description": "In this API documentation, you will find operations that you\n  will call in order to manage the relationship between Infrashop and External entities. \nFor instance, you can make the relationship between Infrashop categories with Marketplace's ones.\nFeel free to browse through all of them and to try it for yourself!"
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce marketplace API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "External Reference API",
+            "description": "<br><font size=\"2\">In this group you will find API operations that you will call in order to manage the relationship between Infrashop entities and it's external references. For instance, you can make the relationship between Infrashop categories with Marketplace's ones.</font>"
+        },
+        {
+            "name": "External Reference API - Sheet",
+            "description": "<br><font size=\"2\">In this group you will find API operations that will allow you to download and submit a spreadsheet containing the external references. The downloaded spreadsheet will contain all the external references of one entity for one partner. The submitted spreadsheet will result in the creation / update of the records within it.</font>"
+        },
+        {
+            "name": "Async Operations API",
+            "description": "<br><font size=\"2\">In this group you will find operations that you allow you to interact with Infrashop asynchronous operaions engine. This mechanism is used every time a long running operation is fired and you need to follow its execution</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-content-api/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-async-api/v1/asyncmetadata/{asyncMetadataId}": {
+            "$ref": "./api/async.json#/paths/GET_ASYNC"
+        },
+        "/ifc-content-api/v1/externalrefs/{systemId}/{entityTp}": {
+        	"get": {
+                "tags": [
+                     "External Reference API"
+                ],
+                "summary": "List all the entity's external references for the specified partner.",
+                "description": "This API operation lists all the external references for the specified partner. The response is a paginated list. <h4>Required Functionalities</h4> API de Referencia Externa - Consultar <br> API de Referencia Externa - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                                        {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Identification of the entity on Infrashop. Example: if entityTp==LVL then the entityId means the level id."
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated ExternalReference records.",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalReferenceListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot create this external reference using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                     "External Reference API"
+                ],
+                "summary": "Update the entity's external reference for the specified partner.",
+                "description": "This API operation will allow you to update the entity's external reference (id and/or description) for the partner. For instance, you can update the external ID of a category in a Marketplace. <h4>Required Functionalities</h4> API de Referencia Externa - Gravar <br>API de Referencia Externa - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+                        "description": "Identification of the entity on Infrashop. Example: if entityTp==LVL then the entityId means the level id."
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/external.json#/ExternalReference"
+                        }
+                    },
+                    
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "External reference.",
+                        "schema": {
+                            "$ref": "./api/def/external.json#/ExternalReference"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this register. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "External reference not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                     "External Reference API"
+                ],
+                "summary": "Delete the entity's external reference for the specified partner.",
+                "description": "This API operation will allow you to delete the entity's external reference for the partner. For instance, you can delete the external ID of a category in a Marketplace. <h4>Required Functionalities</h4> API de Referencia Externa - Gravar <br> API de Referencia Externa - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+                        "description": "Identification of the entity on Infrashop. Example: if entityTp==LVL then the entityId means the level id."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The entity's external reference was successfully deleted."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot update this register. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "External reference not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/externalrefs/{systemId}/{entityTp}/external/{externalReference}": {
+            "get": {
+                "tags": [
+                     "External Reference API"
+                ],
+                "summary": "Retrieve all the Infrashop entities that make reference to the external entity.",
+                "description": "This API operation will allow you to retrieve the Infrashop entities that make reference to the external entity informed by the parameters. For instance, you can retrieve all the Infrashop categories that are making reference to one specific Marketplace level. <h4>Required Functionalities</h4> API de Referencia Externa - Consultar<br> API de Referencia Externa - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                    {
+                        "name": "externalReference",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "Identification of the entity on the partner. Example: if systemId==NTS and entityTp==LVL then the externalReference means the level id on Netshoes."
+                    },
+                    {
+                        "name": "page",
+                        "required": true,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": true,
+                        "default": 20,
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated ExternalReference records.",
+                        "schema": {
+                            "$ref": "#/definitions/ExternalReferenceListPagination"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot retrieve this external using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "External reference not found.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/externalrefs": {
+            "post": {
+                "tags": [
+                     "External Reference API"
+                ],
+                "summary": "Create one external reference.",
+                "description": "This API operation will allow you to create a new external reference. For instance, you can create the external reference of a level in a Marketplace. <h4>Required Functionalities</h4> API de Referencia Externa - Gravar <br> API de Referencia Externa - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "object",
+                        "description": "External reference.",
+                        "schema": {
+                            "$ref": "./api/def/external.json#/ExternalReference"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "External reference.",
+                        "schema": {
+                            "$ref": "./api/def/external.json#/ExternalReference"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot create this external reference using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "/ifc-content-api/v1/externalrefsheets/{systemId}/{entityTp}": {
+            "get": {
+                "tags": [
+                     "External Reference API - Sheet"
+                ],
+                "summary": "Export a sheet with the external references of the entity in the partner.",
+                "description": "This API operation will allow you to trigger one async process to export a sheet with all the external references of the entity in the partner. This sheet can be used to massively edit the data and import it on the POST method.<h4>Required Functionalities</h4> API de Referencia Externa - Consultar <br> API de Referencia Externa - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution. After the process finish the link to download the spreadsheet will be available in <i>links</i> attribute, with the <i>rel=sheet</i>.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot trigger this process using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                     "External Reference API - Sheet"
+                ],
+                "summary": "Import a sheet with the external references of the entity in the partner.",
+                "description": "This API operation will allow you to trigger one async process to import a sheet with all the external references of the entity in the partner. This importation will create the records that doesn't exist and update the ones that already exist.<h4>Required Functionalities</h4> API de Referencia Externa - Gravar <br> API de Referencia Externa - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "systemId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["B2W", "DFT", "FFT", "KAN", "MVR", "NTS", "TRC", "WLM", "ZTT"],
+                        "description": "Identification of the system. <ul><li>B2W = B2W</li><li>DFT = Dafiti</li><li>FFT = Farfetch</li><li>KAN = Kanui</li><li>MVR = Maquina de Vendas</li><li>NTS = Netshoes</li><li>TRC = Tricae</li><li>WLM = Walmart</li><li>ZTT = Zattini</li></ul>"
+                    },
+                    {
+                        "name": "entityTp",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "enum": ["SKU", "LVL", "UDA"],
+                        "description": "Type of the entity. <ul><li>SKU = SKU</li><li>LVL = Level</li><li>UDA = User Defined Attribute</li></ul>"
+                    },
+                    {
+                        "name": "sheet",
+                        "in": "query",
+                        "required": true,
+                        "type": "file",
+                        "description": "The spreadsheet to be imported."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Async process information. Please use async API in order to follow its execution.",
+                        "schema": {
+                            "$ref": "./api/def/async.json#/AsyncMetadata"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid spreadsheet. Please check response messages.",
+                        "schema": {
+                            "$ref": "./api/def/mercury-base.json#/Error"
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot trigger this process using this API. Please check error messages.",
+                        "schema": {
+                            "$ref": "./api/def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ExternalReferenceListPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. ExternalReference entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+                        {
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-content-api/v1/externalrefs/NTS/LVL?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-content-api/v1/externalrefs/NTS/LVL?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-content-api/v1/externalrefs/NTS/LVL?page=3&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-content-api/v1/externalrefs/NTS/LVL?page=1&size=20"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing ExternalReference records.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/external.json#/ExternalReference"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        }
+	}	
+}

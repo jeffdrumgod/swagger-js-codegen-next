@@ -1,0 +1,79 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Feed engine API",
+        "description": "In this API documentation, you will get to know infrashop feed engine. Using API operations defined here you will be able to retrieve up to date information about key data like product, order, price, stock, payment and order status."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce feed engine API. Use this token in all other API calls in Authorization header.</font>"
+        },
+        {
+            "name": "Product Feed API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with product feed engine. You will find operations to retrieve updated products/SKUs, prices and stocks. After retrieving and processing the information, just call DELETE operation providing processed UUIDs in order to acknowledge them.</font>"
+        },
+        {
+            "name": "Order Feed API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with order feed engine. You will find operations to retrieve updated orders, payment and order tracking events. After retrieving and processing the information, just call DELETE operation providing processed UUIDs in order to acknowledge them.</font>"
+        }
+    ],
+    "paths": {
+        "/ifc-feed-api/oauth/token": {
+			"$ref": "./api/auth.json#/paths/AUTH"
+        },
+        "/ifc-feed-api/v1/feed/prd": {
+			"$ref":"./api/feed-prd.json#/paths/PRD"
+		},
+        "/ifc-feed-api/v1/feedlist/prd": {
+			"$ref":"./api/feed-prd.json#/paths/PRD_LIST"
+		},
+        "/ifc-feed-api/v1/feed/sku": {
+            "$ref":"./api/feed-prd.json#/paths/SKU"
+        },
+        "/ifc-feed-api/v1/feedlist/sku": {
+            "$ref":"./api/feed-prd.json#/paths/SKU_LIST"
+        },
+        "/ifc-feed-api/v1/feed/pre": {
+			"$ref":"./api/feed-prd.json#/paths/PRE"
+		},
+        "/ifc-feed-api/v1/feedlist/pre": {
+			"$ref":"./api/feed-prd.json#/paths/PRE_LIST"
+		},
+        "/ifc-feed-api/v1/feed/est": {
+			"$ref":"./api/feed-prd.json#/paths/EST"
+		},
+        "/ifc-feed-api/v1/feedlist/est": {
+			"$ref":"./api/feed-prd.json#/paths/EST_LIST"
+		},
+        "/ifc-feed-api/v1/feed/ord": {
+			"$ref":"./api/feed-ord.json#/paths/ORD"
+		},
+        "/ifc-feed-api/v1/feedlist/ord": {
+			"$ref":"./api/feed-ord.json#/paths/ORD_LIST"
+		},
+        "/ifc-feed-api/v1/feed/pay": {
+			"$ref":"./api/feed-ord.json#/paths/PAY"
+		},
+        "/ifc-feed-api/v1/feedlist/pay": {
+			"$ref":"./api/feed-ord.json#/paths/PAY_LIST"
+		},
+        "/ifc-feed-api/v1/feed/trk": {
+			"$ref":"./api/feed-ord.json#/paths/TRK"
+		},
+        "/ifc-feed-api/v1/feedlist/trk": {
+			"$ref":"./api/feed-ord.json#/paths/TRK_LIST"
+		}
+    }
+}

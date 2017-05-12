@@ -1,0 +1,160 @@
+{
+	"MessageTemplatePagination" :  {
+		"type": "object",
+		"description": "Standard pagination envelope response. Content entries will be available in \"items\".",
+		"properties": {
+			"links": {
+				"type": "array",
+				"description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+				"items": {
+                    "$ref": "#/Link"
+				}
+			},
+			"items": {
+				"type": "array",
+				"description": "Array containing staging entries.",
+				"items": {
+                    "$ref": "#/MessageTemplate"
+                }
+			}
+		},
+		"required": [
+			"links",
+			"items"
+		]
+	},
+	"MessageTemplate" : {
+		"type" : "object",
+		"description" :  "The message template entity.",
+		"example" : {
+			"templateId" : "ORDER_INCLUDED",
+			"name" : "Envio de e-mail de pedido incluído",
+			"description" : "Template de e-mail para pedido incluído/recebido ",
+			"type": "email",
+			"template": "<html><h1>Pedido 123456 finalizado!</h1></html>",
+			"sender":"store@email.com",
+			"subject":"Confirmação de pedido",
+			"recipient":"customer@email.com",
+			"isToSaveHtml":"true",
+			"isAdvancedEdit":"true",
+			"attributes":[
+				"productName",
+				"customerName",
+				"OrderValue"
+			]
+		},
+		"properties": {
+			"templateId": {
+				"type": "string",
+				"description": "The identifier of a message template, this is a unique in the Infrashop platform. <br/>The identifier will be convert in UPPER CASE before any request."
+			},
+			"name": {
+				"type": "string",
+				"description": "The name of message template."
+			},
+			"description": {
+				"type": "string",
+				"description": "The description of message template."
+			},
+			"type": {
+				"type": "string",
+				"description": "The type of the message.",
+				"enum": [
+					"email",
+					"sms"
+				]
+			},
+			"template": {
+				"type": "string",
+				"description": "The template contains the HMTL used to render the message, in this field you need to specify the content that will appear on the message sended to your customer, and in this field you will put the shop attributes that will be shown on your message."
+			},
+			"sender": {
+				"type": "string",
+				"description": "The sender information that will be shown on your message. The sender needs to be a valid e-mail for e-mail message or a cell phone number for SMS message"
+			},
+			"recipient": {
+				"type": "string",
+				"description": "The recipient information that will be shown on your message. The recipient needs to be a valid e-mail for e-mail message of a cell phone number for SMS message"
+			},
+			"isToSaveHtml": {
+				"type": "boolean",
+				"description": "This field define if you need that HTML of message template need to be saved on your Infrashop."
+			},
+			"isAdvancedEdit": {
+				"type": "boolean",
+				"description": "This field define if template can be edited without validate the message template attributes."
+			},
+			"attributes": {
+				"type" : "array",
+				"description": "The attributes to be related with message template. These attributes are used on message template composition",
+				"items": {
+						"type":"string"
+				}
+			}
+		},
+		"required": [
+			"templateId",
+			"name",
+			"type",
+			"template",
+			"serviceType"
+		]
+	},
+
+	"MessageAttributesPagination" :  {
+		"type": "object",
+		"description": "Standard pagination envelope response. Content entries will be available in \"items\".",
+		"properties": {
+			"links": {
+				"type": "array",
+				"description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+				"items": {
+					"$ref": "#/Link"
+				}
+			},
+			"items": {
+				"type": "array",
+				"description": "Array containing staging entries.",
+				"items": {
+                    "$ref": "#/MessageAttributes"
+				}
+			}
+		},
+		"required": [
+			"links",
+			"items"
+		]
+	},
+	"MessageAttributes": {
+		"type" : "object",
+		"description" :  "The message attributes entity",
+		"example" : {
+			"attributeId" : "CustomerName",
+			"name" : "The customer name message attribute",
+			"description" : "The name of customer used on ORDER_INCLUDED message",
+			"type": "email"
+		},
+		"properties": {
+			"attributeId": {
+				"type": "string",
+				"description": "The identifier of a message attribute, this is a unique in the Infrashop platform. <br/>The identifier will be convert in UPPER CASE before any request. Obs: Must be required only on POST and PUT."
+			},
+			"name": {
+				"type": "string",
+				"description": "The name of message attribute. Obs: Must be required only on POST."
+			},
+			"description": {
+				"type": "string",
+				"description": "The description of a message attribute."
+			},
+			"type": {
+				"type": "string",
+				"description": "The type of the message. Obs: Must be required only on POST.",
+				"enum": [
+					"email",
+					"sms"
+				]
+			}
+		}
+	}
+}

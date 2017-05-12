@@ -1,0 +1,872 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Sales Assistant API",
+    "description": "In this API documentation, you will find operations that you will call in order to manage data related to sales assistant. Operations here includes managing sales assistant data, consulting orders done by sales assistants etc. Feel free to browse through all of them and to try it for yourself!"
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/",
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Authentication API",
+      "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce user API. Use this token in all other API calls in Authorization header.</font>"
+    },
+    {
+      "name": "Sales Assistant Management API",
+      "description": "<br><font size=\"2\">This group contains a set of APIs to manage the sales assistant data. Operations here includes: Retrieve, create and update data of an sales assistant.</font>"
+    },
+    {
+      "name": "Sales Assistant Order Management API",
+      "description": "<br><font size=\"2\">This group contains a set of APIs to manage the orders done by a sales assistant. Operations here includes: Retrieve a set of orders done by a specific sales assistant.</font>"
+    }
+  ],
+  "paths": {
+    "/ifc-security-api/oauth/token": {
+      "$ref": "./api/auth.json#/paths/AUTH"
+    },
+    "/ifc-sales-assistant-api/v1/salesassistants": {
+      "post": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Create a new sales assistant",
+        "description": "This API creates a new sales assistant. <h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Gravar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The sales assistant created.",
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          },
+          "400": {
+            "description": "Invalid information provided. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "409": {
+            "description": "There is already a sales assistant that uses this login. You cannot create a sales assistant with a login that already exists.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Retrieve all or a specific sales assistant(s)",
+        "description": "This API retrieves a paginated list of all sales assistants or a specific one. If the parameter <b>login</b> was provided, only the specific sales assistant must be returned and the parameters <b>page</b> and <b>size</b> must be ignored.<h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Consultar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "login",
+            "required": false,
+            "description": "The sales assistant login",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "email",
+            "required": false,
+            "description": "The sales assistant email",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "status",
+            "required": false,
+            "description": "The sales assistant status",
+            "type": "string",
+            "enum":["active", "pending", "inactive"],
+            "in": "query"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "description": "Page number. Starts with 0."
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 20,
+            "description": "Page size. Cannot be higher than 20."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "PARTNER",
+            "description": "The type of the sales assistant."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The paginated sales assistant list.",
+            "schema": {
+              "$ref": "#/definitions/SalesAssistantPagination"
+            }
+          },
+          "400": {
+            "description": "Invalid information provided. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Delete a specific sales assistant",
+        "description": "This API deletes a specific sales assistant identified by its <b>login</b>.<h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Gravar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "login",
+            "required": true,
+            "description": "The sales assistant login",
+            "type": "string",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Sales assistant deleted."
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Sales assistant not found.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Update the sales assistant",
+        "description": "This API updates the data of a specific sales assistant identified by its <b>login</b>. <br><br>Obs. 1: The sales assistant's password is not updated by this API, for that use: <b>/ifc-sales-assistant-api/v1/salesassistants/{login}/password</b><br>Obs. 2: The login is not updatable in this version. <h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Gravar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "login",
+            "required": true,
+            "description": "The sales assistant login",
+            "type": "string",
+            "in": "query"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated sales assistant.",
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Sales assistant not found.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ifc-sales-assistant-api/v1/pub/salesassistants": {
+      "post": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Create a new sales assistant with pending status",
+        "description": "This public API creates a new sales assistant with pending status.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The sales assistant created.",
+            "schema": {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          },
+          "400": {
+            "description": "Invalid information provided. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "409": {
+            "description": "There is already a sales assistant that uses this login. You cannot create a sales assistant with a login that already exists.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ifc-sales-assistant-api/v1/salesassistants/passwords": {
+      "put": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Update the sales assistant password",
+        "description": "This API updates the password of a specific sales assistant identified by its <b>login</b>.<br><br>If the password os not know, it can be reseted and provided to to sales assistant by e-mail. In order to do that, the parameter <b>reset</b> must be provided with value <b>true</b> and the body must have only the attribute \"login\". <h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Gravar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "login",
+            "required": true,
+            "description": "The sales assistant login",
+            "type": "string",
+            "in": "path"
+          },
+          {
+            "name": "reset",
+            "required": true,
+            "description": "Flag that indicates that is to reset the sales assistant password. If is to reset, the value must be <b>true</b>",
+            "default": "false",
+            "type": "boolean",
+            "in": "query"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalseAssistantPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales assistant password updated or reset.",
+            "schema": {
+              "$ref": "#/definitions/SalseAssistantPassword"
+            }
+          },
+          "400": {
+            "description": "Invalid password. Please check error messages for more info.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Sales assistant not found.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ifc-sales-assistant-api/v1/salesassistants/status": {
+      "put": {
+        "tags": [
+          "Sales Assistant Management API"
+        ],
+        "summary": "Update the sales assistant status",
+        "description": "This API updates the status of a specific sales assistant identified by its <b>login</b>. <h4>Required Functionalities</h4> Gestão de Vendas - Gestão de Televendas - Gravar",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "login",
+            "required": true,
+            "description": "The sales assistant login",
+            "type": "string",
+            "in": "path"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesAssistantStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales assistant status updated or reset.",
+            "schema": {
+              "$ref": "#/definitions/SalesAssistantStatus"
+            }
+          },
+          "400": {
+            "description": "Invalid password. Please check error messages for more info.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Sales assistant not found.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ifc-order-sales-api/v1/orders": {
+      "get": {
+        "tags": [
+          "Sales Assistant Order Management API"
+        ],
+        "summary": "Retrieve a list of orders placed by a sales assistant",
+        "description": "This API retrieve a list of orders, paginated, placed by the sales assistant logged in.<h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar <br> Cliente Logado <br> Assistente de Vendas",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "description": "Page number. Starts with 0."
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 20,
+            "description": "Page size. Cannot be higher than 20."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order information.",
+            "schema": {
+              "$ref": "./api/def/itg-order.json#/OrderSalesPagination"
+            }
+          },
+          "400": {
+            "description": "Invalid information provided. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Orders not found. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    },
+    "/ifc-order-sales-api/v1/orders/{orderId}/fullview": {
+      "get": {
+        "tags": [
+          "Sales Assistant Order Management API"
+        ],
+        "summary": "Retrieve an order detail",
+        "description": "This API retrieve the detailed data of a specific order identified by its <b>orderId</b> placed by the sales assistant logged in. This API works not only to get the order placed by sales assistants but also for the ones by customers and guest customers, its depends on the person logged in (i.e., if is a customer that's logged in, only the orders of this customer can be fetch; if is a sales assistant that's logged in, only order placed by them can be fetch). In addition, as guest customers can´t do the login, the parameter <b>login</b> must be provided in order the get the order placed by them. <h4>Required Functionalities</h4> Vendas - Pedidos - Pedidos - Consultar <br> Cliente Logado <br> Assistente de Vendas",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64",
+            "description": "Order unique identifier"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order information.",
+            "schema": {
+              "$ref": "./api/def/itg-order.json#/Order"
+            }
+          },
+          "400": {
+            "description": "Invalid information provided. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          },
+          "401": {
+            "description": "User not authenticated.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "403": {
+            "description": "User is not authorized. Please ensure that you have access to manage customer informations.",
+            "schema": {
+              "$ref": "./api/def/oauth.json#/InvalidToken"
+            }
+          },
+          "404": {
+            "description": "Order not found. Please check error message for more details.",
+            "schema": {
+              "$ref": "./api/def/mercury-base.json#/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SalseAssistantPassword": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "description": "The login of the sales assistant, this value is use to validate the process."
+        },
+        "currentPassword": {
+          "type": "string",
+          "description": "The current password of the sales assistant, this value is use to validate the process."
+        },
+        "newPassword": {
+          "type": "string",
+          "description": "The new password of the sales assistant."
+        }
+      },
+      "required": [
+        "currentPassword",
+        "newPassword"
+      ],
+      "example": {
+        "login": "alberto.dummont",
+        "currentPassword": "123456",
+        "newPassword": "qweqwe"
+      }
+    },
+    "SalesAssistantStatus": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "description": "The login of the sales assistant, this value is use to validate the process."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the sales assistant",
+          "enum": [
+            "active",
+            "pending",
+            "inactive"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the sales assistant",
+          "enum": [
+              "Partner - PAR",
+              "Normal - NOR"
+          ]
+        }
+      },
+      "required": [
+        "login",
+        "status"
+      ],
+      "example": {
+        "login": "alberto.dummont",
+        "status": "active",
+        "type": "NOR"
+      }
+    },
+    "SalesAssistant": {
+      "type": "object",
+      "description": "The sales assistant's data",
+      "properties": {
+        "login": {
+          "type": "string",
+          "description": "The login of the sales assistant. This is his/her identifier. Max length: 50 characters. Obs: Must be required only on PUT."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of the sales assistant. Obs.: Must not be provided in the responses. Must be provided only in POST and PUT requests."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the sales assistant. Max length: 255 characters."
+        },
+        "contactName": {
+          "type": "string",
+          "description": "The name of the person that will be responsible for this login. Max length: 255 characters."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of sales assistant",
+          "enum": [
+            "PARTNER",
+            "NORMAL"
+          ]
+        },
+        "homePhone": {
+          "type": "string",
+          "description": "The principal phone number to the contact"
+        },
+        "mobilePhone": {
+          "type": "string",
+          "description": "The mobile phone number to the contact "
+        },
+        "officePhone": {
+          "type": "string",
+          "description": "The office phone number to the contact"
+        },
+        "email": {
+          "type": "string",
+          "description": "The e-mail of the sales assistant. Max length: 255 characters."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of the sales assistant. Obs.: Must not be provided in the responses. Must be provided only in POST and PUT requests."
+        },
+        "address": {
+          "type": "string",
+          "description": "The address information for the partner."
+        },
+        "addressNumber": {
+          "type": "number",
+          "description": "The number of the address. This number has no decimal places."
+        },
+        "additionalInfo": {
+          "type": "string",
+          "description": "Extra information about the address."
+        },
+        "addressReference": {
+          "type": "string",
+          "description": "The reference point of this address."
+        },
+        "addressType": {
+          "type": "string",
+          "description": "The identifier type of the address."
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "The postal code of sales assistant."
+        },
+        "city": {
+          "type": "string",
+          "description": "The city of the sales assistant."
+        },
+        "state": {
+          "type": "string",
+          "description": "The state of sales assistant."
+        },
+        "quarter": {
+          "type": "string",
+          "description": "The quarter or neighborhood of this sales assistant."
+        },
+        "source": {
+          "type": "string",
+          "description": "How the sales assistant met us."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the sales assistant, where the values can be active, pending and inactive.",
+          "enum": [
+            "active",
+            "pending",
+            "inactive"
+          ]
+        },
+        "leader": {
+          "type": "string",
+          "description": "The name of the leader of the current sales assistant. Max length: 12 characters."
+        },
+        "lastStatusUpdateDate": {
+          "type": "string",
+          "description": "The last date that status was changed."
+        },
+        "shopId": {
+          "type": "number",
+          "description": "The identifier of the shop. This number has no decimal places."
+        }
+      },
+      "required": [
+        "login",
+        "name",
+        "officePhone",
+        "postalCode",
+        "address",
+        "addressNumber",
+        "city",
+        "quarter",
+        "state",
+        "email",
+        "status"
+      ],
+      "example": {
+        "login": "alberto.dummont",
+        "password": "12345",
+        "name": "Alberto Santos Dummont",
+        "contactName": "Joana",
+        "type": "PARTNER",
+        "homePhone": "(12) 9 8845-7878",
+        "mobilePhone ": "(12) 9 8848-7878",
+        "officePhone  ": "(12) 9 9874-7878",
+        "email": "alberto.dummont@infacommerce.com.br",
+        "address": "Avenida Paulista",
+        "addressNumber": 234,
+        "addressType": "Comercial",
+        "quarter": "Bela Vista",
+        "city": "São Paulo",
+        "state": "SP",
+        "source": "Redes Sociais",
+        "status": "active",
+        "leader": "Fernando Pessoa",
+        "lastStatusUpdateDate": 1454637600000,
+        "shopId": 1234
+      }
+    },
+    "Link": {
+      "type": "object",
+      "description": "Page link.",
+      "properties": {
+        "rel": {
+          "type": "string",
+          "description": "Link type"
+        },
+        "href": {
+          "type": "string",
+          "description": "Complete link"
+        }
+      },
+      "required": [
+        "rel",
+        "href"
+      ]
+    },
+    "SalesAssistantPagination": {
+      "type": "object",
+      "description": "Standard pagination envelope response. Sales assistant entries will be available in \"items\".",
+      "properties": {
+        "links": {
+          "type": "array",
+          "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+          "example": [
+            {
+              "rel": "self",
+              "href": "http://ws-mystore.a8e.net.br/ifc-sales-assistant-api/v1/salesassistant?page=0&size=20"
+            },
+            {
+              "rel": "first",
+              "href": "http://ws-mystore.a8e.net.br/ifc-sales-assistant-api/v1/salesassistant?page=0&size=20"
+            },
+            {
+              "rel": "last",
+              "href": "http://ws-mystore.a8e.net.br/ifc-sales-assistant-api/v1/salesassistantpage=1&size=20"
+            },
+            {
+              "rel": "next",
+              "href": "http://ws-mystore.a8e.net.br/ifc-sales-assistant-api/v1/salesassistant?page=1&size=20"
+            }
+          ],
+          "items": [
+            {
+              "$ref": "#/definitions/Link"
+            }
+          ]
+        },
+        "items": {
+          "type": "array",
+          "description": "Array containing sales assistant entries.",
+          "items": [
+            {
+              "$ref": "#/definitions/SalesAssistant"
+            }
+          ]
+        }
+      },
+      "required": [
+        "links",
+        "items"
+      ]
+    }
+  }
+}

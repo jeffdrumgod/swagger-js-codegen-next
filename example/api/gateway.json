@@ -1,0 +1,155 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Gateway API",
+        "description": "This is Infrashop Gateway API documentation. Here you will find API operations to interact with infrashop gateway."
+    },
+    "schemes": [
+        "https"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Authentication API",
+            "description": "<br><font size=\"2\">Plain and simple authentication API. Just call it providing your username and password to retrieve your access token and your profile rights within Infracommerce Gateway API. Use this token in the Authorization header.</font>"
+        },
+        {
+            "name": "Gateway API",
+            "description": "<br><font size=\"2\">In this group you will find API operations to interact with the payment gateway. You will find operations to create transactions (billet, credit card or debit), retrieve the status of the transactions and also to cancel them.</font>"
+        }
+    ],
+    "paths": {
+       "/ifc-gateway-api/v1/transactions" : {
+            "post": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Create a new transaction",
+                "description": "Create a new transaction. The transaction can be a billet, credit card or debit.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "The transaction.",
+                        "in": "body",
+                        "type": "string",
+                        "required": true,
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#Transaction"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#TransactionStatus"
+                        }
+                    }
+                }
+            }
+       },
+       "/ifc-gateway-api/v1/transactions/{id}" : {
+            "post": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Get the status of a transaction",
+                "description": "Get the status of a transaction that was previously created.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "Transaction details. This is optional and should be sent only to override default parameters.",
+                        "in": "body",
+                        "type": "string",
+                        "required": false,
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#Transaction"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "Identification of the transaction. This is the same id used in the transaction creation.",
+                        "in": "request",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#TransactionStatus"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Gateway API"
+                ],
+                "summary": "Cancel the transaction",
+                "description": "Cancel the transaction that was previously created.",
+                "parameters": [
+                    {
+                        "name": "body",
+                        "description": "Transaction details. This is optional and should be sent only to override default parameters.",
+                        "in": "body",
+                        "type": "string",
+                        "required": false,
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#Transaction"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "description": "Identification of the transaction. This is the same id used in the transaction creation.",
+                        "in": "request",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The return value is an updated shopping cart.",
+                        "schema": {
+                            "$ref": "./api/def/gateway.json#TransactionStatus"
+                        }
+                    }
+                }
+            }
+       },
+       "/ifc-gateway-api/oauth/token": {
+            "$ref": "./api/auth.json#/paths/AUTH"
+        }
+    },
+    "definitions": {
+		
+    }
+}

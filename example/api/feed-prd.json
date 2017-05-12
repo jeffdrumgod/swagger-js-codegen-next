@@ -1,0 +1,974 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Infrashop Feed engine API",
+        "description": "In this API documentation, you will get to know infrashop feed engine. Using API operations defined here you will be able to retrieve up to date information about key data like product, order, price, stock, payment and order status."
+    },
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/",
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "paths": {
+        "PRD": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve all pending product updates",
+                "description": "Retrieve all pending product updates. This API operation will return all changes that are pending integration. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve product feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "ACK a list of product feed entries.",
+                "description": "This API operation allows you to acknowledge a list of product feed entries. After acknowledging a product feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of product feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this product feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Product feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "SKU": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve all pending sku updates",
+                "description": "Retrieve all pending sku updates. This API operation will return all changes that are pending integration. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sku feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SkuFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve sku feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "ACK a list of sku feed entries.",
+                "description": "This API operation allows you to acknowledge a list of sku feed entries. After acknowledging a sku feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of sku feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this sku feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Sku feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "PRE": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve all pending price updates",
+                "description": "Retrieve all pending price updates. This API operation will return all changes that are pending integration. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Price feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PriceFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve price feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "ACK a list of price feed entries.",
+                "description": "This API operation allows you to acknowledge a list of price feed entries. After acknowledging a price feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of price feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this price feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Price feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "EST": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve all pending stock updates",
+                "description": "Retrieve all pending stock updates. This API operation will return all changes that are pending integration. Each entry has an UUID that has to be acknowledged in order to be dequeued. Use DELETE HTTP operation to ACK on these entries after retrieving them.<br/> This API will return an empty array when there are no pending entries.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+						"default": 20,
+                        "type": "integer",
+                        "description": "The maximum number of records to retrieve. If not provided, a default value is used."
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stock feed array list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/StockFeed"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve stock feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "ACK a list of stock feed entries.",
+                "description": "This API operation allows you to acknowledge a list of stock feed entries. After acknowledging a stock feed entry, you are stating that this entry was successfuly received and can be removed from pending entries list.<h4>Required Functionalities</h4> Acessos - Parametros Feed Engine - Gravar <br> Acessos - Parametros Feed Engine - Gravar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "type": "array",
+                        "description": "Array containing a list of stock feed IDs to acknowledge.",
+                        "example": [
+                            "04372098-5dda-4f82-816c-667696886db9",
+                            "ac384608-1d0d-4c4f-a6fe-b20ef34f1718",
+                            "fbf1d2f5-9d5f-4bf6-9df0-67e81fea9469",
+                            "849e1185-b83f-4be2-a7b3-bd6f43575782"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Entries successfully acknowledged."
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You cannot ACK this stock feed list. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "404": {
+                        "description": "Stock feed ID not found. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/mercury-base.json#/Error"
+                        }
+                    }
+                }
+            }
+		},
+        "PRD_LIST": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve products from feed engine by last update date.",
+                "description": "Retrieve all products in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for products. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve product feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		},
+        "SKU_LIST": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve products from feed engine by last update date.",
+                "description": "Retrieve all products in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for products. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProductFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve product feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+        },
+        "PRE_LIST": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve prices from feed engine by last update date.",
+                "description": "Retrieve all prices in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for prices. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Price feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PriceFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve price feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		},
+        "EST_LIST": {
+            "get": {
+                "tags": [
+                    "Product Feed API"
+                ],
+                "summary": "Retrieve stock from feed engine by last update date.",
+                "description": "Retrieve all stocks in feed engine that were updated after the date you provided.<h4>Required Functionalities</h4>  Acessos - Parametros Feed Engine - Consultar <br> Acessos - Parametros Feed Engine - Consultar - Canal de Vendas",
+                "parameters": [
+                    {
+                        "name": "updateDt",
+                        "in": "query",
+                        "required": true,
+                        "type": "string",
+						"format":"datetime",
+						"example": "1970-01-01T00:00:00-0300",
+                        "description": "Date that will be used to query for stocks. All orders update after this date will be returned. Date format is YYYY-MM-DD'T'HH24:MI:SSTZ. Ex: 1970-01-01T00:00:00-0300"
+                    },
+                    {
+                        "name": "Authorization",
+                        "description": "Authentication token provided by auth API, like \"Bearer 926c6e54-df23-4da4-be38-b002f0454720\"",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "default": 0,
+                        "description": "Page number. Starts with 0.",
+                        "type": "integer",
+                        "in": "query"
+                    },
+                    {
+                        "name": "size",
+                        "required": false,
+                        "default": 20,
+                        "description": "Page size. Cannot be higher than 20.",
+                        "type": "integer",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stock feed paginated list. ",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/StockFeedPagination"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Please provide a valid authentication token.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to retrieve stock feed information. Please check error messages.",
+                        "schema": {
+                            "$ref": "./def/oauth.json#/InvalidToken"
+                        }
+                    }
+                }
+            }
+		}
+    },
+	"definitions": {
+        "ProductFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "feedId": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "operation": {
+                    "type": "string",
+                    "example": "I",
+                    "description": "Feed event type (I=insert, D=delete)"
+                },
+                "data": {
+                    "$ref": "./def/itg-product.json#/Product"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "SkuFeed": {
+            "type": "object",
+            "description": "Sku feed entry. This entity contains a sku and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "operation": {
+                    "type": "string",
+                    "example": "I",
+                    "description": "Feed event type (I=insert, D=delete)"
+                },
+                "data": {
+                    "$ref": "./def/itg-product.json#/ProductSku"
+                }
+            },
+            "required": [ "id","data" ]
+        },
+        "StockFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "data": {
+                    "$ref": "./def/itg-product.json#/Stock"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "PriceFeed": {
+            "type": "object",
+            "description": "Product feed entry. This entity contains a product and a unique identifier that must be used to ACK the retrieval of this entry.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "04372098-5dda-4f82-816c-667696886db9",
+                    "description": "Feed unique identifier. Use this to ACK the retrieval of this entry."
+                },
+                "data": {
+                    "$ref": "./def/itg-product.json#/Price"
+                }
+            },
+			"required": [ "id","data" ]
+        },
+        "Link": {
+            "type": "object",
+            "description": "Page link.",
+            "properties": {
+                "rel": {
+                    "type": "string",
+                    "description": "Link type"
+                },
+                "href": {
+                    "type": "string",
+                    "description": "Complete link"
+                }
+            },
+            "required": [
+                "rel",
+                "href"
+            ]
+        },		
+        "ProductFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Product entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/prd/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/prd/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/prd/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/prd/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing product entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-product.json#/Product"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },      
+        "SkuFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Sku entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+                    "example": [
+                        {
+                            "rel": "self",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/sku/?page=0&size=20"
+                        },
+                        {
+                            "rel": "first",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/sku/?page=0&size=20"
+                        },
+                        {
+                            "rel": "last",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/sku/?page=1&size=20"
+                        },
+                        {
+                            "rel": "next",
+                            "href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/sku/?page=1&size=20"
+                        }
+                    ],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing product entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-product.json#/ProductSku"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },		
+        "PriceFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Price entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pre/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pre/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pre/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/pre/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing price entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-product.json#/Price"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        },		
+        "StockFeedPagination": {
+            "type": "object",
+            "description": "Standard pagination envelope response. Stock entries will be available in \"items\".",
+            "properties": {
+                "links": {
+                    "type": "array",
+                    "description": "Collection of page links. You will find up to 5 links:<ul><li>self - link to this same page</li><li>first - link to the first page</li><li>last - link to the last page</li><li>next - link to the next page. This will be only presented when there is a next page</li><li>previous - link to the previous page. This will be only presented when there is a previous page</li></ul>",
+					"example": [
+						{
+							"rel": "self",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/est/?page=0&size=20"
+						},
+						{
+							"rel": "first",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/est/?page=0&size=20"
+						},
+						{
+							"rel": "last",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/est/?page=1&size=20"
+						},
+						{
+							"rel": "next",
+							"href": "http://ws-mystore.a8e.net.br/ifc-feed-api/v1/feedlist/est/?page=1&size=20"
+						}
+					],
+                    "items": [
+                        {
+                            "$ref": "#/definitions/Link"
+                        }
+                    ]
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Array containing stock entries.",
+                    "items": 
+                        {
+                            "$ref": "./api/def/itg-order.json#/Stock"
+                        }
+                    
+                }
+            },
+            "required": [
+                "links",
+                "items"
+            ]
+        }
+	}
+}
