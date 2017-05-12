@@ -1,4 +1,4 @@
-# swagger-js-codegen-next
+# Swagger to JS next Codegen
 
 This repo is baby. Was used base of swagger-js-codegen, but rewriten with ES6.
 
