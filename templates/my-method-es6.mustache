@@ -7,23 +7,13 @@
 {{/parameters}}
  *
  */
- {{&className}}.prototype.{{&methodName}} = function(parameters){
-	if(parameters === undefined) {
-		parameters = {};
-	}
-
-	var domain = this.domain;
-	var path = '{{&path}}';
-
-	var body;
-	var queryParameters = {};
-	var headers = {};
-	var form = {};
+{{&methodName}}(parameters = {}) {
+	const form = {};
+	{{#isBodyParameter}}let body;{{/isBodyParameter}}
+	{{#headers}}const headers = {};{{/headers}}
 
 	{{#isSecure}}
-		if (this.token.isQuery) {
-			queryParameters[this.token.headerOrQueryName] = this.token.value;
-		} else if (this.token.headerOrQueryName) {
+		if (this.token.headerOrQueryName) {
 			headers[this.token.headerOrQueryName] = this.token.value;
 		} else {
 			headers['Authorization'] = 'Bearer ' + this.token.value;
@@ -34,75 +24,26 @@
 		headers['{{&name}}'] = [{{&value}}];
 	{{/headers}}
 
+	{{#isBodyParameter}}
+	if(parameters['{{&camelCaseName}}'] !== undefined){
+		body = parameters['{{&camelCaseName}}'];
+	}
+	{{/isBodyParameter}}
+
 	{{#parameters}}
-
-		{{#isQueryParameter}}
-			{{#isSingleton}}
-				queryParameters['{{&name}}'] = '{{&singleton}}';
-			{{/isSingleton}}
-			{{^isSingleton}}
-				{{#isPatternType}}
-					Object.keys(parameters).forEach(function(parameterName) {
-						if(new RegExp('{{&pattern}}').test(parameterName)){
-							queryParameters[parameterName] = parameters[parameterName];
-						}
-					});
-				{{/isPatternType}}
-				{{^isPatternType}}
-				if(parameters['{{&camelCaseName}}'] !== undefined){
-					queryParameters['{{&name}}'] = parameters['{{&camelCaseName}}'];
-				}
-				{{/isPatternType}}
-			{{/isSingleton}}
-		{{/isQueryParameter}}
-
-		{{#isPathParameter}}
-			path = path.replace('{{=<% %>=}}{<%&name%>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
-		{{/isPathParameter}}
-
-		{{#isHeaderParameter}}
-			{{#isSingleton}}
-				headers['{{&name}}'] = '{{&singleton}}';
-			{{/isSingleton}}
-			{{^isSingleton}}
-				if(parameters['{{&camelCaseName}}'] !== undefined){
-					headers['{{&name}}'] = parameters['{{&camelCaseName}}'];
-				}
-			{{/isSingleton}}
-		{{/isHeaderParameter}}
-
-		{{#isBodyParameter}}
-			if(parameters['{{&camelCaseName}}'] !== undefined){
-				body = parameters['{{&camelCaseName}}'];
-			}
-		{{/isBodyParameter}}
-
-		 {{#isFormParameter}}
-			{{#isSingleton}}
-				form['{{&name}}'] = '{{&singleton}}';
-			{{/isSingleton}}
-			{{^isSingleton}}
-				if(parameters['{{&camelCaseName}}'] !== undefined){
-					form['{{&name}}'] = parameters['{{&camelCaseName}}'];
-				}
-			{{/isSingleton}}
-		{{/isFormParameter}}
-
-		{{#required}}
-		if(parameters['{{&camelCaseName}}'] === undefined){
-			return this.reject('Missing required {{&paramType}} parameter: {{&camelCaseName}}');
-		}
-		{{/required}}
-
+	{{#required}}
+	if(parameters['{{&camelCaseName}}'] === undefined){
+		return this.rejectMissingRequired('{{&paramType}}', '{{&camelCaseName}}');
+	}
+	{{/required}}
+	form['{{&name}}'] = parameters['{{&camelCaseName}}'];
 	{{/parameters}}
 
-	if(parameters.$queryParameters) {
-		Object.keys(parameters.$queryParameters)
-		.forEach(function(parameterName){
-			var parameter = parameters.$queryParameters[parameterName];
-			queryParameters[parameterName] = parameter;
-		});
-	}
-
-	return this.request('{{method}}', domain + path, parameters, body, headers, queryParameters, form);
- };
+	return this.request({
+		method: '{{method}}',
+		url: '{{&path}}',
+		params: form,
+		{{#headers}}headers,{{/headers}}
+		{{#isBodyParameter}}data: body,{{/isBodyParameter}}
+	});
+}

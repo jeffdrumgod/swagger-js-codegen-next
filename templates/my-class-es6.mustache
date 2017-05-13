@@ -1,49 +1,44 @@
-/*jshint -W069 */
+/* TODO: remove this eslint fixes below */
+/* eslint-disable dot-notation */
+/* eslint-disable padded-blocks */
+/* eslint-disable eol-last */
+/* eslint-disable max-len */
+/* eslint-disable class-methods-use-this */
 /**
  * {{&description}}
  * @class {{&className}}
  * @param {(string|object)} [domainOrOptions] - The project domain or options object. If object, see the object's optional properties.
- * @param {string} [domainOrOptions.domain] - The project domain
+ * @param {string} [domainOrOptions.baseURL] - The project domain + base URL
  * @param {object} [domainOrOptions.token] - auth token - object with value property and optional headerOrQueryName and isQuery properties
  */
-var {{&className}} = (function(){
-	'use strict';
-
-	function {{&className}}(options){
-		var domain = (typeof options === 'object') ? options.domain : options;
-		this.domain = domain ? domain : '{{&domain}}';
-		if(this.domain.length === 0) {
-			throw new Error('Domain parameter must be specified as a string.');
-		}
+export default class {{&className}} {
+	constructor(props) {
+		const { baseURL = '{{&baseURL}}'{{#isSecure}}, token{{/isSecure}} } = props;
 		{{#isSecure}}
-			this.token = (typeof options === 'object') ? (options.token ? options.token : {}) : {};
+			this.token = token;
 		{{/isSecure}}
+		this.baseURL = baseURL;
+		if (!this.baseURL) {
+			throw new Error('baseURL parameter must be specified as a string.');
+		}
 	}
 
-	{{&className}}.prototype.reject = function(message){
+	reject(message) {
 		return Promise.reject(message);
-	};
+	}
 
-	{{&className}}.prototype.request = function(method, url, parameters, body, headers, queryParameters, form){
-		var req = {
-			method: method,
-			url: url,
-			params: queryParameters,
-			headers: headers,
-			body: body
-		};
-		if(Object.keys(form).length > 0) {
-			req.form = form;
-		}
-		if(typeof(body) === 'object' && !(body instanceof Buffer)) {
-			req.json = true;
-		}
-		return axios(req);
-	};
+	rejectMissingRequired(paramType, camelCaseName) {
+		return this.reject(`Missing required ${paramType} parameter: ${camelCaseName}`);
+	}
+
+	request(config) {
+		return window.axios({
+			baseURL: this.baseURL,
+			...config
+		});
+	}
 
 	{{#methods}}
 		{{> method}}
 	{{/methods}}
-
-	return {{&className}};
-})();
+}
