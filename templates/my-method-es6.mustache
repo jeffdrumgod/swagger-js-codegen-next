@@ -12,17 +12,11 @@
 	{{#isBodyParameter}}let body;{{/isBodyParameter}}
 	{{#headers}}const headers = {};{{/headers}}
 
-	{{#isSecure}}
-		if (this.token.headerOrQueryName) {
-			headers[this.token.headerOrQueryName] = this.token.value;
-		} else {
-			headers['Authorization'] = 'Bearer ' + this.token.value;
-		}
-	{{/isSecure}}
-
 	{{#headers}}
 		headers['{{&name}}'] = [{{&value}}];
 	{{/headers}}
+
+	parameters['headers'] = headers;
 
 	{{#isBodyParameter}}
 	if(parameters['{{&camelCaseName}}'] !== undefined){
@@ -31,6 +25,7 @@
 	{{/isBodyParameter}}
 
 	{{#parameters}}
+	{{#allowGetExternal}}parameters['{{&camelCaseName}}'] = parameters['{{&camelCaseName}}'] || this.getExternal('{{&camelCaseName}}');{{/allowGetExternal}}
 	{{#required}}
 	if(parameters['{{&camelCaseName}}'] === undefined){
 		return this.rejectMissingRequired('{{&paramType}}', '{{&camelCaseName}}');

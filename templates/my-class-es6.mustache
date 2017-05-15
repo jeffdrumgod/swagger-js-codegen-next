@@ -4,6 +4,8 @@
 /* eslint-disable eol-last */
 /* eslint-disable max-len */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable no-param-reassign */
+
 /**
  * {{&description}}
  * @class {{&className}}
@@ -13,10 +15,12 @@
  */
 export default class {{&className}} {
 	constructor(props) {
-		const { baseURL = '{{&baseURL}}'{{#isSecure}}, token{{/isSecure}} } = props;
+		const { externals = {}, baseURL = '{{&baseURL}}'{{#isSecure}},
+			token{{/isSecure}} } = props;
 		{{#isSecure}}
 			this.token = token;
 		{{/isSecure}}
+		this.externals = externals;
 		this.baseURL = baseURL;
 		if (!this.baseURL) {
 			throw new Error('baseURL parameter must be specified as a string.');
@@ -30,6 +34,15 @@ export default class {{&className}} {
 	rejectMissingRequired(paramType, camelCaseName) {
 		return this.reject(`Missing required ${paramType} parameter: ${camelCaseName}`);
 	}
+
+	getExternal(parameter) {
+		if (!!this.externals && !!this.externals[parameter]) {
+			return this.externals[parameter]();
+		}
+
+		return undefined;
+	}
+
 
 	request(config) {
 		return window.axios({
