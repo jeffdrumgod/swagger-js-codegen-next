@@ -7,22 +7,15 @@
 {{/parameters}}
  *
  */
-{{&methodName}}(parameters = {}) {
-	const form = {};
-	{{#isBodyParameter}}let body;{{/isBodyParameter}}
+{{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
+	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
+	{{#hasBodyParameter}}const data = {};{{/hasBodyParameter}}
+	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
 	{{#headers}}const headers = {};{{/headers}}
 
 	{{#headers}}
 		headers['{{&name}}'] = [{{&value}}];
 	{{/headers}}
-
-	parameters['headers'] = headers;
-
-	{{#isBodyParameter}}
-	if(parameters['{{&camelCaseName}}'] !== undefined){
-		body = parameters['{{&camelCaseName}}'];
-	}
-	{{/isBodyParameter}}
 
 	{{#parameters}}
 	{{#allowGetExternal}}parameters['{{&camelCaseName}}'] = parameters['{{&camelCaseName}}'] || this.getExternal('{{&camelCaseName}}');{{/allowGetExternal}}
@@ -31,14 +24,33 @@
 		return this.rejectMissingRequired('{{&paramType}}', '{{&camelCaseName}}');
 	}
 	{{/required}}
+
+	{{#isQueryParameter}}
+	if(parameters['{{&camelCaseName}}'] !== undefined){
+		params['{{&name}}'] = parameters['{{&camelCaseName}}'];
+	}
+	{{/isQueryParameter}}
+
+	{{#isBodyParameter}}
+	if(parameters['{{&camelCaseName}}'] !== undefined){
+		data['{{&name}}'] = parameters['{{&camelCaseName}}'];
+	}
+	{{/isBodyParameter}}
+
+	{{#isHeaderParameter}}{{#headers}}
+	headers['{{&name}}'] = parameters['{{&camelCaseName}}'];
+	{{/headers}}{{/isHeaderParameter}}
+
+	{{#isFormParameter}}
 	form['{{&name}}'] = parameters['{{&camelCaseName}}'];
+	{{/isFormParameter}}
 	{{/parameters}}
 
 	return this.request({
 		method: '{{method}}',
 		url: '{{&path}}',
-		params: form,
+		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
+		{{#hasBodyParameter}}data,{{/hasBodyParameter}}
 		{{#headers}}headers,{{/headers}}
-		{{#isBodyParameter}}data: body,{{/isBodyParameter}}
 	});
 }
