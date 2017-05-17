@@ -37,9 +37,9 @@
 	}
 	{{/isBodyParameter}}
 
-	{{#isHeaderParameter}}{{#headers}}
+	{{#isHeaderParameter}}
 	headers['{{&name}}'] = parameters['{{&camelCaseName}}'];
-	{{/headers}}{{/isHeaderParameter}}
+	{{/isHeaderParameter}}
 
 	{{#isFormParameter}}
 	form['{{&name}}'] = parameters['{{&camelCaseName}}'];
