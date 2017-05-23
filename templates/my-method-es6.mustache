@@ -10,6 +10,7 @@
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
 	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
 	{{#hasBodyParameter}}const data = {};{{/hasBodyParameter}}
+	let path = '{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
 	{{#headers}}const headers = {};{{/headers}}
 
@@ -37,6 +38,12 @@
 	}
 	{{/isBodyParameter}}
 
+	{{#isPathParameter}}
+	if(parameters['{{&camelCaseName}}'] !== undefined){
+		path = path.replace('{{=<% %>=}}{<%& camelCaseName %>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
+	}
+	{{/isPathParameter}}
+
 	{{#isHeaderParameter}}
 	headers['{{&name}}'] = parameters['{{&camelCaseName}}'];
 	{{/isHeaderParameter}}
@@ -48,7 +55,7 @@
 
 	return this.request({
 		method: '{{method}}',
-		url: '{{&path}}',
+		url: path,
 		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
 		{{#hasBodyParameter}}data,{{/hasBodyParameter}}
 		{{#headers}}headers,{{/headers}}
