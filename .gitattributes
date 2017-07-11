@@ -1,0 +1,7 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+*.js        eol=lf
+*.jsx       eol=lf
+*.css       eol=lf
+*.scss      eol=lf
