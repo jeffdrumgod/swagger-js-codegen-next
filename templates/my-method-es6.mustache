@@ -10,7 +10,7 @@
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
 	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
 	{{#hasBodyParameter}}const data = {};{{/hasBodyParameter}}
-	let path = '{{&path}}';
+	let path = '{{&domain}}{{&basePath}}{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
 	{{#headers}}const headers = {};{{/headers}}
 
