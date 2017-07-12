@@ -9,7 +9,7 @@
  */
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
 	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
-	{{#hasBodyParameter}}const data = {};{{/hasBodyParameter}}
+	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
 	{{#headers}}const headers = {};{{/headers}}
@@ -34,7 +34,7 @@
 
 	{{#isBodyParameter}}
 	if(parameters['{{&camelCaseName}}'] !== undefined){
-		data['{{&name}}'] = parameters['{{&camelCaseName}}'];
+		data = parameters['{{&camelCaseName}}'];
 	}
 	{{/isBodyParameter}}
 
