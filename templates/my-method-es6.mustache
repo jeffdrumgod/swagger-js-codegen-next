@@ -22,13 +22,17 @@
 	{{#allowGetExternal}}parameters['{{&camelCaseName}}'] = parameters['{{&camelCaseName}}'] || this.getExternal('{{&camelCaseName}}');{{/allowGetExternal}}
 	{{#required}}
 	if(parameters['{{&camelCaseName}}'] === undefined){
-		return this.rejectMissingRequired('{{&paramType}}', '{{&camelCaseName}}');
+		return this.rejectMissingRequired('{{&type}}', '{{&camelCaseName}}');
 	}
 	{{/required}}
 
 	{{#isQueryParameter}}
 	if(parameters['{{&camelCaseName}}'] !== undefined){
 		params['{{&name}}'] = parameters['{{&camelCaseName}}'];
+		
+		if ('{{&type}}' === 'array') {
+			params['{{&name}}'] = params['{{&name}}'].join(',');
+		}
 	}
 	{{/isQueryParameter}}
 
