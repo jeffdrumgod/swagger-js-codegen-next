@@ -16,10 +16,9 @@
  */
 export default class {{&className}} {
 	constructor(props) {
-		const { externals = {}, baseURL = '{{&baseURL}}'{{#isSecure}},
-			token{{/isSecure}} } = props;
+		const { externals = {}, baseURL = '{{&baseURL}}'{{#isSecure}}, token{{/isSecure}}} = props;
 		{{#isSecure}}
-			this.token = token;
+		this.token = token;
 		{{/isSecure}}
 		this.externals = externals;
 		this.baseURL = baseURL;
