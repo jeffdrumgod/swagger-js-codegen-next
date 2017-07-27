@@ -12,7 +12,7 @@
 	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
-	{{#headers}}const headers = {};{{/headers}}
+	{{#hasHeaderParameter}}const headers = {};{{/hasHeaderParameter}}
 
 	{{#headers}}
 		headers['{{&name}}'] = [{{&value}}];
@@ -62,6 +62,6 @@
 		url: path,
 		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
 		{{#hasBodyParameter}}data,{{/hasBodyParameter}}
-		{{#headers}}headers,{{/headers}}
+		{{#hasHeaderParameter}}headers,{{/hasHeaderParameter}}
 	});
 }
