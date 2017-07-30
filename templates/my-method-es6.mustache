@@ -12,7 +12,7 @@
 	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
-	{{#hasHeaderParameter}}const headers = {};{{/hasHeaderParameter}}
+	{{#headers}}const headers = {};{{/headers}}
 
 	{{#headers}}
 		headers['{{&name}}'] = [{{&value}}];
@@ -29,7 +29,7 @@
 	{{#isQueryParameter}}
 	if(parameters['{{&camelCaseName}}'] !== undefined){
 		params['{{&name}}'] = parameters['{{&camelCaseName}}'];
-		
+
 		if ('{{&type}}' === 'array') {
 			params['{{&name}}'] = params['{{&name}}'].join(',');
 		}
@@ -62,6 +62,6 @@
 		url: path,
 		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
 		{{#hasBodyParameter}}data,{{/hasBodyParameter}}
-		{{#hasHeaderParameter}}headers,{{/hasHeaderParameter}}
+		{{#headers}}headers,{{/headers}}
 	});
 }
