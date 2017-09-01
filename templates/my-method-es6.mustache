@@ -30,7 +30,7 @@
 	if(parameters['{{&camelCaseName}}'] !== undefined){
 		params['{{&name}}'] = parameters['{{&camelCaseName}}'];
 
-		if ('{{&type}}' === 'array') {
+		if (_.isArray(params['{{&name}}'])) {
 			params['{{&name}}'] = params['{{&name}}'].join(',');
 		}
 	}
@@ -44,8 +44,10 @@
 
 	{{#isPathParameter}}
 	if(parameters['{{&camelCaseName}}'] !== undefined){
-		path = path.replace('{{=<% %>=}}{<%& camelCaseName %>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
-	}
+		path = path.replace('{{=<% %>=}}{<%& name %>}<%={{ }}=%>', parameters['{{&camelCaseName}}']);
+	}{{^required}} else {
+		path = path.replace('{{=<% %>=}}{<%& name %>}<%={{ }}=%>', '');
+	}{{/required}}
 	{{/isPathParameter}}
 
 	{{#isHeaderParameter}}
