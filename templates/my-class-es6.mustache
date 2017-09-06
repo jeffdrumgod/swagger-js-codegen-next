@@ -19,12 +19,13 @@
  */
 export default class {{&className}} {
 	constructor(props) {
-		const { externals = {}, baseURL = '{{&baseURL}}'{{#isSecure}}, token{{/isSecure}}} = props;
+		const { externals = {}, baseURL = '{{&baseURL}}'{{#isSecure}}, token{{/isSecure}}, customBaseUrl} = props;
 		{{#isSecure}}
 		this.token = token;
 		{{/isSecure}}
 		this.externals = externals;
 		this.baseURL = baseURL;
+		this.customBaseUrl = customBaseUrl;
 		if (!this.baseURL) {
 			throw new Error('baseURL parameter must be specified as a string.');
 		}
@@ -48,8 +49,18 @@ export default class {{&className}} {
 
 
 	request(config) {
+		let baseURL = this.baseURL;
+
+		if (
+			{}.hasOwnProperty.call(config.params, 'customBaseUrl') &&
+			{}.hasOwnProperty.call(this, 'customBaseUrl')
+		) {
+			baseURL = this.customBaseUrl(this.baseURL, config);
+			delete config.params.customBaseUrl;
+		}
+
 		return window.axios({
-			baseURL: this.baseURL,
+			baseURL,
 			...config
 		});
 	}
