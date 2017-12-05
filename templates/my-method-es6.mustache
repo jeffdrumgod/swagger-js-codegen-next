@@ -8,8 +8,6 @@
  *
  */
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
-	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
-
 	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}{{^hasBodyParameter}}{{#hasFormParameter}}let data = {};{{/hasFormParameter}}{{/hasBodyParameter}}
 
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
