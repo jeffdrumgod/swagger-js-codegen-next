@@ -9,7 +9,9 @@
  */
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
 	{{#hasFormParameter}}const form = {};{{/hasFormParameter}}
-	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}
+
+	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}{{^hasBodyParameter}}{{#hasFormParameter}}let data = {};{{/hasFormParameter}}{{/hasBodyParameter}}
+
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
 	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
 	{{#headers}}const headers = {};{{/headers}}
@@ -55,7 +57,7 @@
 	{{/isHeaderParameter}}
 
 	{{#isFormParameter}}
-	form['{{&name}}'] = parameters['{{&camelCaseName}}'];
+	data = parameters['{{&camelCaseName}}'];
 	{{/isFormParameter}}
 	{{/parameters}}
 
@@ -63,7 +65,7 @@
 		method: '{{method}}',
 		url: path,
 		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
-		{{#hasBodyParameter}}data,{{/hasBodyParameter}}
+		{{#hasBodyParameter}}data,{{/hasBodyParameter}}{{^hasBodyParameter}}{{#hasFormParameter}}data,{{/hasFormParameter}}{{/hasBodyParameter}}
 		{{#headers}}headers,{{/headers}}
 	});
 }
