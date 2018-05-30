@@ -8,11 +8,22 @@
  *
  */
 {{&methodName}}({{#hasParams}}parameters = {}{{/hasParams}}) {
-	{{#hasBodyParameter}}let data = {};{{/hasBodyParameter}}{{^hasBodyParameter}}{{#hasFormParameter}}let data = {};{{/hasFormParameter}}{{/hasBodyParameter}}
+	{{#hasBodyParameter}}
+		let data = {};
+	{{/hasBodyParameter}}
+	{{^hasBodyParameter}}
+		{{#hasFormParameter}}
+			let data = {};
+		{{/hasFormParameter}}
+	{{/hasBodyParameter}}
 
 	let path = '{{&domain}}{{&basePath}}{{&path}}';
-	{{#hasQueryParameter}}const params = {};{{/hasQueryParameter}}
-	{{#headers}}const headers = {};{{/headers}}
+	{{#hasQueryParameter}}
+		const params = {};
+	{{/hasQueryParameter}}
+	{{#headers.length}}
+		const headers = {};
+	{{/headers.length}}
 
 	{{#headers}}
 		headers['{{&name}}'] = [{{&value}}];
@@ -64,6 +75,6 @@
 		url: path,
 		{{#hasQueryParameter}}params,{{/hasQueryParameter}}
 		{{#hasBodyParameter}}data,{{/hasBodyParameter}}{{^hasBodyParameter}}{{#hasFormParameter}}data,{{/hasFormParameter}}{{/hasBodyParameter}}
-		{{#headers}}headers,{{/headers}}
+		{{#headers.length}}headers,{{/headers.length}}
 	});
 }
